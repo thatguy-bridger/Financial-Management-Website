@@ -1013,35 +1013,47 @@ async function pullFromGitHub() {
 }
 
 async function pushToGitHub(data) {
-  const url = `https://api.github.com/repos/thatguy-bridger/Financial-Management-Website/contents/data.json`;
+  // Retrieve the actual values from your stored settings
+  const settings = JSON.parse(localStorage.getItem('myFinancesSettings') || '{}');
+  const token = settings.githubToken;
+  const username = settings.githubUsername;
+  const repo = settings.githubRepo;
+
+  if (!token || !username || !repo) {
+    throw new Error('Missing GitHub configuration in Settings');
+  }
+
+  const url = `https://api.github.com/repos/${username}/${repo}/contents/data.json`;
   
   // 1. Get the current file's SHA
   const getResponse = await fetch(url, {
-    headers: { 'Authorization': `token ${YOUR_TOKEN}` }
+    headers: { 'Authorization': `token ${token}` }
   });
   
   let sha = null;
   if (getResponse.ok) {
     const fileData = await getResponse.json();
-    sha = fileData.sha; // This is the magic key you were missing
+    sha = fileData.sha; 
   }
 
   // 2. Perform the PUT request with the SHA
   const response = await fetch(url, {
     method: 'PUT',
     headers: {
-      'Authorization': `token ${YOUR_TOKEN}`,
+      'Authorization': `token ${token}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       message: "Update data.json",
-      content: btoa(JSON.stringify(data)), // Ensure data is Base64 encoded
-      sha: sha // REQUIRED: This tells GitHub you are updating the specific version
+      content: btoa(JSON.stringify(data)),
+      sha: sha // Include the SHA retrieved above!
     })
   });
 
   if (!response.ok) {
-    throw new Error('Failed to push');
+    const errorData = await response.json();
+    console.error('GitHub API Error:', errorData);
+    throw new Error('Failed to push: ' + errorData.message);
   }
 }
 
