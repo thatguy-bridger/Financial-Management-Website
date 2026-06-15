@@ -65,7 +65,12 @@ table{border-collapse:collapse;width:100%}
 
 /* ===================== NAV ===================== */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
-.nav-brand{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.5px;white-space:nowrap}
+.nav-brand{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.sync-badge{font-size:11px;font-weight:600;padding:2px 6px;border-radius:10px;background:var(--card);color:var(--text-dim);display:flex;align-items:center;gap:4px;transition:all .2s;}
+.sync-badge.syncing{color:var(--yellow);background:var(--yellow-soft);}
+.sync-badge.synced{color:var(--green);background:var(--green-soft);}
+.sync-badge.error{color:var(--red);background:var(--red-soft);}
+
 .nav-tabs{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
 .nav-tabs::-webkit-scrollbar{display:none}
 .nav-tab{padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--text-dim);background:transparent;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
@@ -79,7 +84,9 @@ table{border-collapse:collapse;width:100%}
 /* ===================== LAYOUT ===================== */
 .main{margin-top:var(--nav-h);padding:24px 20px;max-width:1400px;margin-left:auto;margin-right:auto}
 .page{display:none}
-.page.active{display:block}
+.page.active{display:block;animation:fadeIn .3s ease}
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
 
 /* ===================== CARDS ===================== */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
@@ -108,20 +115,45 @@ table{border-collapse:collapse;width:100%}
 .section-title{font-size:16px;font-weight:600;color:var(--text)}
 .section-sub{font-size:13px;color:var(--text-dim)}
 
-/* ===================== TABLES ===================== */
-.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+/* ===================== TABLES & BULK ACTIONS ===================== */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);position:relative;}
 .data-table{width:100%;font-size:13px}
 .data-table thead tr{background:var(--card);border-bottom:2px solid var(--border)}
 .data-table th{padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);white-space:nowrap}
 .data-table td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
 .data-table tbody tr:last-child td{border-bottom:none}
 .data-table tbody tr:hover{background:var(--card)}
+.data-table tbody tr.selected{background:var(--accent-soft)}
 .data-table .mono{font-family:var(--mono);font-size:12px}
 .data-table .pos{color:var(--green)}
 .data-table .neg{color:var(--red)}
 .data-table .right{text-align:right}
 .data-table .center{text-align:center}
 .data-table tbody tr{transition:background .1s}
+
+/* Checkboxes */
+input[type="checkbox"].row-cb {
+  appearance:none; width:16px; height:16px; border:1.5px solid var(--border); border-radius:4px;
+  background:var(--surface); cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+input[type="checkbox"].row-cb:checked {
+  background:var(--accent); border-color:var(--accent);
+}
+input[type="checkbox"].row-cb:checked::after {
+  content:'✓'; color:#fff; font-size:12px; font-weight:bold;
+}
+
+/* Bulk Action Bar */
+.bulk-bar {
+  display:none; align-items:center; justify-content:space-between; 
+  background:var(--surface); border:1px solid var(--accent); border-radius:var(--radius-sm);
+  padding:10px 16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  animation:slideDown .2s ease;
+}
+.bulk-bar.visible { display:flex; }
+.bulk-bar-info { font-weight:600; font-size:14px; color:var(--text); display:flex; align-items:center; gap:8px;}
+.bulk-bar-info span.count { background:var(--accent); color:#fff; padding:2px 8px; border-radius:20px; font-size:12px; }
+@keyframes slideDown { from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:none} }
 
 /* ===================== FORMS ===================== */
 .form-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
@@ -153,18 +185,6 @@ select.form-input option{background:var(--surface)}
 .chip-investing{background:var(--accent-soft);color:var(--accent)}
 .chip-tithing{background:#2d1a2d;color:#c084fc}
 
-/* ===================== PROGRESS BARS ===================== */
-.progress-wrap{background:var(--card);border-radius:4px;height:6px;overflow:hidden}
-.progress-bar{height:100%;border-radius:4px;transition:width .5s ease}
-.progress-green{background:var(--green)}
-.progress-accent{background:var(--accent)}
-.progress-red{background:var(--red)}
-.progress-yellow{background:var(--yellow)}
-
-/* ===================== MINI CHART ===================== */
-.sparkline{display:flex;align-items:flex-end;gap:3px;height:40px}
-.spark-bar{flex:1;border-radius:3px 3px 0 0;min-width:4px;transition:height .3s}
-
 /* ===================== MODAL ===================== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
@@ -183,7 +203,7 @@ select.form-input option{background:var(--surface)}
 .toast.toast-info{border-left:3px solid var(--accent)}
 @keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 
-/* ===================== SETTINGS ===================== */
+/* ===================== SETTINGS & OTHERS ===================== */
 .settings-section{margin-bottom:28px}
 .settings-section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -197,16 +217,11 @@ select.form-input option{background:var(--surface)}
 .toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .toggle input:checked ~ .toggle-thumb,.toggle input:checked + .toggle-track + .toggle-thumb{left:23px}
 
-/* ===================== EMPTY STATE ===================== */
 .empty{text-align:center;padding:48px 20px;color:var(--text-dim)}
 .empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
 .empty-title{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text)}
 .empty-sub{font-size:13px}
-
-/* ===================== DIVIDER ===================== */
 .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
-
-/* ===================== GAP UTILITIES ===================== */
 .mb-4{margin-bottom:4px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}.mb-24{margin-bottom:24px}
 .mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
 .gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
@@ -223,7 +238,6 @@ select.form-input option{background:var(--surface)}
 .month-cell .m-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px}
 .month-cell .m-val{font-size:12px;font-weight:600;font-family:var(--mono)}
 
-/* ===================== RESPONSIVE ===================== */
 @media(max-width:768px){
   .main{padding:16px 12px}
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
@@ -235,38 +249,31 @@ select.form-input option{background:var(--surface)}
   .form-row{flex-direction:column}
   .form-group{min-width:unset}
   .modal{padding:18px}
+  .nav-brand span{display:none} /* hide sync text on mobile */
 }
 @media(max-width:480px){
   .month-grid{grid-template-columns:repeat(2,1fr)}
   .grid-auto{grid-template-columns:1fr 1fr}
 }
 
-/* ===================== CATEGORY COLORS ===================== */
 .cat-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .cat-bar-label{font-size:12px;color:var(--text-dim);width:80px;flex-shrink:0}
 .cat-bar-track{flex:1;background:var(--card);border-radius:4px;height:8px;overflow:hidden}
 .cat-bar-fill{height:100%;border-radius:4px}
 .cat-bar-val{font-size:12px;font-weight:600;font-family:var(--mono);min-width:70px;text-align:right;flex-shrink:0}
-
-/* ===================== INLINE EDITING ===================== */
-.editable{cursor:pointer;border-bottom:1px dashed transparent;transition:border .15s}
-.editable:hover{border-bottom-color:var(--accent)}
-.inline-edit{background:var(--card);border:1.5px solid var(--accent);border-radius:4px;padding:2px 6px;color:var(--text);font-size:13px;font-family:var(--mono);width:100%;min-width:60px}
-
-/* ===================== PILL FILTER ===================== */
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .filter-pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--card);color:var(--text-dim);border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
 .filter-pill:hover,.filter-pill.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
-
-/* ===================== DRAG HANDLE ===================== */
-.drag-handle{cursor:grab;color:var(--muted);font-size:14px;padding:0 4px}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand">💰 MyFinances</div>
+  <div class="nav-brand">
+    💰 <span>MyFinances</span>
+    <div id="syncStatusBadge" class="sync-badge" style="display:none;"></div>
+  </div>
   <div class="nav-tabs">
     <button class="nav-tab active" data-page="dashboard" onclick="switchPage('dashboard')">
       <span class="tab-icon">📊</span> Dashboard
@@ -288,13 +295,24 @@ select.form-input option{background:var(--surface)}
     </button>
   </div>
   <div class="nav-actions">
+    <button class="icon-btn" onclick="triggerManualSync()" title="Force Cloud Sync" id="manualSyncBtn">☁️</button>
     <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="exportData()" title="Export data">⬇️</button>
-    <button class="icon-btn" onclick="openImport()" title="Import data">⬆️</button>
+    <button class="icon-btn" onclick="openImport()" title="Local Import/Export">⬇️</button>
   </div>
 </nav>
 
 <div class="main">
+
+<!-- GLOBAL BULK ACTION BAR -->
+<div id="bulkActionBar" class="bulk-bar">
+  <div class="bulk-bar-info">
+    Items Selected <span class="count" id="bulkCount">0</span>
+  </div>
+  <div class="flex gap-8">
+    <button class="btn btn-ghost btn-sm" onclick="clearSelection()">Cancel</button>
+    <button class="btn btn-danger btn-sm" onclick="executeBulkDelete()">🗑 Delete Selected</button>
+  </div>
+</div>
 
 <!-- ==================== DASHBOARD ==================== -->
 <div id="page-dashboard" class="page active">
@@ -307,7 +325,6 @@ select.form-input option{background:var(--surface)}
   <div class="grid-auto mb-20" id="summaryCards"></div>
 
   <div class="grid-2 mb-20">
-    <!-- Monthly Overview -->
     <div class="card">
       <div class="section-head">
         <div>
@@ -323,7 +340,6 @@ select.form-input option{background:var(--surface)}
       <div class="month-grid" id="monthGrid"></div>
     </div>
 
-    <!-- Category Breakdown -->
     <div class="card">
       <div class="section-head">
         <div class="section-title">Spending by Category</div>
@@ -338,7 +354,6 @@ select.form-input option{background:var(--surface)}
   </div>
 
   <div class="grid-2 mb-20">
-    <!-- Recent Transactions -->
     <div class="card">
       <div class="section-head">
         <div class="section-title">Recent Transactions</div>
@@ -346,8 +361,6 @@ select.form-input option{background:var(--surface)}
       </div>
       <div id="recentTx"></div>
     </div>
-
-    <!-- Investment Summary -->
     <div class="card">
       <div class="section-head">
         <div class="section-title">Investments</div>
@@ -401,6 +414,7 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
+        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="txSelectAll" onchange="toggleSelectAll(this, 'transactions')"></th>
         <th>Date</th><th>Type</th><th>Description</th><th class="right">Amount</th><th class="center">Actions</th>
       </tr></thead>
       <tbody id="txTbody"></tbody>
@@ -437,6 +451,7 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
+        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="incSelectAll" onchange="toggleSelectAll(this, 'income')"></th>
         <th>Pay Date</th><th>Period</th><th>Hours</th><th>Rate</th><th class="right">Gross</th><th class="right">Tax</th><th class="right">Net</th><th class="center">Actions</th>
       </tr></thead>
       <tbody id="incomeTbody"></tbody>
@@ -459,6 +474,7 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
+        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="invSelectAll" onchange="toggleSelectAll(this, 'investments')"></th>
         <th>Date</th><th>Status</th><th>Symbol</th><th class="right">Shares</th>
         <th class="right">Invested</th><th class="right">Buy Price</th><th class="right">Sell Price</th>
         <th class="right">Current</th><th class="right">Value</th><th class="right">Gain/Loss</th>
@@ -484,6 +500,7 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
+        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="tsSelectAll" onchange="toggleSelectAll(this, 'timesheets')"></th>
         <th>Period</th><th>Start Date</th><th>End Date</th><th class="right">Hours</th>
         <th class="right">Est. Gross</th><th class="right">Est. Net</th><th class="center">Actions</th>
       </tr></thead>
@@ -498,12 +515,44 @@ select.form-input option{background:var(--surface)}
 
   <div class="grid-2">
     <div>
+      <!-- GitHub Storage Integration -->
+      <div class="card mb-16" style="border-color:var(--accent)">
+        <div class="settings-section-title" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>☁️ GitHub Cloud Sync</span>
+          <span style="font-size:10px;color:var(--text-dim);font-weight:normal;">Auto-Save Enabled</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:12px;">
+          Store your financial data securely in a private GitHub repository. Once configured, your app will pull and push automatically, acting as your personal backend. <br><a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" style="color:var(--accent);text-decoration:underline;">Generate a PAT token here (requires 'repo' scope).</a>
+        </div>
+        
+        <div class="form-group mb-12">
+          <label class="form-label">GitHub Personal Access Token (PAT)</label>
+          <input type="password" class="form-input" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" onchange="saveSetting('ghToken',this.value); updateGitHubStatus();">
+        </div>
+        <div class="form-row mb-12">
+          <div class="form-group">
+            <label class="form-label">Repo Owner (Username)</label>
+            <input type="text" class="form-input" id="ghOwner" placeholder="e.g., octocat" onchange="saveSetting('ghOwner',this.value); updateGitHubStatus();">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Repository Name</label>
+            <input type="text" class="form-input" id="ghRepo" placeholder="e.g., finances-data" onchange="saveSetting('ghRepo',this.value); updateGitHubStatus();">
+          </div>
+        </div>
+        <div class="form-group mb-12">
+          <label class="form-label">File Path in Repo</label>
+          <input type="text" class="form-input" id="ghPath" placeholder="data.json" value="data.json" onchange="saveSetting('ghPath',this.value)">
+        </div>
+        <div class="flex gap-8 mt-16">
+          <button class="btn btn-primary btn-sm" onclick="triggerManualSync()">Test & Sync Now</button>
+        </div>
+      </div>
+
       <div class="card mb-16">
         <div class="settings-section-title">Appearance</div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Dark Mode</div>
-            <div class="setting-desc">Switch between dark and light theme</div>
           </div>
           <label class="toggle" id="themeToggle">
             <input type="checkbox" onchange="toggleTheme()" id="themeCheckbox">
@@ -514,7 +563,6 @@ select.form-input option{background:var(--surface)}
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Accent Color</div>
-            <div class="setting-desc">Primary interface color</div>
           </div>
           <div class="flex gap-8">
             <button class="btn-icon btn" style="background:#7c83ff;color:#fff" onclick="setAccent('#7c83ff','#2a2f5c')">●</button>
@@ -529,36 +577,25 @@ select.form-input option{background:var(--surface)}
       <div class="card mb-16">
         <div class="settings-section-title">Financial Settings</div>
         <div class="setting-row">
-          <div class="setting-info">
-            <div class="setting-name">Hourly Rate</div>
-            <div class="setting-desc">Default pay rate for timesheet estimates</div>
-          </div>
+          <div class="setting-info"><div class="setting-name">Hourly Rate</div></div>
           <input type="number" class="form-input" style="width:100px;text-align:right" id="settingRate" value="16.79" step="0.01" onchange="saveSetting('rate',this.value)">
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <div class="setting-name">Tax Rate</div>
-            <div class="setting-desc">Estimated tax % for gross→net calculations</div>
-          </div>
+          <div class="setting-info"><div class="setting-name">Tax Rate</div></div>
           <div class="flex items-center gap-8">
             <input type="number" class="form-input" style="width:80px;text-align:right" id="settingTax" value="10" step="0.5" onchange="saveSetting('taxRate',this.value)">
             <span style="color:var(--text-dim);font-size:13px">%</span>
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <div class="setting-name">Tithing Rate</div>
-            <div class="setting-desc">Auto-calculate tithing on income</div>
-          </div>
+          <div class="setting-info"><div class="setting-name">Tithing Rate</div></div>
           <div class="flex items-center gap-8">
             <input type="number" class="form-input" style="width:80px;text-align:right" id="settingTithe" value="10" step="0.5" onchange="saveSetting('titheRate',this.value)">
             <span style="color:var(--text-dim);font-size:13px">%</span>
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-info">
-            <div class="setting-name">Currency Symbol</div>
-          </div>
+          <div class="setting-info"><div class="setting-name">Currency Symbol</div></div>
           <select class="form-input" style="width:80px" id="settingCurrency" onchange="saveSetting('currency',this.value);renderAll()">
             <option value="$">$ USD</option>
             <option value="€">€ EUR</option>
@@ -580,25 +617,25 @@ select.form-input option{background:var(--surface)}
       </div>
 
       <div class="card mb-16">
-        <div class="settings-section-title">Data Management</div>
+        <div class="settings-section-title">Local Data Management</div>
         <div class="setting-row">
           <div class="setting-info">
-            <div class="setting-name">Export All Data</div>
-            <div class="setting-desc">Download as JSON backup file</div>
+            <div class="setting-name">Export Local Data</div>
+            <div class="setting-desc">Download as JSON backup</div>
           </div>
           <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇️ Export</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
-            <div class="setting-name">Import Data</div>
-            <div class="setting-desc">Restore from backup or import from spreadsheet</div>
+            <div class="setting-name">Import Local Data</div>
+            <div class="setting-desc">Restore from JSON backup</div>
           </div>
           <button class="btn btn-ghost btn-sm" onclick="openImport()">⬆️ Import</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Clear All Data</div>
-            <div class="setting-desc" style="color:var(--red)">⚠️ This cannot be undone</div>
+            <div class="setting-desc" style="color:var(--red)">⚠️ Deletes local and GitHub data</div>
           </div>
           <button class="btn btn-danger btn-sm" onclick="clearAll()">🗑 Clear</button>
         </div>
@@ -607,10 +644,8 @@ select.form-input option{background:var(--surface)}
       <div class="card">
         <div class="settings-section-title">About</div>
         <div style="font-size:13px;color:var(--text-dim);line-height:1.7">
-          <p><strong style="color:var(--text)">MyFinances v1.0</strong></p>
-          <p>All data is stored locally in your browser. Nothing is sent to any server.</p>
-          <p class="mt-8">Works on mobile, tablet, and desktop. Install as a PWA from your browser's share/install option.</p>
-          <p class="mt-8">To host on GitHub Pages: push <code style="background:var(--card);padding:1px 5px;border-radius:4px">index.html</code> to a repo and enable Pages in Settings.</p>
+          <p><strong style="color:var(--text)">MyFinances v2.0 (Cloud Sync Edition)</strong></p>
+          <p>Works as a fully serverless App. Data can be saved natively to a GitHub Repo instead of just standard local storage.</p>
         </div>
       </div>
     </div>
@@ -842,12 +877,29 @@ select.form-input option{background:var(--surface)}
   </div>
 </div>
 
+<!-- Custom Confirm Modal -->
+<div class="modal-overlay" id="confirmModal" style="z-index:500;">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <div class="modal-title" id="confirmTitle">Confirm</div>
+      <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+    </div>
+    <div class="mb-20" id="confirmMessage" style="font-size:15px;color:var(--text);line-height:1.5;">
+      Are you sure?
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast container -->
 <div class="toast-container" id="toasts"></div>
 
 <script>
 /* =====================================================================
-   DATA LAYER
+   DATA LAYER & LOCAL STORAGE
    ===================================================================== */
 
 const KEYS = {
@@ -860,84 +912,241 @@ const KEYS = {
 };
 
 const DEFAULTS = {
-  settings: { rate: 16.79, taxRate: 10, titheRate: 10, currency: '$', theme: 'dark', accent: '#7c83ff', accentSoft: '#2a2f5c' },
+  settings: { rate: 16.79, taxRate: 10, titheRate: 10, currency: '$', theme: 'dark', accent: '#7c83ff', accentSoft: '#2a2f5c', ghToken:'', ghOwner:'', ghRepo:'', ghPath:'data.json' },
   cats: ['Food & Dining', 'Gas & Transport', 'Shopping', 'Entertainment', 'Bills & Subscriptions', 'Health', 'Other'],
 };
 
-// Seed with imported spreadsheet data
-const SEED_TX = [
-  {id:'s1', date:'2026-05-16', type:'Spending', desc:'', amount:50.53, cat:'', notes:''},
-  {id:'s2', date:'2026-05-17', type:'Spending', desc:'', amount:73.71, cat:'', notes:''},
-  {id:'s3', date:'2026-05-18', type:'Spending', desc:'', amount:8.00, cat:'', notes:''},
-  {id:'s4', date:'2026-05-20', type:'Spending', desc:'', amount:23.99, cat:'', notes:''},
-  {id:'s5', date:'2026-05-22', type:'Spending', desc:'', amount:7.75, cat:'', notes:''},
-  {id:'s6', date:'2026-05-22', type:'Spending', desc:'', amount:1.62, cat:'', notes:''},
-  {id:'s7', date:'2026-05-24', type:'Spending', desc:'', amount:6.29, cat:'', notes:''},
-  {id:'s8', date:'2026-05-26', type:'Spending', desc:'', amount:10.02, cat:'', notes:''},
-  {id:'s9', date:'2026-05-27', type:'Spending', desc:'', amount:73.05, cat:'', notes:''},
-  {id:'s10', date:'2026-05-27', type:'Spending', desc:'', amount:4.87, cat:'', notes:''},
-  {id:'s11', date:'2026-05-27', type:'Spending', desc:'', amount:6.51, cat:'', notes:''},
-  {id:'s12', date:'2026-05-28', type:'Spending', desc:'', amount:43.10, cat:'', notes:''},
-  {id:'s13', date:'2026-05-31', type:'Spending', desc:'', amount:21.49, cat:'', notes:''},
-  {id:'s14', date:'2026-06-02', type:'Spending', desc:'', amount:54.21, cat:'', notes:''},
-  {id:'s15', date:'2026-06-02', type:'Spending', desc:'', amount:62.99, cat:'', notes:''},
-  {id:'s16', date:'2026-06-02', type:'Spending', desc:'', amount:7.61, cat:'', notes:''},
-  {id:'s17', date:'2026-06-05', type:'Spending', desc:'', amount:4.62, cat:'', notes:''},
-  {id:'s18', date:'2026-06-06', type:'Spending', desc:'', amount:1.74, cat:'', notes:''},
-  {id:'s19', date:'2026-06-07', type:'Spending', desc:'', amount:1.64, cat:'', notes:''},
-  {id:'s20', date:'2026-06-09', type:'Spending', desc:'', amount:100.60, cat:'', notes:''},
-  {id:'s21', date:'2026-06-11', type:'Spending', desc:'', amount:2.99, cat:'', notes:''},
-  {id:'s22', date:'2026-05-14', type:'Extra Income', desc:'Extra Income', amount:105.28, cat:'Extra Income', notes:''},
-  {id:'s23', date:'2026-05-01', type:'Extra Income', desc:'Extra Income', amount:300.00, cat:'Extra Income', notes:''},
-  {id:'s24', date:'2026-06-01', type:'Rewards', desc:'Rewards', amount:5.58, cat:'Rewards', notes:''},
-  {id:'s25', date:'2026-06-01', type:'Rewards', desc:'Rewards', amount:0.65, cat:'Rewards', notes:''},
-  {id:'s26', date:'2026-05-01', type:'Rewards', desc:'Rewards', amount:3.06, cat:'Rewards', notes:''},
-  {id:'s27', date:'2026-05-01', type:'Rewards', desc:'Rewards', amount:0.58, cat:'Rewards', notes:''},
-];
-
-const SEED_INCOME = [
-  {id:'i1', payDate:'2026-05-15', start:'2026-04-20', end:'2026-05-03', hours:17.55, rate:16.79, gross:294.66, tax:22.54, net:272.12},
-  {id:'i2', payDate:'2026-05-29', start:'2026-05-04', end:'2026-05-17', hours:41.67, rate:16.79, gross:699.58, tax:73.27, net:626.31},
-  {id:'i3', payDate:'2026-06-12', start:'2026-05-18', end:'2026-06-07', hours:60.25, rate:16.79, gross:1011.60, tax:146.46, net:865.14},
-  {id:'i4', payDate:'2026-06-30', start:'2026-06-08', end:'2026-06-14', hours:24.00, rate:16.79, gross:402.96, tax:30.82, net:372.14},
-];
-
-const SEED_INVEST = [
-  {id:'inv1', date:'2026-06-12', active:'Active', symbol:'QQQ', shares:0.208527, amount:150.00, buyPrice:719.33, sellPrice:null, currentPrice:744.00, currentValue:155.14, gain:5.14, pct:3.43},
-];
-
-const SEED_TS = [
-  {id:'ts1', start:'2026-04-27', end:'2026-05-03', hours:'17:33', notes:''},
-  {id:'ts2', start:'2026-05-04', end:'2026-05-10', hours:'23:40', notes:''},
-  {id:'ts3', start:'2026-05-11', end:'2026-05-17', hours:'18:00', notes:''},
-  {id:'ts4', start:'2026-05-18', end:'2026-05-24', hours:'19:30', notes:''},
-  {id:'ts5', start:'2026-05-25', end:'2026-05-31', hours:'17:45', notes:''},
-  {id:'ts6', start:'2026-06-01', end:'2026-06-07', hours:'23:00', notes:''},
-  {id:'ts7', start:'2026-06-08', end:'2026-06-14', hours:'24:00', notes:''},
-];
-
-function load(key, seed) {
+function loadLocal(key, defaultVal) {
   const raw = localStorage.getItem(key);
   if (!raw) {
-    const val = seed !== undefined ? seed : DEFAULTS[key] || [];
-    localStorage.setItem(key, JSON.stringify(val));
-    return JSON.parse(JSON.stringify(val));
+    localStorage.setItem(key, JSON.stringify(defaultVal));
+    return JSON.parse(JSON.stringify(defaultVal));
   }
   return JSON.parse(raw);
 }
-function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-let transactions = load(KEYS.tx, SEED_TX);
-let income = load(KEYS.income, SEED_INCOME);
-let investments = load(KEYS.invest, SEED_INVEST);
-let timesheets = load(KEYS.ts, SEED_TS);
-let settings = load(KEYS.settings, DEFAULTS.settings);
-let categories = load(KEYS.cats, DEFAULTS.cats);
+function save(key, val) { 
+  localStorage.setItem(key, JSON.stringify(val)); 
+  triggerAutoSync(); // Fire github sync automatically when data changes
+}
 
-// Ensure settings has all defaults
+let transactions = loadLocal(KEYS.tx, []);
+let income = loadLocal(KEYS.income, []);
+let investments = loadLocal(KEYS.invest, []);
+let timesheets = loadLocal(KEYS.ts, []);
+let settings = loadLocal(KEYS.settings, DEFAULTS.settings);
+let categories = loadLocal(KEYS.cats, DEFAULTS.cats);
+
 Object.assign(settings, {...DEFAULTS.settings, ...settings});
-
 function uid() { return '_' + Math.random().toString(36).substr(2,9); }
+
+/* =====================================================================
+   GITHUB CLOUD STORAGE INTEGRATION
+   ===================================================================== */
+let githubSha = null;
+let syncTimeout = null;
+
+function isGitHubConfigured() {
+  return settings.ghToken && settings.ghOwner && settings.ghRepo;
+}
+
+function updateGitHubStatus(status = 'none') {
+  const badge = document.getElementById('syncStatusBadge');
+  if (!isGitHubConfigured()) {
+    badge.style.display = 'none';
+    return;
+  }
+  badge.style.display = 'flex';
+  badge.className = 'sync-badge';
+  
+  if (status === 'syncing') {
+    badge.classList.add('syncing'); badge.innerHTML = '↻ Syncing';
+  } else if (status === 'synced') {
+    badge.classList.add('synced'); badge.innerHTML = '✓ Synced';
+  } else if (status === 'error') {
+    badge.classList.add('error'); badge.innerHTML = '! Sync Error';
+  } else {
+    badge.innerHTML = '☁️ Cloud Active';
+  }
+}
+
+// Helper to safely encode/decode Unicode to base64
+const encodeBase64 = (str) => btoa(unescape(encodeURIComponent(str)));
+const decodeBase64 = (str) => decodeURIComponent(escape(atob(str)));
+
+async function pullFromGitHub() {
+  if (!isGitHubConfigured()) return;
+  updateGitHubStatus('syncing');
+  
+  const path = settings.ghPath || 'data.json';
+  const url = `https://api.github.com/repos/${settings.ghOwner}/${settings.ghRepo}/contents/${path}`;
+  
+  try {
+    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${settings.ghToken}` } });
+    if (res.ok) {
+      const fileData = await res.json();
+      githubSha = fileData.sha; // Save SHA for updates
+      
+      const contentStr = decodeBase64(fileData.content);
+      const data = JSON.parse(contentStr);
+      
+      // Override local data
+      if (data.transactions) { transactions = data.transactions; localStorage.setItem(KEYS.tx, JSON.stringify(transactions)); }
+      if (data.income) { income = data.income; localStorage.setItem(KEYS.income, JSON.stringify(income)); }
+      if (data.investments) { investments = data.investments; localStorage.setItem(KEYS.invest, JSON.stringify(investments)); }
+      if (data.timesheets) { timesheets = data.timesheets; localStorage.setItem(KEYS.ts, JSON.stringify(timesheets)); }
+      if (data.categories) { categories = data.categories; localStorage.setItem(KEYS.cats, JSON.stringify(categories)); }
+      
+      updateGitHubStatus('synced');
+      renderAll(); 
+    } else if (res.status === 404) {
+      // File doesn't exist yet on GitHub, push initial data
+      pushToGitHub();
+    } else {
+      throw new Error("GitHub API Error: " + res.status);
+    }
+  } catch (error) {
+    console.error("GitHub Pull Error", error);
+    updateGitHubStatus('error');
+    toast("Failed to sync from GitHub", "error");
+  }
+}
+
+async function pushToGitHub() {
+  if (!isGitHubConfigured()) return;
+  updateGitHubStatus('syncing');
+  
+  const path = settings.ghPath || 'data.json';
+  const url = `https://api.github.com/repos/${settings.ghOwner}/${settings.ghRepo}/contents/${path}`;
+  
+  const fullData = { transactions, income, investments, timesheets, categories, settings };
+  const content = encodeBase64(JSON.stringify(fullData, null, 2));
+  
+  // If we don't know the SHA, fetch it first (prevents 409 conflict errors)
+  if (!githubSha) {
+    try {
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${settings.ghToken}` } });
+      if (res.ok) githubSha = (await res.json()).sha;
+    } catch (e) {} // File might not exist
+  }
+
+  const body = {
+    message: `Auto-sync: Update from MyFinances (${new Date().toLocaleDateString()})`,
+    content: content,
+    ...(githubSha && { sha: githubSha })
+  };
+
+  try {
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${settings.ghToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    
+    if (res.ok) {
+      const responseData = await res.json();
+      githubSha = responseData.content.sha; // Update local SHA
+      updateGitHubStatus('synced');
+    } else {
+      throw new Error("Failed to push");
+    }
+  } catch (error) {
+    console.error("GitHub Push Error", error);
+    updateGitHubStatus('error');
+  }
+}
+
+// Debounce pushing so we don't spam the API on every single keystroke/save
+function triggerAutoSync() {
+  if (!isGitHubConfigured()) return;
+  clearTimeout(syncTimeout);
+  updateGitHubStatus('syncing');
+  syncTimeout = setTimeout(() => pushToGitHub(), 2000);
+}
+
+function triggerManualSync() {
+  if (!isGitHubConfigured()) {
+    toast("Configure GitHub in settings first.", "info");
+    switchPage('settings');
+    return;
+  }
+  pushToGitHub().then(()=> toast("Manually pushed to GitHub", "success"));
+}
+
+/* =====================================================================
+   BULK SELECTION LAYER
+   ===================================================================== */
+let selectedIds = new Set();
+let renderedItemIds = []; // keeps track of what is currently on screen for 'select all'
+
+function toggleSelect(cb, id) {
+  if (cb.checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  cb.closest('tr').classList.toggle('selected', cb.checked);
+  updateBulkActionBar();
+}
+
+function toggleSelectAll(cb, context) {
+  const isChecked = cb.checked;
+  const checkboxes = document.querySelectorAll(`#${context === 'transactions' ? 'txTbody' : context === 'income' ? 'incomeTbody' : context === 'investments' ? 'investTbody' : 'timesheetTbody'} .row-cb`);
+  
+  checkboxes.forEach(box => {
+    box.checked = isChecked;
+    const tr = box.closest('tr');
+    tr.classList.toggle('selected', isChecked);
+    if (isChecked) selectedIds.add(box.value);
+    else selectedIds.delete(box.value);
+  });
+  updateBulkActionBar();
+}
+
+function clearSelection() {
+  selectedIds.clear();
+  document.querySelectorAll('.row-cb').forEach(cb => {
+    cb.checked = false;
+    cb.closest('tr').classList.remove('selected');
+  });
+  // Uncheck header checkboxes
+  ['txSelectAll', 'incSelectAll', 'invSelectAll', 'tsSelectAll'].forEach(id => {
+    if(document.getElementById(id)) document.getElementById(id).checked = false;
+  });
+  updateBulkActionBar();
+}
+
+function updateBulkActionBar() {
+  const bar = document.getElementById('bulkActionBar');
+  const countSpan = document.getElementById('bulkCount');
+  if (selectedIds.size > 0) {
+    countSpan.textContent = selectedIds.size;
+    bar.classList.add('visible');
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function executeBulkDelete() {
+  if (selectedIds.size === 0) return;
+  
+  customConfirm(`Are you sure you want to delete ${selectedIds.size} selected items?`, () => {
+    if (currentPage === 'payments') {
+      transactions = transactions.filter(t => !selectedIds.has(t.id));
+      save(KEYS.tx, transactions);
+    } else if (currentPage === 'income') {
+      income = income.filter(i => !selectedIds.has(i.id));
+      save(KEYS.income, income);
+    } else if (currentPage === 'investing') {
+      investments = investments.filter(i => !selectedIds.has(i.id));
+      save(KEYS.invest, investments);
+    } else if (currentPage === 'timesheets') {
+      timesheets = timesheets.filter(t => !selectedIds.has(t.id));
+      save(KEYS.ts, timesheets);
+    }
+    clearSelection();
+    renderAll();
+    toast(`Deleted successfully`, 'success');
+  }, 'Bulk Delete', 'Delete Selected');
+}
+
 
 /* =====================================================================
    THEME / SETTINGS
@@ -964,13 +1173,14 @@ function setAccent(color, soft) {
 }
 
 function saveSetting(k, v) {
-  settings[k] = isNaN(v) ? v : parseFloat(v);
+  settings[k] = (k.startsWith('gh') || k === 'currency' || k === 'theme' || k === 'accent' || k === 'accentSoft') ? v : parseFloat(v);
   save(KEYS.settings, settings);
   renderAll();
 }
 
-function loadSettings() {
+function loadSettingsUI() {
   applyTheme();
+  updateGitHubStatus();
   if (settings.accent) {
     document.documentElement.style.setProperty('--accent', settings.accent);
     document.documentElement.style.setProperty('--accent-soft', settings.accentSoft || '#2a2f5c');
@@ -983,6 +1193,12 @@ function loadSettings() {
   if (t) t.value = settings.taxRate;
   if (ti) ti.value = settings.titheRate;
   if (cu) cu.value = settings.currency || '$';
+  
+  // GH Configs
+  if(document.getElementById('ghToken')) document.getElementById('ghToken').value = settings.ghToken || '';
+  if(document.getElementById('ghOwner')) document.getElementById('ghOwner').value = settings.ghOwner || '';
+  if(document.getElementById('ghRepo')) document.getElementById('ghRepo').value = settings.ghRepo || '';
+  if(document.getElementById('ghPath')) document.getElementById('ghPath').value = settings.ghPath || 'data.json';
 }
 
 /* =====================================================================
@@ -1008,6 +1224,7 @@ function hoursToNum(h) {
    ===================================================================== */
 let currentPage = 'dashboard';
 function switchPage(page) {
+  clearSelection(); // Drop selection context on page change
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
@@ -1032,23 +1249,19 @@ function renderAll() { renderPage(currentPage); }
    DASHBOARD
    ===================================================================== */
 function renderDashboard() {
-  // Compute totals
   const totalSpend = transactions.filter(t=>t.type==='Spending').reduce((s,t)=>s+t.amount,0);
   const totalRewards = transactions.filter(t=>t.type==='Rewards').reduce((s,t)=>s+t.amount,0);
   const totalExtraInc = transactions.filter(t=>t.type==='Extra Income').reduce((s,t)=>s+t.amount,0);
   const totalNetIncome = income.reduce((s,i)=>s+i.net,0);
-  const totalGross = income.reduce((s,i)=>s+i.gross,0);
   const totalInvGain = investments.reduce((s,i)=>s+(i.gain||0),0);
   const tithing = totalNetIncome * (settings.titheRate/100);
   const netPos = totalNetIncome + totalExtraInc + totalRewards - totalSpend - tithing + totalInvGain;
 
-  // Hero
   document.getElementById('heroValue').textContent = fmt(netPos);
   document.getElementById('heroValue').className = 'net-hero-value ' + (netPos >= 0 ? 'pos' : 'neg');
   document.getElementById('heroSub').textContent =
     `Income: ${fmt(totalNetIncome)} • Spending: ${fmt(totalSpend)} • Investing: ${fmtSigned(totalInvGain)}`;
 
-  // Summary cards
   document.getElementById('summaryCards').innerHTML = [
     {label:'Net Income (YTD)', val:totalNetIncome, cls:'pos'},
     {label:'Total Spending', val:-totalSpend, cls:'neg'},
@@ -1063,7 +1276,7 @@ function renderDashboard() {
     </div>
   `).join('');
 
-  renderMonthly(2026);
+  renderMonthly(new Date().getFullYear());
   renderCatBreakdown('all');
   renderRecentTx();
   renderInvestSummary();
@@ -1072,7 +1285,6 @@ function renderDashboard() {
 
 function renderMonthly(year) {
   year = parseInt(year);
-  // Calculate per-month net total from income and spending
   const cells = MONTHS.map((m,i)=>{
     const mo = i+1;
     const inc = income.filter(p=>{const d=new Date(p.payDate);return d.getFullYear()===year&&d.getMonth()+1===mo;}).reduce((s,p)=>s+p.net,0);
@@ -1094,7 +1306,6 @@ function renderCatBreakdown(monthVal) {
     return true;
   });
   const total = spending.reduce((s,t)=>s+t.amount,0);
-  // Group by category
   const cats = {};
   spending.forEach(t=>{
     const c = t.cat || 'Uncategorized';
@@ -1213,13 +1424,18 @@ function renderTxTable() {
   if (search) data = data.filter(t=>(t.desc||'').toLowerCase().includes(search)||(t.notes||'').toLowerCase().includes(search)||(t.cat||'').toLowerCase().includes(search)||(t.type||'').toLowerCase().includes(search));
   if (mo !== 'all') data = data.filter(t=>{ const d=new Date(t.date); return d.getMonth()+1 === parseInt(mo); });
 
+  renderedItemIds = data.map(i => i.id);
+
   const tbody = document.getElementById('txTbody');
+  document.getElementById('txSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
+
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No transactions found</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No transactions found</div></div></td></tr>`;
     return;
   }
   tbody.innerHTML = data.map(t=>`
-    <tr>
+    <tr class="${selectedIds.has(t.id)?'selected':''}">
+      <td class="center"><input type="checkbox" class="row-cb" value="${t.id}" onchange="toggleSelect(this, '${t.id}')" ${selectedIds.has(t.id)?'checked':''}></td>
       <td class="mono" style="font-size:12px;color:var(--text-dim)">${fmtDate(t.date)}</td>
       <td><span class="chip chip-${t.type.toLowerCase().replace(/\s/g,'-')}">${t.type}</span></td>
       <td>
@@ -1308,11 +1524,12 @@ function editTx(id) {
 }
 
 function deleteTx(id) {
-  if (!confirm('Delete this transaction?')) return;
-  transactions = transactions.filter(t=>t.id!==id);
-  save(KEYS.tx, transactions);
-  renderPayments();
-  toast('Deleted','success');
+  customConfirm('Are you sure you want to delete this transaction?', () => {
+    transactions = transactions.filter(t=>t.id!==id);
+    save(KEYS.tx, transactions);
+    renderPayments();
+    toast('Deleted','success');
+  }, 'Delete Transaction');
 }
 
 /* =====================================================================
@@ -1322,7 +1539,6 @@ function renderIncome() {
   const totalNet = income.reduce((s,i)=>s+i.net,0);
   const totalGross = income.reduce((s,i)=>s+i.gross,0);
   const totalTax = income.reduce((s,i)=>s+i.tax,0);
-  const totalHrs = income.reduce((s,i)=>s+i.hours,0);
   const tithe = totalNet * (settings.titheRate/100);
 
   document.getElementById('incomeStatCards').innerHTML = [
@@ -1332,68 +1548,18 @@ function renderIncome() {
     {label:'Tithing Owed', val:tithe, cls:'neg'},
   ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${fmt(c.val)}</div></div>`).join('');
 
-  // Monthly category table
-  const months = [5,6]; // May, June
-  const catRows = ['Spending','Investing','Rewards','Income','Tithing','Net Total'];
-  const catData = {
-    'Spending': {5: -330.93, 6: -236.40},
-    'Investing': {5: 0, 6: 0},
-    'Rewards': {5: 3.64, 6: 6.23},
-    'Income': {5: 1303.72, 6: 1237.28},
-    'Tithing': {5: -89.84, 6: -123.73},
-    'Net Total': {5: 886.58, 6: 1769.96},
-  };
-  // Override with live data
-  months.forEach(mo=>{
-    catData['Spending'][mo] = -transactions.filter(t=>t.type==='Spending'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
-    catData['Income'][mo] = income.filter(p=>new Date(p.payDate).getMonth()+1===mo).reduce((s,p)=>s+p.net,0);
-    catData['Rewards'][mo] = transactions.filter(t=>t.type==='Rewards'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
-    const extraInc = transactions.filter(t=>t.type==='Extra Income'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
-    catData['Tithing'][mo] = -(catData['Income'][mo]+extraInc) * (settings.titheRate/100);
-    catData['Investing'][mo] = investments.filter(i=>new Date(i.date).getMonth()+1===mo).reduce((s,i)=>s+(i.gain||0),0);
-    catData['Net Total'][mo] = catData['Income'][mo]+catData['Spending'][mo]+catData['Rewards'][mo]+catData['Tithing'][mo]+catData['Investing'][mo]+extraInc;
-  });
-
-  document.getElementById('monthCatTable').innerHTML = `
-    <div class="table-wrap" style="border:none"><table class="data-table">
-      <thead><tr><th>Category</th>${months.map(m=>`<th class="right">${MONTHS_FULL[m-1]}</th>`).join('')}<th class="right">Total</th></tr></thead>
-      <tbody>${catRows.map(row=>{
-        const vals = months.map(m=>catData[row][m]||0);
-        const total = vals.reduce((s,v)=>s+v,0);
-        const cls = total>0?'pos':total<0?'neg':'';
-        return `<tr><td style="font-weight:500">${row}</td>
-          ${vals.map(v=>`<td class="right mono ${v>0?'pos':v<0?'neg':''}">${v===0?'—':fmtSigned(v)}</td>`).join('')}
-          <td class="right mono ${cls}" style="font-weight:700">${total===0?'—':fmtSigned(total)}</td>
-        </tr>`;
-      }).join('')}</tbody>
-    </table></div>
-  `;
-
-  // Paycheck breakdown
-  document.getElementById('paycheckBreakdown').innerHTML = `
-    <div style="font-size:13px">
-      ${income.slice(-3).reverse().map(p=>`
-        <div class="flex justify-between items-center" style="padding:10px 0;border-bottom:1px solid var(--border)">
-          <div>
-            <div style="font-weight:500">${fmtDate(p.payDate)}</div>
-            <div style="font-size:11px;color:var(--text-dim)">${fmtDate(p.start)} – ${fmtDate(p.end)}</div>
-          </div>
-          <div class="right">
-            <div class="mono pos" style="font-weight:600">${fmt(p.net)}</div>
-            <div style="font-size:11px;color:var(--text-dim)">${p.hours}h @ ${fmt(p.rate)}</div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-
   renderIncomeTable();
 }
 
 function renderIncomeTable() {
   const sorted = [...income].sort((a,b)=>new Date(b.payDate)-new Date(a.payDate));
+  renderedItemIds = sorted.map(i=>i.id);
+  
+  document.getElementById('incSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
+
   document.getElementById('incomeTbody').innerHTML = sorted.map(p=>`
-    <tr>
+    <tr class="${selectedIds.has(p.id)?'selected':''}">
+      <td class="center"><input type="checkbox" class="row-cb" value="${p.id}" onchange="toggleSelect(this, '${p.id}')" ${selectedIds.has(p.id)?'checked':''}></td>
       <td class="mono" style="font-size:12px">${fmtDate(p.payDate)}</td>
       <td style="font-size:12px;color:var(--text-dim)">${fmtDate(p.start)} – ${fmtDate(p.end)}</td>
       <td class="mono">${p.hours}h</td>
@@ -1465,11 +1631,12 @@ function editIncome(id) {
 }
 
 function deleteIncome(id) {
-  if (!confirm('Delete this paycheck?')) return;
-  income = income.filter(i=>i.id!==id);
-  save(KEYS.income, income);
-  renderIncome();
-  toast('Deleted','success');
+  customConfirm('Are you sure you want to delete this paycheck?', () => {
+    income = income.filter(i=>i.id!==id);
+    save(KEYS.income, income);
+    renderIncome();
+    toast('Deleted','success');
+  }, 'Delete Paycheck');
 }
 
 /* =====================================================================
@@ -1494,8 +1661,12 @@ function renderInvesting() {
   </div>`).join('');
 
   const sorted = [...investments].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  renderedItemIds = sorted.map(i=>i.id);
+  document.getElementById('invSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
+
   document.getElementById('investTbody').innerHTML = sorted.map(inv=>`
-    <tr>
+    <tr class="${selectedIds.has(inv.id)?'selected':''}">
+      <td class="center"><input type="checkbox" class="row-cb" value="${inv.id}" onchange="toggleSelect(this, '${inv.id}')" ${selectedIds.has(inv.id)?'checked':''}></td>
       <td class="mono" style="font-size:12px">${fmtDate(inv.date)}</td>
       <td><span class="stat-badge ${inv.active==='Active'?'badge-green':'badge-red'}">${inv.active}</span></td>
       <td style="font-weight:700;font-size:15px">${inv.symbol}</td>
@@ -1514,13 +1685,12 @@ function renderInvesting() {
         </div>
       </td>
     </tr>
-  `).join('') || `<tr><td colspan="12"><div class="empty"><div class="empty-icon">📈</div><div class="empty-title">No investments yet</div></div></td></tr>`;
+  `).join('') || `<tr><td colspan="13"><div class="empty"><div class="empty-icon">📈</div><div class="empty-title">No investments yet</div></div></td></tr>`;
 }
 
 function calcInvest() {
   const shares = parseFloat(document.getElementById('invShares').value)||0;
   const current = parseFloat(document.getElementById('invCurrent').value)||0;
-  const buy = parseFloat(document.getElementById('invBuy').value)||0;
   const amount = parseFloat(document.getElementById('invAmount').value)||0;
   const value = shares * current;
   const gain = value - amount;
@@ -1574,11 +1744,12 @@ function editInvest(id) {
 }
 
 function deleteInvest(id) {
-  if (!confirm('Delete this investment?')) return;
-  investments = investments.filter(i=>i.id!==id);
-  save(KEYS.invest, investments);
-  renderInvesting();
-  toast('Deleted','success');
+  customConfirm('Are you sure you want to delete this investment?', () => {
+    investments = investments.filter(i=>i.id!==id);
+    save(KEYS.invest, investments);
+    renderInvesting();
+    toast('Deleted','success');
+  }, 'Delete Investment');
 }
 
 /* =====================================================================
@@ -1599,12 +1770,16 @@ function renderTimesheets() {
   ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${c.raw?c.val:fmt(c.val)}</div></div>`).join('');
 
   const sorted = [...timesheets].sort((a,b)=>new Date(b.start)-new Date(a.start));
+  renderedItemIds = sorted.map(t=>t.id);
+  document.getElementById('tsSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
+
   document.getElementById('timesheetTbody').innerHTML = sorted.map((t,i)=>{
     const hrs = hoursToNum(t.hours);
     const gross = hrs*rate;
     const net = gross*(1-taxRate);
     const weekNum = sorted.length - i;
-    return `<tr>
+    return `<tr class="${selectedIds.has(t.id)?'selected':''}">
+      <td class="center"><input type="checkbox" class="row-cb" value="${t.id}" onchange="toggleSelect(this, '${t.id}')" ${selectedIds.has(t.id)?'checked':''}></td>
       <td><span class="stat-badge badge-accent">Week ${weekNum}</span></td>
       <td class="mono" style="font-size:12px">${fmtDate(t.start)}</td>
       <td class="mono" style="font-size:12px">${fmtDate(t.end)}</td>
@@ -1618,7 +1793,7 @@ function renderTimesheets() {
         </div>
       </td>
     </tr>`;
-  }).join('') || `<tr><td colspan="7"><div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">No timesheets yet</div></div></td></tr>`;
+  }).join('') || `<tr><td colspan="8"><div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">No timesheets yet</div></div></td></tr>`;
 }
 
 let editingTsId = null;
@@ -1654,19 +1829,19 @@ function editTs(id) {
 }
 
 function deleteTs(id) {
-  if (!confirm('Delete this timesheet?')) return;
-  timesheets = timesheets.filter(t=>t.id!==id);
-  save(KEYS.ts, timesheets);
-  renderTimesheets();
-  toast('Deleted','success');
+  customConfirm('Are you sure you want to delete this timesheet?', () => {
+    timesheets = timesheets.filter(t=>t.id!==id);
+    save(KEYS.ts, timesheets);
+    renderTimesheets();
+    toast('Deleted','success');
+  }, 'Delete Timesheet');
 }
 
 /* =====================================================================
    SETTINGS PAGE
    ===================================================================== */
 function renderSettings() {
-  loadSettings();
-  // Category list
+  loadSettingsUI();
   document.getElementById('catList').innerHTML = categories.map((c,i)=>`
     <div class="flex items-center justify-between" style="padding:8px 0;border-bottom:1px solid var(--border)">
       <span style="font-size:13px">${c}</span>
@@ -1692,7 +1867,7 @@ function removeCat(i) {
 }
 
 /* =====================================================================
-   DATA IMPORT / EXPORT
+   DATA IMPORT / EXPORT (LOCAL)
    ===================================================================== */
 function exportData() {
   const data = {
@@ -1706,7 +1881,7 @@ function exportData() {
   a.download = `myfinances-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  toast('Data exported!','success');
+  toast('Local data exported!','success');
 }
 
 function openImport() {
@@ -1726,12 +1901,21 @@ function importData() {
   try {
     const raw = document.getElementById('importJson').value.trim();
     const data = JSON.parse(raw);
-    if (data.transactions) { transactions = data.transactions; save(KEYS.tx, transactions); }
-    if (data.income) { income = data.income; save(KEYS.income, income); }
-    if (data.investments) { investments = data.investments; save(KEYS.invest, investments); }
-    if (data.timesheets) { timesheets = data.timesheets; save(KEYS.ts, timesheets); }
-    if (data.settings) { settings = {...settings,...data.settings}; save(KEYS.settings, settings); }
-    if (data.categories) { categories = data.categories; save(KEYS.cats, categories); }
+    if (data.transactions) transactions = data.transactions; 
+    if (data.income) income = data.income; 
+    if (data.investments) investments = data.investments; 
+    if (data.timesheets) timesheets = data.timesheets; 
+    if (data.settings) settings = {...settings,...data.settings}; 
+    if (data.categories) categories = data.categories; 
+    
+    // Save locally and trigger GitHub sync
+    save(KEYS.tx, transactions);
+    save(KEYS.income, income);
+    save(KEYS.invest, investments);
+    save(KEYS.ts, timesheets);
+    save(KEYS.cats, categories);
+    save(KEYS.settings, settings);
+
     closeModal('importModal');
     renderAll();
     toast('Data imported successfully!','success');
@@ -1741,14 +1925,36 @@ function importData() {
 }
 
 function clearAll() {
-  if (!confirm('⚠️ This will delete ALL your data permanently. Are you sure?')) return;
-  if (!confirm('Really? This cannot be undone.')) return;
-  Object.values(KEYS).forEach(k=>localStorage.removeItem(k));
-  transactions=[]; income=[]; investments=[]; timesheets=[];
-  settings={...DEFAULTS.settings};
-  categories=[...DEFAULTS.cats];
-  renderAll();
-  toast('All data cleared','info');
+  customConfirm('⚠️ This will delete ALL local and synced GitHub data. Are you sure?', () => {
+    setTimeout(() => {
+      customConfirm('Really? This cannot be undone.', () => {
+        Object.values(KEYS).forEach(k=>localStorage.removeItem(k));
+        transactions=[]; income=[]; investments=[]; timesheets=[];
+        settings={...DEFAULTS.settings};
+        categories=[...DEFAULTS.cats];
+        triggerAutoSync(); // Push blank state to GitHub
+        renderAll();
+        toast('All data cleared','info');
+      }, 'Final Warning', 'Yes, Delete Everything');
+    }, 300);
+  }, 'Clear All Data', 'Delete');
+}
+
+/* =====================================================================
+   CUSTOM CONFIRM MODAL LOGIC
+   ===================================================================== */
+function customConfirm(message, onConfirm, title = "Confirm", btnText = "Delete") {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').innerHTML = message;
+  const btn = document.getElementById('confirmBtn');
+  btn.textContent = btnText;
+  
+  btn.onclick = () => {
+    closeModal('confirmModal');
+    onConfirm();
+  };
+  
+  openModal('confirmModal');
 }
 
 /* =====================================================================
@@ -1770,7 +1976,6 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
 });
 
-// Pre-fill modals with defaults
 document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('incPayDate').value = new Date().toISOString().split('T')[0];
@@ -1781,7 +1986,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   txTypeChanged();
 });
 
-// Wire add buttons
 document.querySelector('[data-page="payments"]').addEventListener('click',()=>{
   setTimeout(()=>{ if(document.getElementById('txDate')) document.getElementById('txDate').value = new Date().toISOString().split('T')[0]; },50);
 });
@@ -1802,8 +2006,15 @@ document.addEventListener('keydown', e=>{
 /* =====================================================================
    INIT
    ===================================================================== */
-loadSettings();
-renderDashboard();
+loadSettingsUI();
+
+// If GitHub is configured, pull the latest data first to overwrite local memory
+if (isGitHubConfigured()) {
+  pullFromGitHub().then(() => renderDashboard());
+} else {
+  renderDashboard();
+}
+
 </script>
 </body>
 </html>
