@@ -1012,47 +1012,36 @@ async function pullFromGitHub() {
   }
 }
 
-async function pushToGitHub() {
-  if (!isGitHubConfigured()) return;
-  updateGitHubStatus('syncing');
+async function pushToGitHub(data) {
+  const url = `https://api.github.com/repos/thatguy-bridger/Financial-Management-Website/contents/data.json`;
   
-  const path = settings.ghPath || 'data.json';
-  const url = `https://api.github.com/repos/${settings.ghOwner}/${settings.ghRepo}/contents/${path}`;
+  // 1. Get the current file's SHA
+  const getResponse = await fetch(url, {
+    headers: { 'Authorization': `token ${YOUR_TOKEN}` }
+  });
   
-  const fullData = { transactions, income, investments, timesheets, categories, settings };
-  const content = encodeBase64(JSON.stringify(fullData, null, 2));
-  
-  // If we don't know the SHA, fetch it first (prevents 409 conflict errors)
-  if (!githubSha) {
-    try {
-      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${settings.ghToken}` } });
-      if (res.ok) githubSha = (await res.json()).sha;
-    } catch (e) {} // File might not exist
+  let sha = null;
+  if (getResponse.ok) {
+    const fileData = await getResponse.json();
+    sha = fileData.sha; // This is the magic key you were missing
   }
 
-  const body = {
-    message: `Auto-sync: Update from MyFinances (${new Date().toLocaleDateString()})`,
-    content: content,
-    ...(githubSha && { sha: githubSha })
-  };
+  // 2. Perform the PUT request with the SHA
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${YOUR_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: "Update data.json",
+      content: btoa(JSON.stringify(data)), // Ensure data is Base64 encoded
+      sha: sha // REQUIRED: This tells GitHub you are updating the specific version
+    })
+  });
 
-  try {
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: { 'Authorization': `Bearer ${settings.ghToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    
-    if (res.ok) {
-      const responseData = await res.json();
-      githubSha = responseData.content.sha; // Update local SHA
-      updateGitHubStatus('synced');
-    } else {
-      throw new Error("Failed to push");
-    }
-  } catch (error) {
-    console.error("GitHub Push Error", error);
-    updateGitHubStatus('error');
+  if (!response.ok) {
+    throw new Error('Failed to push');
   }
 }
 
