@@ -1017,7 +1017,7 @@ async function pushToGitHub(data) {
   
   // 1. Get the current file's SHA
   const getResponse = await fetch(url, {
-    headers: { 'Authorization': `token ${YOUR_TOKEN}` }
+    headers: { 'Authorization': `token ${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}` }
   });
   
   let sha = null;
@@ -1030,7 +1030,7 @@ async function pushToGitHub(data) {
   const response = await fetch(url, {
     method: 'PUT',
     headers: {
-      'Authorization': `token ${YOUR_TOKEN}`,
+      'Authorization': `token ${}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
