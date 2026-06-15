@@ -1030,7 +1030,7 @@ async function pushToGitHub(data) {
   const response = await fetch(url, {
     method: 'PUT',
     headers: {
-      'Authorization': `token ${}`,
+      'Authorization': `token ${YOUR_TOKEN}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
