@@ -1315,6 +1315,11 @@ let budgets = load(KEYS.budgets, DEFAULTS.budgets);
 let paySchedule = load(KEYS.paysched, DEFAULTS.paysched);
 let settings = load(KEYS.settings, DEFAULTS.settings);
 let categories = load(KEYS.cats, DEFAULTS.cats);
+let investRefreshTimer = null;
+let backgroundRefreshTimer = null;
+
+const INVEST_TAB_REFRESH_MS = 2 * 60 * 1000;      // 2 minutes
+const BACKGROUND_REFRESH_MS = 60 * 60 * 1000;     // 1 hour
 
 // Ensure settings has all defaults (deep-merge tax object so older saves get constants)
 settings = {...DEFAULTS.settings, ...settings};
@@ -1404,6 +1409,23 @@ function switchPage(page) {
   document.getElementById('page-' + page).classList.add('active');
   document.querySelector(`[data-page="${page}"]`).classList.add('active');
   currentPage = page;
+  if (page === 'investing') {
+
+    if (!investRefreshTimer) {
+      refreshAllPrices();
+
+      investRefreshTimer = setInterval(() => {
+        refreshAllPrices();
+      }, INVEST_TAB_REFRESH_MS);
+    }
+
+  } else {
+
+    if (investRefreshTimer) {
+      clearInterval(investRefreshTimer);
+      investRefreshTimer = null;
+    }
+  }
   renderPage(page);
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -1826,6 +1848,7 @@ function multiDelete(table) {
 /* =====================================================================
    CELL VALUE RENDERER — handles built-in + custom columns
    ===================================================================== */
+  
 function renderCell(col, row, table) {
   const v = row[col.key];
   if (col.type==='cb') {
@@ -3604,6 +3627,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('tsStart').value = new Date().toISOString().split('T')[0];
   populateCatSelect();
   txTypeChanged();
+  backgroundRefreshTimer = setInterval(() => {
+    refreshAllPrices();
+  }, BACKGROUND_REFRESH_MS);
 });
 
 // Wire add buttons
@@ -3620,7 +3646,7 @@ document.addEventListener('keydown', e=>{
     e.preventDefault();
     const pages=['dashboard','payments','income','investing','timesheets','budget','import','settings'];
     const idx = pages.indexOf(currentPage);
-    switchPage(pages[(idx+1)%pages.length]);
+    (pages[(idx+1)%pages.length]);
   }
 });
 
