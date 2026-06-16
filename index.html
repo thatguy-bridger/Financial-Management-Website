@@ -2109,12 +2109,51 @@ function renderTxTable() {
   }
   tbody.innerHTML = data.map(t=>{
     const sel = selections.tx.has(t.id);
-    const cells = vcols.map(col=>{
-      if (col.type==='act') return `<td class="center"><div class="flex gap-8" style="justify-content:center"><button class="btn btn-icon btn-ghost" onclick="editTx('${t.id}')" title="Edit">✏️</button><button class="btn btn-icon btn-danger" onclick="deleteTx('${t.id}')" title="Delete">🗑</button></div></td>`;
-      // skip cat — merged into desc
-      if (col.key==='cat') return '';
-      return renderCell(col, t, 'tx') || '';
-    }).join('');
+    const cells = vcols.map(col => {
+
+  if (col.type === 'act') {
+    return `
+      <td class="tx-actions">
+        <div class="tx-action-wrap">
+          <button
+            class="btn btn-icon btn-ghost"
+            onclick="editTx('${t.id}')"
+            title="Edit"
+          >
+            ✏️
+          </button>
+
+          <button
+            class="btn btn-icon btn-danger"
+            onclick="deleteTx('${t.id}')"
+            title="Delete"
+          >
+            🗑
+          </button>
+        </div>
+      </td>
+    `;
+  }
+
+  if (col.key === 'amount') {
+    return `
+      <td class="tx-amount">
+        ${fmt(t.amount)}
+      </td>
+    `;
+  }
+
+  if (col.key === 'cat') {
+    return `
+      <td class="tx-category">
+        ${t.cat || '—'}
+      </td>
+    `;
+  }
+
+  return renderCell(col, t, 'tx') || '';
+
+}).join('');
     return `<tr class="${sel?'selected':''}">${cells}</tr>`;
   }).join('');
 }
