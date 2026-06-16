@@ -260,6 +260,25 @@ select.form-input option{background:var(--surface)}
 
 /* ===================== DRAG HANDLE ===================== */
 .drag-handle{cursor:grab;color:var(--muted);font-size:14px;padding:0 4px}
+
+/* ===================== MULTI-SELECT TOOLBAR ===================== */
+.select-toolbar{display:none;align-items:center;gap:12px;padding:10px 16px;background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:var(--radius-sm);margin-bottom:12px}
+.select-toolbar.visible{display:flex}
+.select-toolbar-count{font-size:13px;font-weight:600;color:var(--accent)}
+.row-cb{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.data-table tbody tr.selected{background:var(--accent-soft) !important}
+
+/* ===================== COLUMN MANAGER ===================== */
+.col-manager-btn{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--card);color:var(--text-dim);border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+.col-manager-btn:hover{border-color:var(--accent);color:var(--accent)}
+.col-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 12px;border-radius:20px;font-size:12px;font-weight:500;background:var(--card);border:1.5px solid var(--border);margin:3px;cursor:default;user-select:none}
+.col-pill.hidden{opacity:.4}
+.col-pill-toggle{cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+
+/* ===================== LIVE PRICE ===================== */
+.price-live{color:var(--green);font-weight:600}
+.price-stale{color:var(--yellow)}
+.price-err{color:var(--red)}
 </style>
 </head>
 <body>
@@ -296,8 +315,8 @@ select.form-input option{background:var(--surface)}
   <div class="nav-actions">
     <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
     <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="exportData()" title="Export data">⬇️</button>
-    <button class="icon-btn" onclick="openImport()" title="Import data">⬆️</button>
+    <button class="icon-btn" onclick="exportData()" title="Export data">⬆️</button>
+    <button class="icon-btn" onclick="openImport()" title="Import data">⬇️</button>
   </div>
 </nav>
 
@@ -342,6 +361,20 @@ select.form-input option{background:var(--surface)}
       </div>
       <div id="catBars"></div>
     </div>
+  </div>
+
+  <div class="card mb-20">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Monthly By Category</div>
+        <div class="section-sub">Actual income, spending, rewards, investing and net — by month</div>
+      </div>
+      <select class="form-input" style="width:auto;padding:5px 10px;font-size:12px" id="monthlyCatYear" onchange="renderMonthlyCat()">
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+      </select>
+    </div>
+    <div id="monthCatTable"></div>
   </div>
 
   <div class="grid-2 mb-20">
@@ -405,11 +438,16 @@ select.form-input option{background:var(--surface)}
     </select>
   </div>
 
+  <!-- Toolbar -->
+  <div class="select-toolbar" id="txToolbar">
+    <span class="select-toolbar-count" id="txSelCount">0 selected</span>
+    <button class="btn btn-danger btn-sm" onclick="multiDelete('tx')">🗑 Delete selected</button>
+    <button class="btn btn-ghost btn-sm" onclick="clearSelection('tx')">✕ Clear</button>
+    <button class="col-manager-btn" onclick="openColManager('tx')" style="margin-left:auto">⚙ Columns</button>
+  </div>
   <div class="table-wrap">
     <table class="data-table">
-      <thead><tr>
-        <th>Date</th><th>Type</th><th>Description</th><th class="right">Amount</th><th class="center">Actions</th>
-      </tr></thead>
+      <thead id="txThead"></thead>
       <tbody id="txTbody"></tbody>
     </table>
   </div>
@@ -427,15 +465,9 @@ select.form-input option{background:var(--surface)}
 
   <div class="grid-4 mb-20" id="incomeStatCards"></div>
 
-  <div class="grid-2 mb-20">
-    <div class="card">
-      <div class="section-title mb-12">Monthly By Category</div>
-      <div id="monthCatTable"></div>
-    </div>
-    <div class="card">
-      <div class="section-title mb-12">Paycheck Breakdown</div>
-      <div id="paycheckBreakdown"></div>
-    </div>
+  <div class="card mb-20">
+    <div class="section-title mb-12">Recent Paycheck Breakdown</div>
+    <div id="paycheckBreakdown"></div>
   </div>
 
   <div class="card mb-20">
@@ -475,11 +507,16 @@ select.form-input option{background:var(--surface)}
   <div class="section-head mb-12">
     <div class="section-title">Pay Periods</div>
   </div>
+  <!-- Toolbar -->
+  <div class="select-toolbar" id="incToolbar">
+    <span class="select-toolbar-count" id="incSelCount">0 selected</span>
+    <button class="btn btn-danger btn-sm" onclick="multiDelete('income')">🗑 Delete selected</button>
+    <button class="btn btn-ghost btn-sm" onclick="clearSelection('income')">✕ Clear</button>
+    <button class="col-manager-btn" onclick="openColManager('income')" style="margin-left:auto">⚙ Columns</button>
+  </div>
   <div class="table-wrap">
     <table class="data-table">
-      <thead><tr>
-        <th>Pay Date</th><th>Period</th><th>Hours</th><th>Rate</th><th class="right">Gross</th><th class="right">Tax</th><th class="right">Net</th><th class="center">Actions</th>
-      </tr></thead>
+      <thead id="incomeThead"></thead>
       <tbody id="incomeTbody"></tbody>
     </table>
   </div>
@@ -492,19 +529,22 @@ select.form-input option{background:var(--surface)}
       <div class="section-title" style="font-size:20px">Investments</div>
       <div class="section-sub">Stock positions, gains & losses</div>
     </div>
-    <button class="btn btn-primary" onclick="openModal('investModal')">+ Add Position</button>
+    <button class="btn btn-primary" onclick="openInvestModal()">+ Add Position</button>
   </div>
 
   <div class="grid-auto mb-20" id="investStatCards"></div>
 
+  <!-- Toolbar -->
+  <div class="select-toolbar" id="invToolbar">
+    <span class="select-toolbar-count" id="invSelCount">0 selected</span>
+    <button class="btn btn-danger btn-sm" onclick="multiDelete('invest')">🗑 Delete selected</button>
+    <button class="btn btn-ghost btn-sm" onclick="clearSelection('invest')">✕ Clear</button>
+    <button class="btn btn-ghost btn-sm" onclick="refreshAllPrices()" style="margin-left:8px">↻ Refresh prices</button>
+    <button class="col-manager-btn" onclick="openColManager('invest')" style="margin-left:auto">⚙ Columns</button>
+  </div>
   <div class="table-wrap">
     <table class="data-table">
-      <thead><tr>
-        <th>Date</th><th>Status</th><th>Symbol</th><th class="right">Shares</th>
-        <th class="right">Invested</th><th class="right">Buy Price</th><th class="right">Sell Price</th>
-        <th class="right">Current</th><th class="right">Value</th><th class="right">Gain/Loss</th>
-        <th class="right">% Change</th><th class="center">Actions</th>
-      </tr></thead>
+      <thead id="invThead"></thead>
       <tbody id="investTbody"></tbody>
     </table>
   </div>
@@ -522,12 +562,16 @@ select.form-input option{background:var(--surface)}
 
   <div class="grid-auto mb-20" id="timesheetStatCards"></div>
 
+  <!-- Toolbar -->
+  <div class="select-toolbar" id="tsToolbar">
+    <span class="select-toolbar-count" id="tsSelCount">0 selected</span>
+    <button class="btn btn-danger btn-sm" onclick="multiDelete('ts')">🗑 Delete selected</button>
+    <button class="btn btn-ghost btn-sm" onclick="clearSelection('ts')">✕ Clear</button>
+    <button class="col-manager-btn" onclick="openColManager('ts')" style="margin-left:auto">⚙ Columns</button>
+  </div>
   <div class="table-wrap">
     <table class="data-table">
-      <thead><tr>
-        <th>Period</th><th>Start Date</th><th>End Date</th><th class="right">Hours</th>
-        <th class="right">Est. Gross</th><th class="right">Est. Net</th><th class="center">Actions</th>
-      </tr></thead>
+      <thead id="tsThead"></thead>
       <tbody id="timesheetTbody"></tbody>
     </table>
   </div>
@@ -990,7 +1034,7 @@ select.form-input option{background:var(--surface)}
       </div>
       <div class="form-group">
         <label class="form-label">Symbol</label>
-        <input type="text" class="form-input" id="invSymbol" placeholder="e.g. QQQ, SPY" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+        <input type="text" class="form-input" id="invSymbol" placeholder="e.g. QQQ, SPY" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()" onblur="if(this.value.trim()) fetchLivePrice()">
       </div>
       <div class="form-group">
         <label class="form-label">Status</label>
@@ -1020,8 +1064,13 @@ select.form-input option{background:var(--surface)}
         <input type="number" class="form-input" id="invSell" step="0.01" placeholder="Leave blank if active">
       </div>
       <div class="form-group">
-        <label class="form-label">Current Price ($)</label>
-        <input type="number" class="form-input" id="invCurrent" step="0.01" oninput="calcInvest()">
+        <label class="form-label">Current Price</label>
+        <div class="form-input" id="invCurrentDisplay" style="display:flex;align-items:center;gap:8px;cursor:default;background:var(--card);opacity:.85">
+          <span id="invCurrentVal" style="font-family:var(--mono);font-size:13px">—</span>
+          <span id="invCurrentStatus" style="font-size:11px;color:var(--text-dim)">enter symbol to fetch</span>
+          <button type="button" onclick="fetchLivePrice()" style="margin-left:auto;padding:2px 8px;font-size:11px;font-weight:600;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);cursor:pointer">↻</button>
+        </div>
+        <input type="hidden" id="invCurrent" value="0">
       </div>
     </div>
     <div class="form-row mb-12">
@@ -1125,6 +1174,35 @@ select.form-input option{background:var(--surface)}
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('importModal')">Cancel</button>
       <button class="btn btn-primary" onclick="importData()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- Column Manager Modal -->
+<div class="modal-overlay" id="colManagerModal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title" id="colManagerTitle">Manage Columns</div>
+      <button class="modal-close" onclick="closeModal('colManagerModal')">✕</button>
+    </div>
+    <div class="section-sub mb-16">Toggle columns on/off. Changes apply immediately and are saved across sessions.</div>
+    <div id="colManagerPills" class="mb-16"></div>
+    <div class="divider"></div>
+    <div class="section-sub mb-8" style="font-size:11px;color:var(--text-dim)">ADD CUSTOM COLUMN</div>
+    <div class="form-row mb-4">
+      <div class="form-group"><label class="form-label">Column Name</label>
+        <input class="form-input" id="newColName" placeholder="e.g. Notes, Tag…"></div>
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-input" id="newColType">
+          <option value="text">Text</option>
+          <option value="number">Number</option>
+          <option value="date">Date</option>
+        </select></div>
+      <button class="btn btn-primary" onclick="addCustomColumn()" style="align-self:flex-end">Add</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="resetColumns()" style="margin-right:auto">↺ Reset defaults</button>
+      <button class="btn btn-primary" onclick="closeModal('colManagerModal')">Done</button>
     </div>
   </div>
 </div>
@@ -1381,10 +1459,56 @@ function renderDashboard() {
 
   renderMonthly(2026);
   renderCatBreakdown('all');
+  renderMonthlyCat();
   renderRecentTx();
   renderInvestSummary();
   renderTimesheetDashSummary();
 }
+
+function renderMonthlyCat() {
+  const yearEl = document.getElementById('monthlyCatYear');
+  const year = parseInt(yearEl?.value||'2026');
+  // Find months that have any data
+  const allMonths = [1,2,3,4,5,6,7,8,9,10,11,12];
+  const activeMonths = allMonths.filter(mo=>{
+    const hasIncome = allPaychecks().some(p=>!p.pending&&new Date(p.payDate).getFullYear()===year&&new Date(p.payDate).getMonth()+1===mo);
+    const hasSpend = transactions.some(t=>new Date(t.date).getFullYear()===year&&new Date(t.date).getMonth()+1===mo);
+    return hasIncome||hasSpend;
+  });
+  const months = activeMonths.length ? activeMonths : [5,6]; // fallback
+
+  const catRows = ['Income','Spending','Rewards','Investing','Tithing','Net Total'];
+  const catData = {};
+  catRows.forEach(r=>{ catData[r]={}; months.forEach(mo=>catData[r][mo]=0); });
+
+  months.forEach(mo=>{
+    const paid = allPaychecks().filter(p=>!p.pending&&new Date(p.payDate).getFullYear()===year&&new Date(p.payDate).getMonth()+1===mo);
+    catData['Income'][mo] = paid.reduce((s,p)=>s+p.net,0);
+    const extra = transactions.filter(t=>t.type==='Extra Income'&&new Date(t.date).getFullYear()===year&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
+    catData['Income'][mo] += extra;
+    catData['Spending'][mo] = -transactions.filter(t=>t.type==='Spending'&&new Date(t.date).getFullYear()===year&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
+    catData['Rewards'][mo] = transactions.filter(t=>t.type==='Rewards'&&new Date(t.date).getFullYear()===year&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
+    catData['Investing'][mo] = investments.filter(i=>new Date(i.date).getFullYear()===year&&new Date(i.date).getMonth()+1===mo).reduce((s,i)=>s+(i.gain||0),0);
+    catData['Tithing'][mo] = -catData['Income'][mo]*(settings.titheRate/100);
+    catData['Net Total'][mo] = catData['Income'][mo]+catData['Spending'][mo]+catData['Rewards'][mo]+catData['Tithing'][mo]+catData['Investing'][mo];
+  });
+
+  const el = document.getElementById('monthCatTable');
+  if (!el) return;
+  el.innerHTML = `<div class="table-wrap" style="border:none;overflow-x:auto"><table class="data-table">
+    <thead><tr><th>Category</th>${months.map(m=>`<th class="right">${MONTHS[m-1]}</th>`).join('')}<th class="right">Total</th></tr></thead>
+    <tbody>${catRows.map(row=>{
+      const vals = months.map(m=>catData[row][m]||0);
+      const total = vals.reduce((s,v)=>s+v,0);
+      const cls = total>0?'pos':total<0?'neg':'';
+      return `<tr><td style="font-weight:500">${row}</td>
+        ${vals.map(v=>`<td class="right mono ${v>0?'pos':v<0?'neg':''}" style="font-size:12px">${v===0?'—':fmtSigned(v)}</td>`).join('')}
+        <td class="right mono ${cls}" style="font-weight:700">${total===0?'—':fmtSigned(total)}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
 
 function renderMonthly(year) {
   year = parseInt(year);
@@ -1498,6 +1622,430 @@ function renderTimesheetDashSummary() {
 }
 
 /* =====================================================================
+   COLUMN CONFIGURATION ENGINE
+   Each table has a default set of columns. Users can toggle visibility,
+   add custom columns, delete custom columns. Config saved to localStorage.
+   ===================================================================== */
+
+const COL_DEFAULTS = {
+  tx: [
+    {key:'_cb',    label:'',          visible:true,  fixed:true,   type:'cb'},
+    {key:'date',   label:'Date',      visible:true,  fixed:true,   type:'date'},
+    {key:'type',   label:'Type',      visible:true,  fixed:false,  type:'text'},
+    {key:'desc',   label:'Description',visible:true, fixed:false,  type:'text'},
+    {key:'cat',    label:'Category',  visible:true,  fixed:false,  type:'text'},
+    {key:'amount', label:'Amount',    visible:true,  fixed:true,   type:'number'},
+    {key:'notes',  label:'Notes',     visible:false, fixed:false,  type:'text'},
+    {key:'_act',   label:'Actions',   visible:true,  fixed:true,   type:'act'},
+  ],
+  income: [
+    {key:'_cb',      label:'',            visible:true,  fixed:true,  type:'cb'},
+    {key:'payDate',  label:'Pay Date',    visible:true,  fixed:true,  type:'date'},
+    {key:'period',   label:'Period',      visible:true,  fixed:false, type:'text'},
+    {key:'hours',    label:'Hours',       visible:true,  fixed:false, type:'number'},
+    {key:'rate',     label:'Rate',        visible:true,  fixed:false, type:'number'},
+    {key:'gross',    label:'Gross',       visible:true,  fixed:false, type:'number'},
+    {key:'tax',      label:'Tax',         visible:true,  fixed:false, type:'number'},
+    {key:'net',      label:'Net',         visible:true,  fixed:true,  type:'number'},
+    {key:'_act',     label:'Actions',     visible:true,  fixed:true,  type:'act'},
+  ],
+  invest: [
+    {key:'_cb',          label:'',          visible:true,  fixed:true,  type:'cb'},
+    {key:'date',         label:'Date',      visible:true,  fixed:false, type:'date'},
+    {key:'active',       label:'Status',    visible:true,  fixed:false, type:'text'},
+    {key:'symbol',       label:'Symbol',    visible:true,  fixed:true,  type:'text'},
+    {key:'shares',       label:'Shares',    visible:true,  fixed:false, type:'number'},
+    {key:'amount',       label:'Invested',  visible:true,  fixed:false, type:'number'},
+    {key:'buyPrice',     label:'Buy Price', visible:true,  fixed:false, type:'number'},
+    {key:'sellPrice',    label:'Sell Price',visible:true,  fixed:false, type:'number'},
+    {key:'currentPrice', label:'Current',   visible:true,  fixed:false, type:'number'},
+    {key:'currentValue', label:'Value',     visible:true,  fixed:false, type:'number'},
+    {key:'gain',         label:'Gain/Loss', visible:true,  fixed:false, type:'number'},
+    {key:'pct',          label:'% Change',  visible:true,  fixed:false, type:'number'},
+    {key:'_act',         label:'Actions',   visible:true,  fixed:true,  type:'act'},
+  ],
+  ts: [
+    {key:'_cb',    label:'',          visible:true,  fixed:true,  type:'cb'},
+    {key:'week',   label:'Period',    visible:true,  fixed:true,  type:'text'},
+    {key:'start',  label:'Start',     visible:true,  fixed:false, type:'date'},
+    {key:'end',    label:'End',       visible:true,  fixed:false, type:'date'},
+    {key:'hours',  label:'Hours',     visible:true,  fixed:true,  type:'number'},
+    {key:'gross',  label:'Est. Gross',visible:true,  fixed:false, type:'number'},
+    {key:'net',    label:'Est. Net',  visible:true,  fixed:false, type:'number'},
+    {key:'notes',  label:'Notes',     visible:false, fixed:false, type:'text'},
+    {key:'_act',   label:'Actions',   visible:true,  fixed:true,  type:'act'},
+  ],
+};
+
+let colConfig = {};
+function loadColConfig() {
+  const saved = localStorage.getItem('mf_colconfig');
+  if (saved) {
+    try { colConfig = JSON.parse(saved); return; } catch(e) {}
+  }
+  resetAllColConfigs();
+}
+function resetAllColConfigs() {
+  colConfig = {};
+  Object.entries(COL_DEFAULTS).forEach(([t,cols])=> colConfig[t] = JSON.parse(JSON.stringify(cols)));
+  saveColConfig();
+}
+function saveColConfig() { localStorage.setItem('mf_colconfig', JSON.stringify(colConfig)); }
+
+function getCols(table) {
+  if (!colConfig[table]) colConfig[table] = JSON.parse(JSON.stringify(COL_DEFAULTS[table]));
+  return colConfig[table];
+}
+function visibleCols(table) { return getCols(table).filter(c=>c.visible); }
+
+// Render a <thead> row dynamically
+function renderThead(table, theadId) {
+  const el = document.getElementById(theadId);
+  if (!el) return;
+  const cols = visibleCols(table);
+  el.innerHTML = '<tr>' + cols.map(c => {
+    if (c.type==='cb') return `<th style="width:36px;padding:6px 8px"><input type="checkbox" class="row-cb" id="${table}SelectAll" onchange="toggleSelectAll('${table}',this.checked)" title="Select all"></th>`;
+    if (c.type==='act') return `<th class="center" style="width:90px">Actions</th>`;
+    const align = c.type==='number' ? 'right' : 'left';
+    return `<th class="${align}" style="white-space:nowrap">${c.label}</th>`;
+  }).join('') + '</tr>';
+}
+
+/* =====================================================================
+   COLUMN MANAGER UI
+   ===================================================================== */
+let activeColTable = null;
+const TABLE_LABELS = {tx:'Transactions', income:'Income', invest:'Investments', ts:'Timesheets'};
+
+function openColManager(table) {
+  activeColTable = table;
+  document.getElementById('colManagerTitle').textContent = `Columns — ${TABLE_LABELS[table]}`;
+  renderColManagerPills(table);
+  document.getElementById('newColName').value = '';
+  openModal('colManagerModal');
+}
+
+function renderColManagerPills(table) {
+  const cols = getCols(table);
+  document.getElementById('colManagerPills').innerHTML = cols
+    .filter(c=>c.type!=='cb' && c.type!=='act')
+    .map((c,i)=>`
+      <span class="col-pill ${c.visible?'':'hidden'}">
+        <span>${c.label}</span>
+        <span class="col-pill-toggle" onclick="toggleCol('${table}','${c.key}')" title="${c.visible?'Hide':'Show'}">${c.visible?'👁':'👁'}</span>
+        ${!c.fixed ? `<span class="col-pill-toggle" onclick="deleteCustomCol('${table}','${c.key}')" title="Remove" style="color:var(--red)">✕</span>` : ''}
+      </span>`).join('');
+}
+
+function toggleCol(table, key) {
+  const col = getCols(table).find(c=>c.key===key);
+  if (col && !col.fixed) { col.visible = !col.visible; saveColConfig(); renderColManagerPills(table); renderPage(currentPage); }
+}
+
+function addCustomColumn() {
+  const name = document.getElementById('newColName').value.trim();
+  const type = document.getElementById('newColType').value;
+  if (!name || !activeColTable) return;
+  const key = 'custom_' + name.toLowerCase().replace(/\s+/g,'_') + '_' + Date.now();
+  const cols = getCols(activeColTable);
+  // Insert before Actions
+  const actIdx = cols.findIndex(c=>c.type==='act');
+  cols.splice(actIdx, 0, {key, label:name, visible:true, fixed:false, type, custom:true});
+  saveColConfig();
+  renderColManagerPills(activeColTable);
+  renderPage(currentPage);
+  document.getElementById('newColName').value = '';
+  toast(`Column "${name}" added`, 'success');
+}
+
+function deleteCustomCol(table, key) {
+  colConfig[table] = getCols(table).filter(c=>c.key!==key);
+  saveColConfig();
+  // Remove from data too
+  const dataKey = {tx:KEYS.tx, income:KEYS.income, invest:KEYS.invest, ts:KEYS.ts}[table];
+  const dataArr = {tx:transactions, income, invest:investments, ts:timesheets}[table];
+  if (dataArr) dataArr.forEach(r=>{ delete r[key]; });
+  if (dataKey) { const d={tx:transactions,income,invest:investments,ts:timesheets}; save(dataKey, d[table]||d['invest']||[]); }
+  renderColManagerPills(table);
+  renderPage(currentPage);
+  toast('Column removed', 'success');
+}
+
+function resetColumns() {
+  if (!activeColTable) return;
+  colConfig[activeColTable] = JSON.parse(JSON.stringify(COL_DEFAULTS[activeColTable]));
+  saveColConfig();
+  renderColManagerPills(activeColTable);
+  renderPage(currentPage);
+  toast('Columns reset to default', 'success');
+}
+
+/* =====================================================================
+   MULTI-SELECT ENGINE
+   ===================================================================== */
+const selections = {tx:new Set(), income:new Set(), invest:new Set(), ts:new Set()};
+
+function toggleRow(table, id, checked) {
+  if (checked) selections[table].add(id);
+  else selections[table].delete(id);
+  updateToolbar(table);
+}
+function toggleSelectAll(table, checked) {
+  const allData = {tx:transactions, income:allPaychecks(), invest:investments, ts:timesheets};
+  (allData[table]||[]).forEach(r=>{ if(checked) selections[table].add(r.id||r.schedId); else selections[table].delete(r.id||r.schedId); });
+  renderPage(currentPage);
+  updateToolbar(table);
+}
+function clearSelection(table) { selections[table].clear(); renderPage(currentPage); updateToolbar(table); }
+function updateToolbar(table) {
+  const n = selections[table].size;
+  const toolbar = {tx:'txToolbar',income:'incToolbar',invest:'invToolbar',ts:'tsToolbar'}[table];
+  const count = {tx:'txSelCount',income:'incSelCount',invest:'invSelCount',ts:'tsSelCount'}[table];
+  const el = document.getElementById(toolbar);
+  const ce = document.getElementById(count);
+  if (el) el.classList.toggle('visible', n>0);
+  if (ce) ce.textContent = `${n} selected`;
+}
+
+function multiDelete(table) {
+  const ids = [...selections[table]];
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} item${ids.length!==1?'s':''}?`)) return;
+  const keyMap = {tx:KEYS.tx, income:KEYS.income, invest:KEYS.invest, ts:KEYS.ts};
+  if (table==='tx') { transactions = transactions.filter(r=>!ids.includes(r.id)); save(KEYS.tx,transactions); }
+  else if (table==='income') { income = income.filter(r=>!ids.includes(r.id)); save(KEYS.income,income); }
+  else if (table==='invest') { investments = investments.filter(r=>!ids.includes(r.id)); save(KEYS.invest,investments); }
+  else if (table==='ts') { timesheets = timesheets.filter(r=>!ids.includes(r.id)); save(KEYS.ts,timesheets); }
+  selections[table].clear();
+  updateToolbar(table);
+  renderPage(currentPage);
+  toast(`Deleted ${ids.length} item${ids.length!==1?'s':''}`, 'success');
+  scheduleAutoSync();
+}
+
+/* =====================================================================
+   CELL VALUE RENDERER — handles built-in + custom columns
+   ===================================================================== */
+function renderCell(col, row, table) {
+  const v = row[col.key];
+  if (col.type==='cb') {
+    const id = row.id || row.schedId || '';
+    const checked = selections[table].has(id);
+    return `<td style="padding:6px 8px"><input type="checkbox" class="row-cb" ${checked?'checked':''} onchange="toggleRow('${table}','${id}',this.checked)"></td>`;
+  }
+  if (col.type==='act') return null; // rendered separately per table
+  if (v==null || v==='') return `<td style="color:var(--muted)">—</td>`;
+  if (col.key==='type') return `<td><span class="chip chip-${String(v).toLowerCase().replace(/\s/g,'-')}">${v}</span></td>`;
+  if (col.key==='active') return `<td><span class="stat-badge ${v==='Active'?'badge-green':'badge-red'}">${v}</span></td>`;
+  if (col.key==='period') return `<td style="font-size:12px;color:var(--text-dim)">${fmtDate(row.start)} – ${fmtDate(row.end)}${row.derived&&row.weekCount?` <span style="opacity:.7">(${row.weekCount}wk)</span>`:''}</td>`;
+  if (col.key==='week') return `<td><span class="stat-badge badge-accent">${v}</span></td>`;
+  if (col.key==='date'||col.key==='payDate'||col.key==='start'||col.key==='end'||col.type==='date')
+    return `<td class="mono" style="font-size:12px">${fmtDate(v)}</td>`;
+  if (col.key==='amount'&&table==='tx') {
+    const cls = row.type==='Spending'?'neg':'pos';
+    return `<td class="right mono ${cls}" style="font-weight:600">${row.type==='Spending'?'− ':'+ '}${fmt(v)}</td>`;
+  }
+  if (col.key==='gain') return `<td class="right mono ${v>=0?'pos':'neg'}" style="font-weight:600">${fmtSigned(v)}</td>`;
+  if (col.key==='net'&&table==='income') return `<td class="right mono pos" style="font-weight:600">${fmt(v)}</td>`;
+  if (col.key==='net'&&table==='ts') return `<td class="right mono pos">${fmt(v)}</td>`;
+  if (col.key==='tax') return `<td class="right mono neg">${fmt(v)}</td>`;
+  if (col.key==='pct') return `<td class="right mono ${v>=0?'pos':'neg'}">${v>=0?'+':''}${v.toFixed(2)}%</td>`;
+  if (col.key==='symbol') return `<td style="font-weight:700;font-size:15px">${v}</td>`;
+  if (col.key==='currentPrice') {
+    const cls = row._priceFresh ? 'price-live' : row._priceStale ? 'price-stale' : '';
+    return `<td class="right mono ${cls}">${fmt(v)}</td>`;
+  }
+  if (col.type==='number') return `<td class="right mono">${typeof v==='number'?fmt(v):v}</td>`;
+  // Text / custom
+  if (col.custom) {
+    // Inline-editable custom cells
+    return `<td><span class="editable" onclick="inlineEdit(this,'${table}','${row.id}','${col.key}')" title="Click to edit">${v||'—'}</span></td>`;
+  }
+  if (col.key==='desc') return `<td style="max-width:200px"><div style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v||'—'}</div>${row.cat?`<div style="font-size:11px;color:var(--text-dim)">${row.cat}</div>`:''}</td>`;
+  if (col.key==='cat') return null; // merged into desc
+  if (col.key==='hours'&&table==='income') return `<td class="mono">${v}h</td>`;
+  if (col.key==='rate') return `<td class="mono">${fmt(v)}/hr</td>`;
+  if (col.key==='sellPrice') return `<td class="right mono" style="color:var(--text-dim)">${v?fmt(v):'—'}</td>`;
+  if (col.key==='shares') return `<td class="right mono">${v}</td>`;
+  return `<td>${v}</td>`;
+}
+
+function inlineEdit(span, table, id, key) {
+  const current = span.textContent === '—' ? '' : span.textContent;
+  const col = getCols(table).find(c=>c.key===key);
+  const input = document.createElement('input');
+  input.className='inline-edit'; input.value=current;
+  if (col && col.type==='number') input.type='number';
+  span.replaceWith(input);
+  input.focus();
+  const commit = () => {
+    const val = col&&col.type==='number' ? (parseFloat(input.value)||0) : input.value;
+    const arr = {tx:transactions,income,invest:investments,ts:timesheets};
+    const k = {tx:KEYS.tx,income:KEYS.income,invest:KEYS.invest,ts:KEYS.ts};
+    const row = (arr[table]||[]).find(r=>r.id===id);
+    if (row) { row[key]=val; save(k[table],arr[table]); }
+    renderPage(currentPage);
+    scheduleAutoSync();
+  };
+  input.onblur=commit;
+  input.onkeydown=e=>{ if(e.key==='Enter') commit(); if(e.key==='Escape') renderPage(currentPage); };
+}
+
+/* =====================================================================
+   LIVE STOCK PRICE FETCHER (Yahoo Finance via CORS proxy)
+   ===================================================================== */
+const priceCache = {};
+const PRICE_TTL = 5 * 60 * 1000;
+
+async function fetchPrice(symbol) {
+  if (!symbol) return null;
+
+  symbol = symbol.toUpperCase().trim();
+
+  const cached = priceCache[symbol];
+  if (cached && (Date.now() - cached.fetched) < PRICE_TTL) {
+    return cached.price;
+  }
+
+  const sources = [
+
+    // Stooq (works surprisingly well for stocks & ETFs)
+    async () => {
+      const res = await fetch(
+        `https://stooq.com/q/l/?s=${symbol.toLowerCase()}&f=sd2t2ohlcvn&e=json`
+      );
+
+      if (!res.ok) return null;
+
+      const data = await res.json();
+
+      if (data?.symbols?.length) {
+        const price = parseFloat(data.symbols[0].close);
+        return Number.isFinite(price) ? price : null;
+      }
+
+      return null;
+    },
+
+    // Yahoo fallback
+    async () => {
+      const url =
+        `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=1d&interval=1m`;
+
+      const proxy =
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
+      const res = await fetch(proxy);
+
+      if (!res.ok) return null;
+
+      const data = await res.json();
+
+      return data?.chart?.result?.[0]?.meta?.regularMarketPrice ?? null;
+    }
+  ];
+
+  for (const source of sources) {
+    try {
+      const price = await source();
+
+      if (price && Number.isFinite(price)) {
+        priceCache[symbol] = {
+          price,
+          fetched: Date.now()
+        };
+
+        return price;
+      }
+    } catch (err) {
+      console.warn(`Price source failed for ${symbol}`, err);
+    }
+  }
+
+  return null;
+}
+
+async function fetchLivePrice() {
+  const sym = (document.getElementById('invSymbol')?.value||'').toUpperCase().trim();
+  if (!sym) { toast('Enter a symbol first','error'); return; }
+  const statusEl = document.getElementById('invCurrentStatus');
+  const valEl = document.getElementById('invCurrentVal');
+  const hiddenEl = document.getElementById('invCurrent');
+  if (statusEl) statusEl.textContent = 'fetching…';
+  const price = await fetchPrice(sym);
+  if (price) {
+    if (valEl) valEl.textContent = `$${price.toFixed(2)}`;
+    if (statusEl) statusEl.textContent = 'live ✓';
+    if (hiddenEl) { hiddenEl.value = price; calcInvest(); }
+  } else {
+    if (statusEl) statusEl.textContent = 'not found';
+    if (valEl) valEl.textContent = '—';
+    toast(`Could not fetch price for ${sym}`, 'error');
+  }
+}
+
+async function refreshAllPrices() {
+  const active = investments.filter(
+    i => i.active === 'Active'
+  );
+
+  if (!active.length) {
+    toast('No active positions', 'info');
+    return;
+  }
+
+  toast(`Refreshing ${active.length} positions...`, 'info');
+
+  const results = await Promise.allSettled(
+    active.map(inv => fetchPrice(inv.symbol))
+  );
+
+  let updated = 0;
+
+  results.forEach((result, idx) => {
+    const inv = active[idx];
+
+    if (
+      result.status === 'fulfilled' &&
+      result.value
+    ) {
+      const price = result.value;
+
+      inv.currentPrice = price;
+      inv.currentValue =
+        Math.round(inv.shares * price * 100) / 100;
+
+      inv.gain =
+        Math.round(
+          (inv.currentValue - inv.amount) * 100
+        ) / 100;
+
+      inv.pct =
+        inv.amount > 0
+          ? Math.round(
+              (inv.gain / inv.amount) * 10000
+            ) / 100
+          : 0;
+
+      inv._priceFresh = true;
+      inv._priceStale = false;
+
+      updated++;
+    } else {
+      inv._priceStale = true;
+    }
+  });
+
+  save(KEYS.invest, investments);
+  renderInvesting();
+
+  toast(
+    `Updated ${updated}/${active.length} prices`,
+    updated ? 'success' : 'error'
+  );
+}
+
+/* =====================================================================
    TRANSACTIONS PAGE
    ===================================================================== */
 let txFilter = 'all';
@@ -1529,31 +2077,23 @@ function renderTxTable() {
   if (search) data = data.filter(t=>(t.desc||'').toLowerCase().includes(search)||(t.notes||'').toLowerCase().includes(search)||(t.cat||'').toLowerCase().includes(search)||(t.type||'').toLowerCase().includes(search));
   if (mo !== 'all') data = data.filter(t=>{ const d=new Date(t.date); return d.getMonth()+1 === parseInt(mo); });
 
+  renderThead('tx','txThead');
+  const vcols = visibleCols('tx');
   const tbody = document.getElementById('txTbody');
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No transactions found</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="${vcols.length}"><div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No transactions found</div></div></td></tr>`;
     return;
   }
-  tbody.innerHTML = data.map(t=>`
-    <tr>
-      <td class="mono" style="font-size:12px;color:var(--text-dim)">${fmtDate(t.date)}</td>
-      <td><span class="chip chip-${t.type.toLowerCase().replace(/\s/g,'-')}">${t.type}</span></td>
-      <td>
-        <div style="font-size:13px">${t.desc||'<span style="color:var(--muted)">—</span>'}</div>
-        ${t.cat?`<div style="font-size:11px;color:var(--text-dim)">${t.cat}</div>`:''}
-        ${t.notes?`<div style="font-size:11px;color:var(--text-dim)">${t.notes}</div>`:''}
-      </td>
-      <td class="right mono ${t.type==='Spending'?'neg':'pos'}" style="font-weight:600">
-        ${t.type==='Spending'?'-':'+'} ${fmt(t.amount)}
-      </td>
-      <td class="center">
-        <div class="flex gap-8" style="justify-content:center">
-          <button class="btn btn-icon btn-ghost" onclick="editTx('${t.id}')" title="Edit">✏️</button>
-          <button class="btn btn-icon btn-danger" onclick="deleteTx('${t.id}')" title="Delete">🗑</button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = data.map(t=>{
+    const sel = selections.tx.has(t.id);
+    const cells = vcols.map(col=>{
+      if (col.type==='act') return `<td class="center"><div class="flex gap-8" style="justify-content:center"><button class="btn btn-icon btn-ghost" onclick="editTx('${t.id}')" title="Edit">✏️</button><button class="btn btn-icon btn-danger" onclick="deleteTx('${t.id}')" title="Delete">🗑</button></div></td>`;
+      // skip cat — merged into desc
+      if (col.key==='cat') return '';
+      return renderCell(col, t, 'tx') || '';
+    }).join('');
+    return `<tr class="${sel?'selected':''}">${cells}</tr>`;
+  }).join('');
 }
 
 let editingTxId = null;
@@ -1702,42 +2242,7 @@ function renderIncome() {
     {label:'Tithing Owed', val:tithe, cls:'neg'},
   ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${fmt(c.val)}</div></div>`).join('');
 
-  // Monthly category table
-  const months = [5,6]; // May, June
-  const catRows = ['Spending','Investing','Rewards','Income','Tithing','Net Total'];
-  const catData = {
-    'Spending': {5: -330.93, 6: -236.40},
-    'Investing': {5: 0, 6: 0},
-    'Rewards': {5: 3.64, 6: 6.23},
-    'Income': {5: 1303.72, 6: 1237.28},
-    'Tithing': {5: -89.84, 6: -123.73},
-    'Net Total': {5: 886.58, 6: 1769.96},
-  };
-  // Override with live data
-  months.forEach(mo=>{
-    catData['Spending'][mo] = -transactions.filter(t=>t.type==='Spending'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
-    catData['Income'][mo] = paid.filter(p=>new Date(p.payDate).getMonth()+1===mo).reduce((s,p)=>s+p.net,0);
-    catData['Rewards'][mo] = transactions.filter(t=>t.type==='Rewards'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
-    const extraInc = transactions.filter(t=>t.type==='Extra Income'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
-    catData['Tithing'][mo] = -(catData['Income'][mo]+extraInc) * (settings.titheRate/100);
-    catData['Investing'][mo] = investments.filter(i=>new Date(i.date).getMonth()+1===mo).reduce((s,i)=>s+(i.gain||0),0);
-    catData['Net Total'][mo] = catData['Income'][mo]+catData['Spending'][mo]+catData['Rewards'][mo]+catData['Tithing'][mo]+catData['Investing'][mo]+extraInc;
-  });
-
-  document.getElementById('monthCatTable').innerHTML = `
-    <div class="table-wrap" style="border:none"><table class="data-table">
-      <thead><tr><th>Category</th>${months.map(m=>`<th class="right">${MONTHS_FULL[m-1]}</th>`).join('')}<th class="right">Total</th></tr></thead>
-      <tbody>${catRows.map(row=>{
-        const vals = months.map(m=>catData[row][m]||0);
-        const total = vals.reduce((s,v)=>s+v,0);
-        const cls = total>0?'pos':total<0?'neg':'';
-        return `<tr><td style="font-weight:500">${row}</td>
-          ${vals.map(v=>`<td class="right mono ${v>0?'pos':v<0?'neg':''}">${v===0?'—':fmtSigned(v)}</td>`).join('')}
-          <td class="right mono ${cls}" style="font-weight:700">${total===0?'—':fmtSigned(total)}</td>
-        </tr>`;
-      }).join('')}</tbody>
-    </table></div>
-  `;
+  // Monthly category table now lives on dashboard — see renderMonthlyCat()
 
   // Paycheck breakdown (most recent paid checks)
   const recentPaid = [...paid].sort((a,b)=>new Date(b.payDate)-new Date(a.payDate)).slice(0,3);
@@ -1763,28 +2268,31 @@ function renderIncome() {
 
 function renderIncomeTable() {
   const checks = allPaychecks().sort((a,b)=>new Date(b.payDate)-new Date(a.payDate));
+  renderThead('income','incomeThead');
+  const vcols = visibleCols('income');
   if (!checks.length) {
-    document.getElementById('incomeTbody').innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">💵</div><div class="empty-title">No paychecks yet</div><div class="empty-sub">Add your pay dates in the Pay Schedule above, and they'll fill in from your timesheets</div></div></td></tr>`;
+    document.getElementById('incomeTbody').innerHTML = `<tr><td colspan="${vcols.length}"><div class="empty"><div class="empty-icon">💵</div><div class="empty-title">No paychecks yet</div><div class="empty-sub">Add your pay dates in the Pay Schedule above, and they'll fill in from your timesheets</div></div></td></tr>`;
     return;
   }
   document.getElementById('incomeTbody').innerHTML = checks.map(p=>{
     const isDerived = p.derived;
-    const actions = isDerived
-      ? `<span class="stat-badge ${p.pending?'badge-yellow':'badge-green'}">${p.pending?'Pending':'Auto'}</span>`
-      : `<div class="flex gap-8" style="justify-content:center">
-           <button class="btn btn-icon btn-ghost" onclick="editIncome('${p.id}')">✏️</button>
-           <button class="btn btn-icon btn-danger" onclick="deleteIncome('${p.id}')">🗑</button>
-         </div>`;
-    return `<tr style="${p.pending?'opacity:.6':''}">
-      <td class="mono" style="font-size:12px">${fmtDate(p.payDate)}${p.pending?' <span style="color:var(--yellow)">•</span>':''}</td>
-      <td style="font-size:12px;color:var(--text-dim)">${fmtDate(p.start)} – ${fmtDate(p.end)}${isDerived&&p.weekCount?` <span style="opacity:.7">(${p.weekCount} wk)</span>`:''}</td>
-      <td class="mono">${p.hours}h</td>
-      <td class="mono">${fmt(p.rate)}/hr</td>
-      <td class="right mono">${fmt(p.gross)}</td>
-      <td class="right mono neg">${fmt(p.tax)}</td>
-      <td class="right mono pos" style="font-weight:600">${fmt(p.net)}</td>
-      <td class="center">${actions}</td>
-    </tr>`;
+    const id = p.id || p.schedId || '';
+    const sel = selections.income.has(id);
+    const cells = vcols.map(col=>{
+      if (col.type==='cb') {
+        return `<td style="padding:6px 8px"><input type="checkbox" class="row-cb" ${sel?'checked':''} onchange="toggleRow('income','${id}',this.checked)"></td>`;
+      }
+      if (col.type==='act') {
+        const actions = isDerived
+          ? `<span class="stat-badge ${p.pending?'badge-yellow':'badge-green'}">${p.pending?'Pending':'Auto'}</span>`
+          : `<div class="flex gap-8" style="justify-content:center"><button class="btn btn-icon btn-ghost" onclick="editIncome('${p.id}')">✏️</button><button class="btn btn-icon btn-danger" onclick="deleteIncome('${p.id}')">🗑</button></div>`;
+        return `<td class="center">${actions}</td>`;
+      }
+      const cell = renderCell(col, p, 'income');
+      if (col.key==='payDate') return `<td class="mono" style="font-size:12px">${fmtDate(p.payDate)}${p.pending?' <span style="color:var(--yellow)">•</span>':''}</td>`;
+      return cell || '<td>—</td>';
+    }).join('');
+    return `<tr class="${sel?'selected':''}" style="${p.pending?'opacity:.65':''}"> ${cells}</tr>`;
   }).join('');
 }
 
@@ -1888,39 +2396,39 @@ function renderInvesting() {
     <div class="stat-value ${c.cls}">${c.raw?c.val:c.pct?(c.val>=0?'+':'')+c.val.toFixed(2)+'%':c.val<0?'-'+fmt(Math.abs(c.val)):fmt(c.val)}</div>
   </div>`).join('');
 
+  renderThead('invest','invThead');
+  const vcols = visibleCols('invest');
   const sorted = [...investments].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  document.getElementById('investTbody').innerHTML = sorted.map(inv=>`
-    <tr>
-      <td class="mono" style="font-size:12px">${fmtDate(inv.date)}</td>
-      <td><span class="stat-badge ${inv.active==='Active'?'badge-green':'badge-red'}">${inv.active}</span></td>
-      <td style="font-weight:700;font-size:15px">${inv.symbol}</td>
-      <td class="right mono">${inv.shares}</td>
-      <td class="right mono">${fmt(inv.amount)}</td>
-      <td class="right mono">${fmt(inv.buyPrice)}</td>
-      <td class="right mono" style="color:var(--text-dim)">${inv.sellPrice?fmt(inv.sellPrice):'—'}</td>
-      <td class="right mono">${fmt(inv.currentPrice)}</td>
-      <td class="right mono" style="font-weight:600">${fmt(inv.currentValue||0)}</td>
-      <td class="right mono ${(inv.gain||0)>=0?'pos':'neg'}" style="font-weight:600">${fmtSigned(inv.gain||0)}</td>
-      <td class="right mono ${(inv.pct||0)>=0?'pos':'neg'}">${(inv.pct||0)>=0?'+':''}${(inv.pct||0).toFixed(2)}%</td>
-      <td class="center">
-        <div class="flex gap-8" style="justify-content:center">
-          <button class="btn btn-icon btn-ghost" onclick="editInvest('${inv.id}')">✏️</button>
-          <button class="btn btn-icon btn-danger" onclick="deleteInvest('${inv.id}')">🗑</button>
-        </div>
-      </td>
-    </tr>
-  `).join('') || `<tr><td colspan="12"><div class="empty"><div class="empty-icon">📈</div><div class="empty-title">No investments yet</div></div></td></tr>`;
+  const empty = `<tr><td colspan="${vcols.length}"><div class="empty"><div class="empty-icon">📈</div><div class="empty-title">No investments yet</div></div></td></tr>`;
+  document.getElementById('investTbody').innerHTML = sorted.length ? sorted.map(inv=>{
+    const sel = selections.invest.has(inv.id);
+    const cells = vcols.map(col=>{
+      if (col.type==='cb') return `<td style="padding:6px 8px"><input type="checkbox" class="row-cb" ${sel?'checked':''} onchange="toggleRow('invest','${inv.id}',this.checked)"></td>`;
+      if (col.type==='act') return `<td class="center"><div class="flex gap-8" style="justify-content:center"><button class="btn btn-icon btn-ghost" onclick="editInvest('${inv.id}')">✏️</button><button class="btn btn-icon btn-danger" onclick="deleteInvest('${inv.id}')">🗑</button></div></td>`;
+      return renderCell(col, inv, 'invest') || '<td>—</td>';
+    }).join('');
+    return `<tr class="${sel?'selected':''}">${cells}</tr>`;
+  }).join('') : empty;
 }
+
 
 function calcInvest() {
   const shares = parseFloat(document.getElementById('invShares').value)||0;
   const current = parseFloat(document.getElementById('invCurrent').value)||0;
-  const buy = parseFloat(document.getElementById('invBuy').value)||0;
   const amount = parseFloat(document.getElementById('invAmount').value)||0;
   const value = shares * current;
   const gain = value - amount;
   document.getElementById('invValue').value = value.toFixed(2);
   document.getElementById('invGain').value = gain.toFixed(2);
+}
+
+function setInvCurrentDisplay(price, status) {
+  const valEl = document.getElementById('invCurrentVal');
+  const statEl = document.getElementById('invCurrentStatus');
+  const hidEl = document.getElementById('invCurrent');
+  if (valEl) valEl.textContent = price ? `$${parseFloat(price).toFixed(2)}` : '—';
+  if (statEl) statEl.textContent = status || '';
+  if (hidEl) { hidEl.value = price||0; calcInvest(); }
 }
 
 let editingInvestId = null;
@@ -1963,9 +2471,28 @@ function editInvest(id) {
   document.getElementById('invAmount').value = inv.amount;
   document.getElementById('invBuy').value = inv.buyPrice;
   document.getElementById('invSell').value = inv.sellPrice||'';
-  document.getElementById('invCurrent').value = inv.currentPrice;
+  // Pre-fill the live price display with stored value, then auto-fetch fresh
+  setInvCurrentDisplay(inv.currentPrice, 'stored — click ↻ to refresh');
   document.getElementById('invValue').value = (inv.currentValue||0).toFixed(2);
   document.getElementById('invGain').value = (inv.gain||0).toFixed(2);
+  openModal('investModal');
+  // Auto-fetch fresh price in background
+  if (inv.symbol) fetchPrice(inv.symbol).then(p=>{ if(p) setInvCurrentDisplay(p,'live ✓'); });
+}
+
+function openInvestModal() {
+  editingInvestId = null;
+  document.getElementById('investModalTitle').textContent = 'Add Investment';
+  document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('invSymbol').value = '';
+  document.getElementById('invActive').value = 'Active';
+  document.getElementById('invShares').value = '';
+  document.getElementById('invAmount').value = '';
+  document.getElementById('invBuy').value = '';
+  document.getElementById('invSell').value = '';
+  document.getElementById('invValue').value = '';
+  document.getElementById('invGain').value = '';
+  setInvCurrentDisplay(null, 'enter symbol above ↑ to fetch');
   openModal('investModal');
 }
 
@@ -1983,39 +2510,40 @@ function deleteInvest(id) {
    ===================================================================== */
 function renderTimesheets() {
   const rate = settings.rate || 16.79;
-  const taxRate = settings.taxRate / 100;
+  const taxFn = calcTax; // use actual formula for estimates
   const totalHrs = timesheets.reduce((s,t)=>s+hoursToNum(t.hours),0);
   const totalEst = totalHrs * rate;
+  const totalEstNet = totalEst - calcTax(totalEst);
 
   document.getElementById('timesheetStatCards').innerHTML = [
     {label:'Total Weeks', val:timesheets.length, raw:true, cls:'accent'},
     {label:'Total Hours', val:totalHrs.toFixed(1), raw:true, cls:''},
     {label:'Est. Gross', val:totalEst, cls:''},
-    {label:'Est. Net', val:totalEst*(1-taxRate), cls:'pos'},
+    {label:'Est. Net', val:totalEstNet, cls:'pos'},
     {label:'Avg hrs/week', val:(timesheets.length?totalHrs/timesheets.length:0).toFixed(1), raw:true, cls:''},
   ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${c.raw?c.val:fmt(c.val)}</div></div>`).join('');
 
+  renderThead('ts','tsThead');
+  const vcols = visibleCols('ts');
   const sorted = [...timesheets].sort((a,b)=>new Date(b.start)-new Date(a.start));
-  document.getElementById('timesheetTbody').innerHTML = sorted.map((t,i)=>{
+  const empty = `<tr><td colspan="${vcols.length}"><div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">No timesheets yet</div></div></td></tr>`;
+
+  document.getElementById('timesheetTbody').innerHTML = sorted.length ? sorted.map((t,i)=>{
     const hrs = hoursToNum(t.hours);
     const gross = hrs*rate;
-    const net = gross*(1-taxRate);
+    const net = gross - calcTax(gross);
     const weekNum = sorted.length - i;
-    return `<tr>
-      <td><span class="stat-badge badge-accent">Week ${weekNum}</span></td>
-      <td class="mono" style="font-size:12px">${fmtDate(t.start)}</td>
-      <td class="mono" style="font-size:12px">${fmtDate(t.end)}</td>
-      <td class="right mono" style="font-weight:600">${t.hours}</td>
-      <td class="right mono">${fmt(gross)}</td>
-      <td class="right mono pos">${fmt(net)}</td>
-      <td class="center">
-        <div class="flex gap-8" style="justify-content:center">
-          <button class="btn btn-icon btn-ghost" onclick="editTs('${t.id}')">✏️</button>
-          <button class="btn btn-icon btn-danger" onclick="deleteTs('${t.id}')">🗑</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('') || `<tr><td colspan="7"><div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">No timesheets yet</div></div></td></tr>`;
+    const sel = selections.ts.has(t.id);
+    // Augment the object with computed fields for renderCell
+    const row = {...t, week:`Week ${weekNum}`, gross, net};
+    const cells = vcols.map(col=>{
+      if (col.type==='cb') return `<td style="padding:6px 8px"><input type="checkbox" class="row-cb" ${sel?'checked':''} onchange="toggleRow('ts','${t.id}',this.checked)"></td>`;
+      if (col.type==='act') return `<td class="center"><div class="flex gap-8" style="justify-content:center"><button class="btn btn-icon btn-ghost" onclick="editTs('${t.id}')">✏️</button><button class="btn btn-icon btn-danger" onclick="deleteTs('${t.id}')">🗑</button></div></td>`;
+      if (col.key==='hours') return `<td class="right mono" style="font-weight:600">${t.hours}</td>`;
+      return renderCell(col, row, 'ts') || '<td>—</td>';
+    }).join('');
+    return `<tr class="${sel?'selected':''}">${cells}</tr>`;
+  }).join('') : empty;
 }
 
 let editingTsId = null;
@@ -3099,6 +3627,7 @@ document.addEventListener('keydown', e=>{
 /* =====================================================================
    INIT
    ===================================================================== */
+loadColConfig();
 loadSettings();
 renderDashboard();
 autoSyncOnOpen();
