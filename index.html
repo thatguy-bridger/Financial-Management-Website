@@ -438,6 +438,40 @@ select.form-input option{background:var(--surface)}
     </div>
   </div>
 
+  <div class="card mb-20">
+    <div class="section-head">
+      <div>
+        <div class="section-title">📅 Pay Schedule</div>
+        <div class="section-sub" style="font-size:12px">Each pay date and the two-week period it covers. Hours auto-pull from timesheets whose week ends inside the period; future dates show as <span style="color:var(--yellow)">Pending</span>.</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn btn-ghost btn-sm" onclick="openPayImport()">⬇️ Import dates</button>
+        <button class="btn btn-ghost btn-sm" onclick="autoFillBiweekly()">⚡ Auto-generate</button>
+      </div>
+    </div>
+    <div id="paySchedList"></div>
+    <div class="divider"></div>
+    <div class="form-row" style="align-items:flex-end">
+      <div class="form-group" style="min-width:90px">
+        <label class="form-label">Pay Date</label>
+        <input type="date" class="form-input" id="psPayDate">
+      </div>
+      <div class="form-group" style="min-width:90px">
+        <label class="form-label">Period Start</label>
+        <input type="date" class="form-input" id="psStart">
+      </div>
+      <div class="form-group" style="min-width:90px">
+        <label class="form-label">Period End</label>
+        <input type="date" class="form-input" id="psEnd">
+      </div>
+      <div class="form-group" style="min-width:70px;flex:0 0 auto">
+        <label class="form-label">Rate</label>
+        <input type="number" class="form-input" id="psRate" step="0.01" placeholder="default" style="width:80px">
+      </div>
+      <button class="btn btn-primary" onclick="addPaySched()">Add</button>
+    </div>
+  </div>
+
   <div class="section-head mb-12">
     <div class="section-title">Pay Periods</div>
   </div>
@@ -761,39 +795,6 @@ select.form-input option{background:var(--surface)}
       </div>
 
       <div class="card mb-16">
-        <div class="settings-section-title">📅 Pay Schedule</div>
-        <div class="setting-desc mb-12" style="font-size:12px">
-          Enter each pay date and the two-week period it covers. Hours are pulled automatically
-          from timesheets whose week ends inside that period, then your tax formula is applied.
-          Future pay dates show as <span style="color:var(--yellow)">Pending</span>.
-        </div>
-        <div id="paySchedList"></div>
-        <div class="divider"></div>
-        <div class="form-row" style="align-items:flex-end">
-          <div class="form-group" style="min-width:90px">
-            <label class="form-label">Pay Date</label>
-            <input type="date" class="form-input" id="psPayDate">
-          </div>
-          <div class="form-group" style="min-width:90px">
-            <label class="form-label">Period Start</label>
-            <input type="date" class="form-input" id="psStart">
-          </div>
-          <div class="form-group" style="min-width:90px">
-            <label class="form-label">Period End</label>
-            <input type="date" class="form-input" id="psEnd">
-          </div>
-          <div class="form-group" style="min-width:70px;flex:0 0 auto">
-            <label class="form-label">Rate</label>
-            <input type="number" class="form-input" id="psRate" step="0.01" placeholder="default" style="width:80px">
-          </div>
-          <button class="btn btn-primary" onclick="addPaySched()">Add</button>
-        </div>
-        <div class="flex gap-8 mt-12">
-          <button class="btn btn-ghost btn-sm" onclick="autoFillBiweekly()">⚡ Auto-generate biweekly dates…</button>
-        </div>
-      </div>
-
-      <div class="card mb-16">
         <div class="settings-section-title">🧮 Tax Formula (soft-coded)</div>
         <div class="setting-desc mb-12" style="font-size:12px">
           Mirrors your spreadsheet: SS + Medicare + annualized federal &amp; state.
@@ -840,14 +841,14 @@ select.form-input option{background:var(--surface)}
             <div class="setting-name">Export All Data</div>
             <div class="setting-desc">Download as JSON backup file</div>
           </div>
-          <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇️ Export</button>
+          <button class="btn btn-ghost btn-sm" onclick="exportData()">⬆️ Export</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Import Data</div>
             <div class="setting-desc">Restore from backup or import from spreadsheet</div>
           </div>
-          <button class="btn btn-ghost btn-sm" onclick="openImport()">⬆️ Import</button>
+          <button class="btn btn-ghost btn-sm" onclick="openImport()">⬇️ Import</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
@@ -1124,6 +1125,34 @@ select.form-input option{background:var(--surface)}
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('importModal')">Cancel</button>
       <button class="btn btn-primary" onclick="importData()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pay Schedule Import Modal -->
+<div class="modal-overlay" id="payImportModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Import Pay Dates</div>
+      <button class="modal-close" onclick="closeModal('payImportModal')">✕</button>
+    </div>
+    <div class="section-sub mb-12">
+      Paste or upload three columns: <strong>Pay Date, Period Start, Period End</strong> — one row per paycheck.
+      A header row is optional. Dates can be <code style="background:var(--card);padding:1px 5px;border-radius:4px">5/15/2026</code>, <code style="background:var(--card);padding:1px 5px;border-radius:4px">2026-05-15</code>, etc.
+      An optional 4th column sets a per-check rate.
+    </div>
+    <div class="form-group mb-12">
+      <label class="form-label">Paste rows (CSV, tab, or spaces)</label>
+      <textarea class="form-input" id="payImportText" rows="8" placeholder="Pay Date, Period Start, Period End&#10;05/15/2026, 04/20/2026, 05/03/2026&#10;05/29/2026, 05/04/2026, 05/17/2026&#10;06/12/2026, 05/18/2026, 06/07/2026" oninput="previewPayImport()"></textarea>
+    </div>
+    <div class="form-group mb-12">
+      <label class="form-label">Or upload a file (.csv, .txt)</label>
+      <input type="file" class="form-input" accept=".csv,.txt" id="payImportFile" onchange="loadPayImportFile(this)">
+    </div>
+    <div id="payImportPreview"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('payImportModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="commitPayImport()" id="payImportBtn">Parse & Preview</button>
     </div>
   </div>
 </div>
@@ -1656,6 +1685,7 @@ function allPaychecks() {
 }
 
 function renderIncome() {
+  renderPaySchedule();
   const checks = allPaychecks();
   const paid = checks.filter(c=>!c.pending);
   const totalNet = paid.reduce((s,i)=>s+i.net,0);
@@ -1734,7 +1764,7 @@ function renderIncome() {
 function renderIncomeTable() {
   const checks = allPaychecks().sort((a,b)=>new Date(b.payDate)-new Date(a.payDate));
   if (!checks.length) {
-    document.getElementById('incomeTbody').innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">💵</div><div class="empty-title">No paychecks yet</div><div class="empty-sub">Add your pay dates in Settings → Pay Schedule, and they'll fill in from your timesheets</div></div></td></tr>`;
+    document.getElementById('incomeTbody').innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">💵</div><div class="empty-title">No paychecks yet</div><div class="empty-sub">Add your pay dates in the Pay Schedule above, and they'll fill in from your timesheets</div></div></td></tr>`;
     return;
   }
   document.getElementById('incomeTbody').innerHTML = checks.map(p=>{
@@ -2042,7 +2072,6 @@ function renderSettings() {
       <button class="btn btn-icon btn-danger" onclick="removeCat(${i})" style="width:24px;height:24px;font-size:12px">✕</button>
     </div>
   `).join('');
-  renderPaySchedule();
   loadTaxFields();
 }
 
@@ -2131,8 +2160,90 @@ function autoFillBiweekly() {
 }
 
 /* =====================================================================
-   TAX FORMULA CONSTANTS (Settings)
+   PAY SCHEDULE IMPORT — 3 columns: pay date, period start, period end
+   (optional 4th column: rate). Header row optional.
    ===================================================================== */
+let pendingPayRows = [];
+
+function openPayImport() {
+  document.getElementById('payImportText').value = '';
+  document.getElementById('payImportPreview').innerHTML = '';
+  document.getElementById('payImportBtn').textContent = 'Parse & Preview';
+  pendingPayRows = [];
+  openModal('payImportModal');
+}
+
+function loadPayImportFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('payImportText').value = e.target.result; previewPayImport(); };
+  reader.readAsText(file);
+}
+
+function parsePayRows(text) {
+  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length);
+  const rows = [];
+  lines.forEach(line=>{
+    // split on comma, tab, or 2+ spaces
+    const delim = line.includes('\t') ? '\t' : line.includes(',') ? ',' : /\s{2,}/;
+    const cells = line.split(delim).map(c=>c.trim().replace(/^"|"$/g,'')).filter(c=>c.length);
+    if (cells.length < 3) return;
+    const payDate = parseDate(cells[0]);
+    const start = parseDate(cells[1]);
+    const end = parseDate(cells[2]);
+    // skip header rows (no parseable dates)
+    if (!payDate || !start || !end) return;
+    const rate = cells[3] != null && cells[3] !== '' ? (parseFloat(String(cells[3]).replace(/[^0-9.]/g,'')) || null) : null;
+    rows.push({ payDate, start, end, rate });
+  });
+  return rows;
+}
+
+function previewPayImport() {
+  const text = document.getElementById('payImportText').value;
+  pendingPayRows = parsePayRows(text);
+  const el = document.getElementById('payImportPreview');
+  const btn = document.getElementById('payImportBtn');
+  if (!pendingPayRows.length) {
+    el.innerHTML = text.trim() ? `<div class="section-sub" style="color:var(--yellow)">No valid 3-column rows found yet. Check the date columns.</div>` : '';
+    btn.textContent = 'Parse & Preview';
+    return;
+  }
+  btn.textContent = `✓ Add ${pendingPayRows.length} pay date${pendingPayRows.length!==1?'s':''}`;
+  el.innerHTML = `
+    <div class="table-wrap mb-12" style="max-height:200px;overflow-y:auto"><table class="data-table">
+      <thead><tr><th>Pay Date</th><th>Period</th><th class="right">Rate</th><th class="right">Est. Net</th></tr></thead>
+      <tbody>${pendingPayRows.slice(0,40).map(r=>{
+        const dp = derivePaycheck({id:'preview', payDate:r.payDate, start:r.start, end:r.end, rate:r.rate});
+        return `<tr>
+          <td class="mono" style="font-size:12px">${fmtDate(r.payDate)}${dp.pending?' <span class="stat-badge badge-yellow">Pending</span>':''}</td>
+          <td style="font-size:11px;color:var(--text-dim)">${fmtDate(r.start)} – ${fmtDate(r.end)}</td>
+          <td class="right mono" style="font-size:12px">${r.rate!=null?fmt(r.rate):'<span style="color:var(--text-dim)">default</span>'}</td>
+          <td class="right mono ${dp.pending?'':'pos'}" style="font-size:12px">${fmt(dp.net)}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+    ${pendingPayRows.length>40?`<div class="section-sub">+ ${pendingPayRows.length-40} more…</div>`:''}`;
+}
+
+function commitPayImport() {
+  if (!pendingPayRows.length) { previewPayImport(); return; }
+  let added = 0, skipped = 0;
+  pendingPayRows.forEach(r=>{
+    // de-dupe on pay date
+    if (paySchedule.some(s=>s.payDate===r.payDate)) { skipped++; return; }
+    paySchedule.push({ id: uid(), payDate:r.payDate, start:r.start, end:r.end, rate:r.rate });
+    added++;
+  });
+  save(KEYS.paysched, paySchedule);
+  closeModal('payImportModal');
+  renderIncome();
+  toast(`Added ${added} pay date${added!==1?'s':''}${skipped?`, skipped ${skipped} duplicate${skipped!==1?'s':''}`:''}`,'success');
+  scheduleAutoSync();
+}
+
+
 function loadTaxFields() {
   const t = settings.tax || DEFAULTS.settings.tax;
   const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.value=v; };
