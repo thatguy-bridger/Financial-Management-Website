@@ -1087,55 +1087,18 @@ const DEFAULTS = {
 
 // Seed with imported spreadsheet data
 const SEED_TX = [
-  {id:'s1', date:'2026-05-16', type:'Spending', desc:'', amount:50.53, cat:'', notes:''},
-  {id:'s2', date:'2026-05-17', type:'Spending', desc:'', amount:73.71, cat:'', notes:''},
-  {id:'s3', date:'2026-05-18', type:'Spending', desc:'', amount:8.00, cat:'', notes:''},
-  {id:'s4', date:'2026-05-20', type:'Spending', desc:'', amount:23.99, cat:'', notes:''},
-  {id:'s5', date:'2026-05-22', type:'Spending', desc:'', amount:7.75, cat:'', notes:''},
-  {id:'s6', date:'2026-05-22', type:'Spending', desc:'', amount:1.62, cat:'', notes:''},
-  {id:'s7', date:'2026-05-24', type:'Spending', desc:'', amount:6.29, cat:'', notes:''},
-  {id:'s8', date:'2026-05-26', type:'Spending', desc:'', amount:10.02, cat:'', notes:''},
-  {id:'s9', date:'2026-05-27', type:'Spending', desc:'', amount:73.05, cat:'', notes:''},
-  {id:'s10', date:'2026-05-27', type:'Spending', desc:'', amount:4.87, cat:'', notes:''},
-  {id:'s11', date:'2026-05-27', type:'Spending', desc:'', amount:6.51, cat:'', notes:''},
-  {id:'s12', date:'2026-05-28', type:'Spending', desc:'', amount:43.10, cat:'', notes:''},
-  {id:'s13', date:'2026-05-31', type:'Spending', desc:'', amount:21.49, cat:'', notes:''},
-  {id:'s14', date:'2026-06-02', type:'Spending', desc:'', amount:54.21, cat:'', notes:''},
-  {id:'s15', date:'2026-06-02', type:'Spending', desc:'', amount:62.99, cat:'', notes:''},
-  {id:'s16', date:'2026-06-02', type:'Spending', desc:'', amount:7.61, cat:'', notes:''},
-  {id:'s17', date:'2026-06-05', type:'Spending', desc:'', amount:4.62, cat:'', notes:''},
-  {id:'s18', date:'2026-06-06', type:'Spending', desc:'', amount:1.74, cat:'', notes:''},
-  {id:'s19', date:'2026-06-07', type:'Spending', desc:'', amount:1.64, cat:'', notes:''},
-  {id:'s20', date:'2026-06-09', type:'Spending', desc:'', amount:100.60, cat:'', notes:''},
-  {id:'s21', date:'2026-06-11', type:'Spending', desc:'', amount:2.99, cat:'', notes:''},
-  {id:'s22', date:'2026-05-14', type:'Extra Income', desc:'Extra Income', amount:105.28, cat:'Extra Income', notes:''},
-  {id:'s23', date:'2026-05-01', type:'Extra Income', desc:'Extra Income', amount:300.00, cat:'Extra Income', notes:''},
-  {id:'s24', date:'2026-06-01', type:'Rewards', desc:'Rewards', amount:5.58, cat:'Rewards', notes:''},
-  {id:'s25', date:'2026-06-01', type:'Rewards', desc:'Rewards', amount:0.65, cat:'Rewards', notes:''},
-  {id:'s26', date:'2026-05-01', type:'Rewards', desc:'Rewards', amount:3.06, cat:'Rewards', notes:''},
-  {id:'s27', date:'2026-05-01', type:'Rewards', desc:'Rewards', amount:0.58, cat:'Rewards', notes:''},
+  
 ];
 
 const SEED_INCOME = [
-  {id:'i1', payDate:'2026-05-15', start:'2026-04-20', end:'2026-05-03', hours:17.55, rate:16.79, gross:294.66, tax:22.54, net:272.12},
-  {id:'i2', payDate:'2026-05-29', start:'2026-05-04', end:'2026-05-17', hours:41.67, rate:16.79, gross:699.58, tax:73.27, net:626.31},
-  {id:'i3', payDate:'2026-06-12', start:'2026-05-18', end:'2026-06-07', hours:60.25, rate:16.79, gross:1011.60, tax:146.46, net:865.14},
-  {id:'i4', payDate:'2026-06-30', start:'2026-06-08', end:'2026-06-14', hours:24.00, rate:16.79, gross:402.96, tax:30.82, net:372.14},
+
 ];
 
 const SEED_INVEST = [
-  {id:'inv1', date:'2026-06-12', active:'Active', symbol:'QQQ', shares:0.208527, amount:150.00, buyPrice:719.33, sellPrice:null, currentPrice:744.00, currentValue:155.14, gain:5.14, pct:3.43},
-];
+  ];
 
 const SEED_TS = [
-  {id:'ts1', start:'2026-04-27', end:'2026-05-03', hours:'17:33', notes:''},
-  {id:'ts2', start:'2026-05-04', end:'2026-05-10', hours:'23:40', notes:''},
-  {id:'ts3', start:'2026-05-11', end:'2026-05-17', hours:'18:00', notes:''},
-  {id:'ts4', start:'2026-05-18', end:'2026-05-24', hours:'19:30', notes:''},
-  {id:'ts5', start:'2026-05-25', end:'2026-05-31', hours:'17:45', notes:''},
-  {id:'ts6', start:'2026-06-01', end:'2026-06-07', hours:'23:00', notes:''},
-  {id:'ts7', start:'2026-06-08', end:'2026-06-14', hours:'24:00', notes:''},
-];
+  ];
 
 function load(key, seed) {
   const raw = localStorage.getItem(key);
@@ -1643,16 +1606,28 @@ function renderIncomeTable() {
 }
 
 let editingIncomeId = null;
+function calcTax(gross) {
+  const ss  = Math.round(gross * 0.062 * 100) / 100;
+  const med = Math.round(gross * 0.0145 * 100) / 100;
+  const fed = Math.round(Math.max(0, ((gross * 26) * 0.10 - 1744.2) / 26) * 100) / 100;
+  const st  = Math.round(Math.max(0, ((gross * 26) * 0.058 - 615.75) / 26) * 100) / 100;
+  return Math.round((ss + med + fed + st) * 100) / 100;
+}
+
 function calcIncome() {
-  const h = parseFloat(document.getElementById('incHours').value)||0;
-  const r = parseFloat(document.getElementById('incRate').value)||0;
-  const gross = h*r;
+  const h = parseFloat(document.getElementById('incHours').value) || 0;
+  const r = parseFloat(document.getElementById('incRate').value) || 0;
+  const gross = h * r;
   document.getElementById('incGross').value = gross.toFixed(2);
+  document.getElementById('incTax').value = calcTax(gross).toFixed(2);  // auto-fill tax
   calcNet();
 }
 function calcNet() {
-  const gross = parseFloat(document.getElementById('incGross').value)||0;
-  const tax = parseFloat(document.getElementById('incTax').value)||0;
+  const gross = parseFloat(document.getElementById('incGross').value) || 0;
+  // Recompute tax from the formula unless you've manually overridden it.
+  // Comment out the next line if you want to keep a hand-typed tax value.
+  document.getElementById('incTax').value = calcTax(gross).toFixed(2);
+  const tax = parseFloat(document.getElementById('incTax').value) || 0;
   document.getElementById('incNet').value = (gross - tax).toFixed(2);
 }
 
