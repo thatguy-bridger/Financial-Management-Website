@@ -65,12 +65,7 @@ table{border-collapse:collapse;width:100%}
 
 /* ===================== NAV ===================== */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
-.nav-brand{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.5px;white-space:nowrap;display:flex;align-items:center;gap:8px}
-.sync-badge{font-size:11px;font-weight:600;padding:2px 6px;border-radius:10px;background:var(--card);color:var(--text-dim);display:flex;align-items:center;gap:4px;transition:all .2s;}
-.sync-badge.syncing{color:var(--yellow);background:var(--yellow-soft);}
-.sync-badge.synced{color:var(--green);background:var(--green-soft);}
-.sync-badge.error{color:var(--red);background:var(--red-soft);}
-
+.nav-brand{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.5px;white-space:nowrap}
 .nav-tabs{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
 .nav-tabs::-webkit-scrollbar{display:none}
 .nav-tab{padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--text-dim);background:transparent;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
@@ -84,9 +79,7 @@ table{border-collapse:collapse;width:100%}
 /* ===================== LAYOUT ===================== */
 .main{margin-top:var(--nav-h);padding:24px 20px;max-width:1400px;margin-left:auto;margin-right:auto}
 .page{display:none}
-.page.active{display:block;animation:fadeIn .3s ease}
-
-@keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+.page.active{display:block}
 
 /* ===================== CARDS ===================== */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
@@ -115,45 +108,20 @@ table{border-collapse:collapse;width:100%}
 .section-title{font-size:16px;font-weight:600;color:var(--text)}
 .section-sub{font-size:13px;color:var(--text-dim)}
 
-/* ===================== TABLES & BULK ACTIONS ===================== */
-.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);position:relative;}
+/* ===================== TABLES ===================== */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
 .data-table{width:100%;font-size:13px}
 .data-table thead tr{background:var(--card);border-bottom:2px solid var(--border)}
 .data-table th{padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);white-space:nowrap}
 .data-table td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
 .data-table tbody tr:last-child td{border-bottom:none}
 .data-table tbody tr:hover{background:var(--card)}
-.data-table tbody tr.selected{background:var(--accent-soft)}
 .data-table .mono{font-family:var(--mono);font-size:12px}
 .data-table .pos{color:var(--green)}
 .data-table .neg{color:var(--red)}
 .data-table .right{text-align:right}
 .data-table .center{text-align:center}
 .data-table tbody tr{transition:background .1s}
-
-/* Checkboxes */
-input[type="checkbox"].row-cb {
-  appearance:none; width:16px; height:16px; border:1.5px solid var(--border); border-radius:4px;
-  background:var(--surface); cursor:pointer; display:flex; align-items:center; justify-content:center;
-}
-input[type="checkbox"].row-cb:checked {
-  background:var(--accent); border-color:var(--accent);
-}
-input[type="checkbox"].row-cb:checked::after {
-  content:'✓'; color:#fff; font-size:12px; font-weight:bold;
-}
-
-/* Bulk Action Bar */
-.bulk-bar {
-  display:none; align-items:center; justify-content:space-between; 
-  background:var(--surface); border:1px solid var(--accent); border-radius:var(--radius-sm);
-  padding:10px 16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.15);
-  animation:slideDown .2s ease;
-}
-.bulk-bar.visible { display:flex; }
-.bulk-bar-info { font-weight:600; font-size:14px; color:var(--text); display:flex; align-items:center; gap:8px;}
-.bulk-bar-info span.count { background:var(--accent); color:#fff; padding:2px 8px; border-radius:20px; font-size:12px; }
-@keyframes slideDown { from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:none} }
 
 /* ===================== FORMS ===================== */
 .form-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
@@ -185,6 +153,18 @@ select.form-input option{background:var(--surface)}
 .chip-investing{background:var(--accent-soft);color:var(--accent)}
 .chip-tithing{background:#2d1a2d;color:#c084fc}
 
+/* ===================== PROGRESS BARS ===================== */
+.progress-wrap{background:var(--card);border-radius:4px;height:6px;overflow:hidden}
+.progress-bar{height:100%;border-radius:4px;transition:width .5s ease}
+.progress-green{background:var(--green)}
+.progress-accent{background:var(--accent)}
+.progress-red{background:var(--red)}
+.progress-yellow{background:var(--yellow)}
+
+/* ===================== MINI CHART ===================== */
+.sparkline{display:flex;align-items:flex-end;gap:3px;height:40px}
+.spark-bar{flex:1;border-radius:3px 3px 0 0;min-width:4px;transition:height .3s}
+
 /* ===================== MODAL ===================== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
@@ -203,7 +183,7 @@ select.form-input option{background:var(--surface)}
 .toast.toast-info{border-left:3px solid var(--accent)}
 @keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 
-/* ===================== SETTINGS & OTHERS ===================== */
+/* ===================== SETTINGS ===================== */
 .settings-section{margin-bottom:28px}
 .settings-section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -217,11 +197,16 @@ select.form-input option{background:var(--surface)}
 .toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .toggle input:checked ~ .toggle-thumb,.toggle input:checked + .toggle-track + .toggle-thumb{left:23px}
 
+/* ===================== EMPTY STATE ===================== */
 .empty{text-align:center;padding:48px 20px;color:var(--text-dim)}
 .empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
 .empty-title{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text)}
 .empty-sub{font-size:13px}
+
+/* ===================== DIVIDER ===================== */
 .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+/* ===================== GAP UTILITIES ===================== */
 .mb-4{margin-bottom:4px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}.mb-24{margin-bottom:24px}
 .mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
 .gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
@@ -238,6 +223,7 @@ select.form-input option{background:var(--surface)}
 .month-cell .m-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:4px}
 .month-cell .m-val{font-size:12px;font-weight:600;font-family:var(--mono)}
 
+/* ===================== RESPONSIVE ===================== */
 @media(max-width:768px){
   .main{padding:16px 12px}
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
@@ -249,31 +235,38 @@ select.form-input option{background:var(--surface)}
   .form-row{flex-direction:column}
   .form-group{min-width:unset}
   .modal{padding:18px}
-  .nav-brand span{display:none} /* hide sync text on mobile */
 }
 @media(max-width:480px){
   .month-grid{grid-template-columns:repeat(2,1fr)}
   .grid-auto{grid-template-columns:1fr 1fr}
 }
 
+/* ===================== CATEGORY COLORS ===================== */
 .cat-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .cat-bar-label{font-size:12px;color:var(--text-dim);width:80px;flex-shrink:0}
 .cat-bar-track{flex:1;background:var(--card);border-radius:4px;height:8px;overflow:hidden}
 .cat-bar-fill{height:100%;border-radius:4px}
 .cat-bar-val{font-size:12px;font-weight:600;font-family:var(--mono);min-width:70px;text-align:right;flex-shrink:0}
+
+/* ===================== INLINE EDITING ===================== */
+.editable{cursor:pointer;border-bottom:1px dashed transparent;transition:border .15s}
+.editable:hover{border-bottom-color:var(--accent)}
+.inline-edit{background:var(--card);border:1.5px solid var(--accent);border-radius:4px;padding:2px 6px;color:var(--text);font-size:13px;font-family:var(--mono);width:100%;min-width:60px}
+
+/* ===================== PILL FILTER ===================== */
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .filter-pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--card);color:var(--text-dim);border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
 .filter-pill:hover,.filter-pill.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+
+/* ===================== DRAG HANDLE ===================== */
+.drag-handle{cursor:grab;color:var(--muted);font-size:14px;padding:0 4px}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand">
-    💰 <span>MyFinances</span>
-    <div id="syncStatusBadge" class="sync-badge" style="display:none;"></div>
-  </div>
+  <div class="nav-brand">💰 MyFinances</div>
   <div class="nav-tabs">
     <button class="nav-tab active" data-page="dashboard" onclick="switchPage('dashboard')">
       <span class="tab-icon">📊</span> Dashboard
@@ -290,29 +283,25 @@ select.form-input option{background:var(--surface)}
     <button class="nav-tab" data-page="timesheets" onclick="switchPage('timesheets')">
       <span class="tab-icon">🕐</span> Timesheets
     </button>
+    <button class="nav-tab" data-page="budget" onclick="switchPage('budget')">
+      <span class="tab-icon">🎯</span> Budget
+    </button>
+    <button class="nav-tab" data-page="import" onclick="switchPage('import')">
+      <span class="tab-icon">🤖</span> Import
+    </button>
     <button class="nav-tab" data-page="settings" onclick="switchPage('settings')">
       <span class="tab-icon">⚙️</span> Settings
     </button>
   </div>
   <div class="nav-actions">
-    <button class="icon-btn" onclick="triggerManualSync()" title="Force Cloud Sync" id="manualSyncBtn">☁️</button>
+    <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
     <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="openImport()" title="Local Import/Export">⬇️</button>
+    <button class="icon-btn" onclick="exportData()" title="Export data">⬇️</button>
+    <button class="icon-btn" onclick="openImport()" title="Import data">⬆️</button>
   </div>
 </nav>
 
 <div class="main">
-
-<!-- GLOBAL BULK ACTION BAR -->
-<div id="bulkActionBar" class="bulk-bar">
-  <div class="bulk-bar-info">
-    Items Selected <span class="count" id="bulkCount">0</span>
-  </div>
-  <div class="flex gap-8">
-    <button class="btn btn-ghost btn-sm" onclick="clearSelection()">Cancel</button>
-    <button class="btn btn-danger btn-sm" onclick="executeBulkDelete()">🗑 Delete Selected</button>
-  </div>
-</div>
 
 <!-- ==================== DASHBOARD ==================== -->
 <div id="page-dashboard" class="page active">
@@ -325,6 +314,7 @@ select.form-input option{background:var(--surface)}
   <div class="grid-auto mb-20" id="summaryCards"></div>
 
   <div class="grid-2 mb-20">
+    <!-- Monthly Overview -->
     <div class="card">
       <div class="section-head">
         <div>
@@ -340,6 +330,7 @@ select.form-input option{background:var(--surface)}
       <div class="month-grid" id="monthGrid"></div>
     </div>
 
+    <!-- Category Breakdown -->
     <div class="card">
       <div class="section-head">
         <div class="section-title">Spending by Category</div>
@@ -354,6 +345,7 @@ select.form-input option{background:var(--surface)}
   </div>
 
   <div class="grid-2 mb-20">
+    <!-- Recent Transactions -->
     <div class="card">
       <div class="section-head">
         <div class="section-title">Recent Transactions</div>
@@ -361,6 +353,8 @@ select.form-input option{background:var(--surface)}
       </div>
       <div id="recentTx"></div>
     </div>
+
+    <!-- Investment Summary -->
     <div class="card">
       <div class="section-head">
         <div class="section-title">Investments</div>
@@ -414,7 +408,6 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
-        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="txSelectAll" onchange="toggleSelectAll(this, 'transactions')"></th>
         <th>Date</th><th>Type</th><th>Description</th><th class="right">Amount</th><th class="center">Actions</th>
       </tr></thead>
       <tbody id="txTbody"></tbody>
@@ -451,7 +444,6 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
-        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="incSelectAll" onchange="toggleSelectAll(this, 'income')"></th>
         <th>Pay Date</th><th>Period</th><th>Hours</th><th>Rate</th><th class="right">Gross</th><th class="right">Tax</th><th class="right">Net</th><th class="center">Actions</th>
       </tr></thead>
       <tbody id="incomeTbody"></tbody>
@@ -474,7 +466,6 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
-        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="invSelectAll" onchange="toggleSelectAll(this, 'investments')"></th>
         <th>Date</th><th>Status</th><th>Symbol</th><th class="right">Shares</th>
         <th class="right">Invested</th><th class="right">Buy Price</th><th class="right">Sell Price</th>
         <th class="right">Current</th><th class="right">Value</th><th class="right">Gain/Loss</th>
@@ -500,12 +491,136 @@ select.form-input option{background:var(--surface)}
   <div class="table-wrap">
     <table class="data-table">
       <thead><tr>
-        <th style="width:30px;text-align:center"><input type="checkbox" class="row-cb" id="tsSelectAll" onchange="toggleSelectAll(this, 'timesheets')"></th>
         <th>Period</th><th>Start Date</th><th>End Date</th><th class="right">Hours</th>
         <th class="right">Est. Gross</th><th class="right">Est. Net</th><th class="center">Actions</th>
       </tr></thead>
       <tbody id="timesheetTbody"></tbody>
     </table>
+  </div>
+</div>
+
+<!-- ==================== BUDGET ==================== -->
+<div id="page-budget" class="page">
+  <div class="section-head mb-16">
+    <div>
+      <div class="section-title" style="font-size:20px">Budget</div>
+      <div class="section-sub">Set monthly targets per category — tracked against real spending</div>
+    </div>
+    <div class="flex gap-8">
+      <select class="form-input" style="width:auto" id="budgetMonthSel" onchange="renderBudget()">
+        <option value="6">June 2026</option>
+        <option value="5">May 2026</option>
+        <option value="7">July 2026</option>
+      </select>
+      <button class="btn btn-primary" onclick="openBudgetModal()">+ Set Budget</button>
+    </div>
+  </div>
+
+  <!-- Budget hero: income vs allocated vs spent -->
+  <div class="grid-3 mb-20" id="budgetHeroCards"></div>
+
+  <!-- Allocation bar -->
+  <div class="card mb-20">
+    <div class="section-head">
+      <div class="section-title">Where your money is planned to go</div>
+      <div class="section-sub" id="budgetAllocSub"></div>
+    </div>
+    <div id="budgetAllocBar" style="display:flex;height:36px;border-radius:8px;overflow:hidden;border:1px solid var(--border)"></div>
+    <div id="budgetAllocLegend" class="flex flex-wrap gap-12 mt-12"></div>
+  </div>
+
+  <!-- Category budgets -->
+  <div class="card mb-20">
+    <div class="section-head">
+      <div class="section-title">Category Budgets</div>
+      <div class="section-sub">Spent vs. budgeted this month</div>
+    </div>
+    <div id="budgetCatList"></div>
+  </div>
+
+  <!-- 50/30/20 health -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title mb-12">Budget Rule Check (50/30/20)</div>
+      <div class="section-sub mb-16" style="font-size:12px">A common guideline: 50% needs, 30% wants, 20% savings/giving. Based on your net income this month.</div>
+      <div id="budgetRuleCheck"></div>
+    </div>
+    <div class="card">
+      <div class="section-title mb-12">Budget vs. Actual Summary</div>
+      <div id="budgetSummaryTable"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== IMPORT / AI CONVERTER ==================== -->
+<div id="page-import" class="page">
+  <div class="section-head mb-16">
+    <div>
+      <div class="section-title" style="font-size:20px">Smart Import</div>
+      <div class="section-sub">Paste messy data — bank exports, CSV, statements, copied text — and it auto-sorts into your lists</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-20">
+    <div class="card">
+      <div class="section-title mb-12">1. Paste or upload your data</div>
+      <div class="form-group mb-12">
+        <label class="form-label">Destination</label>
+        <select class="form-input" id="importDest">
+          <option value="auto">Auto-detect (recommended)</option>
+          <option value="transactions">Transactions</option>
+          <option value="income">Income / Paychecks</option>
+          <option value="investments">Investments</option>
+          <option value="timesheets">Timesheets</option>
+        </select>
+      </div>
+      <div class="form-group mb-12">
+        <label class="form-label">Paste data here</label>
+        <textarea class="form-input" id="smartImportText" rows="10" placeholder="Examples:&#10;&#10;05/16/2026, Walmart, -50.53&#10;5/17  GAS STATION  $73.71&#10;&#10;Or a CSV with headers:&#10;Date,Description,Amount&#10;2026-06-09,Groceries,100.60&#10;&#10;Or bank-style text — it'll figure it out." oninput="previewSmartImport()"></textarea>
+      </div>
+      <div class="form-group mb-12">
+        <label class="form-label">Or upload a file (.csv, .txt, .json)</label>
+        <input type="file" class="form-input" accept=".csv,.txt,.json" id="smartImportFile" onchange="loadSmartFile(this)">
+      </div>
+      <button class="btn btn-primary" onclick="runSmartImport()" style="width:100%">🤖 Parse & Preview</button>
+    </div>
+
+    <div class="card">
+      <div class="section-head">
+        <div class="section-title">2. Review what was found</div>
+        <span class="stat-badge badge-accent" id="parseCount">0 rows</span>
+      </div>
+      <div id="importPreview">
+        <div class="empty">
+          <div class="empty-icon">🤖</div>
+          <div class="empty-title">Nothing parsed yet</div>
+          <div class="empty-sub">Paste data on the left and hit Parse</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="importConfirmCard" style="display:none">
+    <div class="section-head">
+      <div class="section-title">3. Confirm & add to your lists</div>
+      <div class="flex gap-8">
+        <button class="btn btn-ghost" onclick="clearImportPreview()">Discard</button>
+        <button class="btn btn-primary" onclick="commitSmartImport()" id="commitBtn">✓ Add all to lists</button>
+      </div>
+    </div>
+    <div class="section-sub" id="importConfirmSummary"></div>
+  </div>
+
+  <div class="card mt-16">
+    <div class="settings-section-title">💡 What the parser understands</div>
+    <div style="font-size:13px;color:var(--text-dim);line-height:1.8">
+      <strong style="color:var(--text)">Dates:</strong> 5/16, 05/16/2026, 2026-05-16, "May 16 2026" &nbsp;•&nbsp;
+      <strong style="color:var(--text)">Amounts:</strong> $50.53, -50.53, (50.53), 50.53 DR/CR<br>
+      <strong style="color:var(--text)">Auto-typing:</strong> negative or "debit" → Spending, positive or "credit/deposit" → Extra Income, "reward/cashback" → Rewards<br>
+      <strong style="color:var(--text)">Investments:</strong> recognizes ticker symbols (QQQ, SPY), share counts, buy/sell prices<br>
+      <strong style="color:var(--text)">Timesheets:</strong> recognizes HH:MM hours and date ranges<br>
+      <strong style="color:var(--text)">CSV:</strong> reads headers (Date, Description, Amount, Type, Category, Hours, Rate, etc.) automatically
+    </div>
   </div>
 </div>
 
@@ -515,44 +630,12 @@ select.form-input option{background:var(--surface)}
 
   <div class="grid-2">
     <div>
-      <!-- GitHub Storage Integration -->
-      <div class="card mb-16" style="border-color:var(--accent)">
-        <div class="settings-section-title" style="display:flex; justify-content:space-between; align-items:center;">
-          <span>☁️ GitHub Cloud Sync</span>
-          <span style="font-size:10px;color:var(--text-dim);font-weight:normal;">Auto-Save Enabled</span>
-        </div>
-        <div style="font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:12px;">
-          Store your financial data securely in a private GitHub repository. Once configured, your app will pull and push automatically, acting as your personal backend. <br><a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" style="color:var(--accent);text-decoration:underline;">Generate a PAT token here (requires 'repo' scope).</a>
-        </div>
-        
-        <div class="form-group mb-12">
-          <label class="form-label">GitHub Personal Access Token (PAT)</label>
-          <input type="password" class="form-input" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" onchange="saveSetting('ghToken',this.value); updateGitHubStatus();">
-        </div>
-        <div class="form-row mb-12">
-          <div class="form-group">
-            <label class="form-label">Repo Owner (Username)</label>
-            <input type="text" class="form-input" id="ghOwner" placeholder="e.g., octocat" onchange="saveSetting('ghOwner',this.value); updateGitHubStatus();">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Repository Name</label>
-            <input type="text" class="form-input" id="ghRepo" placeholder="e.g., finances-data" onchange="saveSetting('ghRepo',this.value); updateGitHubStatus();">
-          </div>
-        </div>
-        <div class="form-group mb-12">
-          <label class="form-label">File Path in Repo</label>
-          <input type="text" class="form-input" id="ghPath" placeholder="data.json" value="data.json" onchange="saveSetting('ghPath',this.value)">
-        </div>
-        <div class="flex gap-8 mt-16">
-          <button class="btn btn-primary btn-sm" onclick="triggerManualSync()">Test & Sync Now</button>
-        </div>
-      </div>
-
       <div class="card mb-16">
         <div class="settings-section-title">Appearance</div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Dark Mode</div>
+            <div class="setting-desc">Switch between dark and light theme</div>
           </div>
           <label class="toggle" id="themeToggle">
             <input type="checkbox" onchange="toggleTheme()" id="themeCheckbox">
@@ -563,6 +646,7 @@ select.form-input option{background:var(--surface)}
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Accent Color</div>
+            <div class="setting-desc">Primary interface color</div>
           </div>
           <div class="flex gap-8">
             <button class="btn-icon btn" style="background:#7c83ff;color:#fff" onclick="setAccent('#7c83ff','#2a2f5c')">●</button>
@@ -575,27 +659,87 @@ select.form-input option{background:var(--surface)}
       </div>
 
       <div class="card mb-16">
+        <div class="settings-section-title">☁️ Google Drive Sync</div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Connection status</div>
+            <div class="setting-desc" id="driveStatusDesc">Not connected</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="driveConnectBtn" onclick="driveConnect()">Connect</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Auto-sync on open & edit</div>
+            <div class="setting-desc">Pulls latest, saves one backup per day automatically</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="autoSyncToggle" onchange="saveSetting('autoSync',this.checked)">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Pull latest now</div>
+            <div class="setting-desc">Load today's data from Drive (any device)</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="drivePull()">⬇️ Pull</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Back up now</div>
+            <div class="setting-desc">Save current data to Drive as today's backup</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="driveSyncNow()">☁️ Back up</button>
+        </div>
+        <div id="driveSetupHint" style="font-size:12px;color:var(--text-dim);line-height:1.6;margin-top:12px;padding:12px;background:var(--card);border-radius:8px">
+          <strong style="color:var(--text)">First-time setup:</strong> Paste your Google OAuth Client ID below (free — instructions in the README). Then tap Connect and sign in once per device.
+          <input class="form-input mt-8" id="googleClientId" placeholder="xxxxx.apps.googleusercontent.com" onchange="saveGoogleClientId(this.value)" style="font-size:11px">
+        </div>
+      </div>
+
+      <div class="card mb-16">
+        <div class="settings-section-title">🗄️ Backup Archive</div>
+        <div class="setting-desc mb-12" style="font-size:12px">Restore your data from any day's backup stored in Google Drive.</div>
+        <div id="archiveList">
+          <div class="empty" style="padding:24px"><div class="empty-icon">🗄️</div><div class="empty-sub">Connect Drive to see backups</div></div>
+        </div>
+        <button class="btn btn-ghost btn-sm mt-12" onclick="loadArchiveList()" style="width:100%">🔄 Refresh archive list</button>
+      </div>
+
+      <div class="card mb-16">
         <div class="settings-section-title">Financial Settings</div>
         <div class="setting-row">
-          <div class="setting-info"><div class="setting-name">Hourly Rate</div></div>
+          <div class="setting-info">
+            <div class="setting-name">Hourly Rate</div>
+            <div class="setting-desc">Default pay rate for timesheet estimates</div>
+          </div>
           <input type="number" class="form-input" style="width:100px;text-align:right" id="settingRate" value="16.79" step="0.01" onchange="saveSetting('rate',this.value)">
         </div>
         <div class="setting-row">
-          <div class="setting-info"><div class="setting-name">Tax Rate</div></div>
+          <div class="setting-info">
+            <div class="setting-name">Tax Rate</div>
+            <div class="setting-desc">Estimated tax % for gross→net calculations</div>
+          </div>
           <div class="flex items-center gap-8">
             <input type="number" class="form-input" style="width:80px;text-align:right" id="settingTax" value="10" step="0.5" onchange="saveSetting('taxRate',this.value)">
             <span style="color:var(--text-dim);font-size:13px">%</span>
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-info"><div class="setting-name">Tithing Rate</div></div>
+          <div class="setting-info">
+            <div class="setting-name">Tithing Rate</div>
+            <div class="setting-desc">Auto-calculate tithing on income</div>
+          </div>
           <div class="flex items-center gap-8">
             <input type="number" class="form-input" style="width:80px;text-align:right" id="settingTithe" value="10" step="0.5" onchange="saveSetting('titheRate',this.value)">
             <span style="color:var(--text-dim);font-size:13px">%</span>
           </div>
         </div>
         <div class="setting-row">
-          <div class="setting-info"><div class="setting-name">Currency Symbol</div></div>
+          <div class="setting-info">
+            <div class="setting-name">Currency Symbol</div>
+          </div>
           <select class="form-input" style="width:80px" id="settingCurrency" onchange="saveSetting('currency',this.value);renderAll()">
             <option value="$">$ USD</option>
             <option value="€">€ EUR</option>
@@ -617,25 +761,25 @@ select.form-input option{background:var(--surface)}
       </div>
 
       <div class="card mb-16">
-        <div class="settings-section-title">Local Data Management</div>
+        <div class="settings-section-title">Data Management</div>
         <div class="setting-row">
           <div class="setting-info">
-            <div class="setting-name">Export Local Data</div>
-            <div class="setting-desc">Download as JSON backup</div>
+            <div class="setting-name">Export All Data</div>
+            <div class="setting-desc">Download as JSON backup file</div>
           </div>
           <button class="btn btn-ghost btn-sm" onclick="exportData()">⬇️ Export</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
-            <div class="setting-name">Import Local Data</div>
-            <div class="setting-desc">Restore from JSON backup</div>
+            <div class="setting-name">Import Data</div>
+            <div class="setting-desc">Restore from backup or import from spreadsheet</div>
           </div>
           <button class="btn btn-ghost btn-sm" onclick="openImport()">⬆️ Import</button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">Clear All Data</div>
-            <div class="setting-desc" style="color:var(--red)">⚠️ Deletes local and GitHub data</div>
+            <div class="setting-desc" style="color:var(--red)">⚠️ This cannot be undone</div>
           </div>
           <button class="btn btn-danger btn-sm" onclick="clearAll()">🗑 Clear</button>
         </div>
@@ -644,8 +788,10 @@ select.form-input option{background:var(--surface)}
       <div class="card">
         <div class="settings-section-title">About</div>
         <div style="font-size:13px;color:var(--text-dim);line-height:1.7">
-          <p><strong style="color:var(--text)">MyFinances v2.0 (Cloud Sync Edition)</strong></p>
-          <p>Works as a fully serverless App. Data can be saved natively to a GitHub Repo instead of just standard local storage.</p>
+          <p><strong style="color:var(--text)">MyFinances v1.0</strong></p>
+          <p>All data is stored locally in your browser. Nothing is sent to any server.</p>
+          <p class="mt-8">Works on mobile, tablet, and desktop. Install as a PWA from your browser's share/install option.</p>
+          <p class="mt-8">To host on GitHub Pages: push <code style="background:var(--card);padding:1px 5px;border-radius:4px">index.html</code> to a repo and enable Pages in Settings.</p>
         </div>
       </div>
     </div>
@@ -855,6 +1001,38 @@ select.form-input option{background:var(--surface)}
   </div>
 </div>
 
+<!-- Budget Modal -->
+<div class="modal-overlay" id="budgetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Set Category Budget</div>
+      <button class="modal-close" onclick="closeModal('budgetModal')">✕</button>
+    </div>
+    <div class="section-sub mb-16">Set a monthly spending limit for a category. Leave the amount at 0 to remove a budget.</div>
+    <div class="form-group mb-12">
+      <label class="form-label">Category</label>
+      <select class="form-input" id="budgetCat"></select>
+    </div>
+    <div class="form-row mb-12">
+      <div class="form-group">
+        <label class="form-label">Monthly Limit ($)</label>
+        <input type="number" class="form-input" id="budgetAmount" step="0.01" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Applies to</label>
+        <select class="form-input" id="budgetScope">
+          <option value="recurring">Every month</option>
+          <option value="month">This month only</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('budgetModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBudget()">Save Budget</button>
+    </div>
+  </div>
+</div>
+
 <!-- Import Modal -->
 <div class="modal-overlay" id="importModal">
   <div class="modal">
@@ -877,29 +1055,12 @@ select.form-input option{background:var(--surface)}
   </div>
 </div>
 
-<!-- Custom Confirm Modal -->
-<div class="modal-overlay" id="confirmModal" style="z-index:500;">
-  <div class="modal" style="max-width:400px;">
-    <div class="modal-header">
-      <div class="modal-title" id="confirmTitle">Confirm</div>
-      <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
-    </div>
-    <div class="mb-20" id="confirmMessage" style="font-size:15px;color:var(--text);line-height:1.5;">
-      Are you sure?
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancel</button>
-      <button class="btn btn-danger" id="confirmBtn">Confirm</button>
-    </div>
-  </div>
-</div>
-
 <!-- Toast container -->
 <div class="toast-container" id="toasts"></div>
 
 <script>
 /* =====================================================================
-   DATA LAYER & LOCAL STORAGE
+   DATA LAYER
    ===================================================================== */
 
 const KEYS = {
@@ -907,247 +1068,98 @@ const KEYS = {
   income: 'mf_income',
   invest: 'mf_investments',
   ts: 'mf_timesheets',
+  budgets: 'mf_budgets',
   settings: 'mf_settings',
   cats: 'mf_categories',
 };
 
-const DEFAULTS = {
-  settings: { rate: 16.79, taxRate: 10, titheRate: 10, currency: '$', theme: 'dark', accent: '#7c83ff', accentSoft: '#2a2f5c', ghToken:'', ghOwner:'', ghRepo:'', ghPath:'data.json' },
-  cats: ['Food & Dining', 'Gas & Transport', 'Shopping', 'Entertainment', 'Bills & Subscriptions', 'Health', 'Other'],
+const DRIVE = {
+  folderId: '16HW7JbnI6vV5WMuapYPkgocclde7zu_K',
+  backupsFolderId: '1gOZMUEJTRsy3gVy_q1mm2RQ4NjOXythK',
+  SCOPE: 'https://www.googleapis.com/auth/drive.file',
 };
 
-function loadLocal(key, defaultVal) {
+const DEFAULTS = {
+  settings: { rate: 16.79, taxRate: 10, titheRate: 10, currency: '$', theme: 'dark', accent: '#7c83ff', accentSoft: '#2a2f5c', autoSync: false },
+  cats: ['Food & Dining', 'Gas & Transport', 'Shopping', 'Entertainment', 'Bills & Subscriptions', 'Health', 'Other'],
+  budgets: [],
+};
+
+// Seed with imported spreadsheet data
+const SEED_TX = [
+  {id:'s1', date:'2026-05-16', type:'Spending', desc:'', amount:50.53, cat:'', notes:''},
+  {id:'s2', date:'2026-05-17', type:'Spending', desc:'', amount:73.71, cat:'', notes:''},
+  {id:'s3', date:'2026-05-18', type:'Spending', desc:'', amount:8.00, cat:'', notes:''},
+  {id:'s4', date:'2026-05-20', type:'Spending', desc:'', amount:23.99, cat:'', notes:''},
+  {id:'s5', date:'2026-05-22', type:'Spending', desc:'', amount:7.75, cat:'', notes:''},
+  {id:'s6', date:'2026-05-22', type:'Spending', desc:'', amount:1.62, cat:'', notes:''},
+  {id:'s7', date:'2026-05-24', type:'Spending', desc:'', amount:6.29, cat:'', notes:''},
+  {id:'s8', date:'2026-05-26', type:'Spending', desc:'', amount:10.02, cat:'', notes:''},
+  {id:'s9', date:'2026-05-27', type:'Spending', desc:'', amount:73.05, cat:'', notes:''},
+  {id:'s10', date:'2026-05-27', type:'Spending', desc:'', amount:4.87, cat:'', notes:''},
+  {id:'s11', date:'2026-05-27', type:'Spending', desc:'', amount:6.51, cat:'', notes:''},
+  {id:'s12', date:'2026-05-28', type:'Spending', desc:'', amount:43.10, cat:'', notes:''},
+  {id:'s13', date:'2026-05-31', type:'Spending', desc:'', amount:21.49, cat:'', notes:''},
+  {id:'s14', date:'2026-06-02', type:'Spending', desc:'', amount:54.21, cat:'', notes:''},
+  {id:'s15', date:'2026-06-02', type:'Spending', desc:'', amount:62.99, cat:'', notes:''},
+  {id:'s16', date:'2026-06-02', type:'Spending', desc:'', amount:7.61, cat:'', notes:''},
+  {id:'s17', date:'2026-06-05', type:'Spending', desc:'', amount:4.62, cat:'', notes:''},
+  {id:'s18', date:'2026-06-06', type:'Spending', desc:'', amount:1.74, cat:'', notes:''},
+  {id:'s19', date:'2026-06-07', type:'Spending', desc:'', amount:1.64, cat:'', notes:''},
+  {id:'s20', date:'2026-06-09', type:'Spending', desc:'', amount:100.60, cat:'', notes:''},
+  {id:'s21', date:'2026-06-11', type:'Spending', desc:'', amount:2.99, cat:'', notes:''},
+  {id:'s22', date:'2026-05-14', type:'Extra Income', desc:'Extra Income', amount:105.28, cat:'Extra Income', notes:''},
+  {id:'s23', date:'2026-05-01', type:'Extra Income', desc:'Extra Income', amount:300.00, cat:'Extra Income', notes:''},
+  {id:'s24', date:'2026-06-01', type:'Rewards', desc:'Rewards', amount:5.58, cat:'Rewards', notes:''},
+  {id:'s25', date:'2026-06-01', type:'Rewards', desc:'Rewards', amount:0.65, cat:'Rewards', notes:''},
+  {id:'s26', date:'2026-05-01', type:'Rewards', desc:'Rewards', amount:3.06, cat:'Rewards', notes:''},
+  {id:'s27', date:'2026-05-01', type:'Rewards', desc:'Rewards', amount:0.58, cat:'Rewards', notes:''},
+];
+
+const SEED_INCOME = [
+  {id:'i1', payDate:'2026-05-15', start:'2026-04-20', end:'2026-05-03', hours:17.55, rate:16.79, gross:294.66, tax:22.54, net:272.12},
+  {id:'i2', payDate:'2026-05-29', start:'2026-05-04', end:'2026-05-17', hours:41.67, rate:16.79, gross:699.58, tax:73.27, net:626.31},
+  {id:'i3', payDate:'2026-06-12', start:'2026-05-18', end:'2026-06-07', hours:60.25, rate:16.79, gross:1011.60, tax:146.46, net:865.14},
+  {id:'i4', payDate:'2026-06-30', start:'2026-06-08', end:'2026-06-14', hours:24.00, rate:16.79, gross:402.96, tax:30.82, net:372.14},
+];
+
+const SEED_INVEST = [
+  {id:'inv1', date:'2026-06-12', active:'Active', symbol:'QQQ', shares:0.208527, amount:150.00, buyPrice:719.33, sellPrice:null, currentPrice:744.00, currentValue:155.14, gain:5.14, pct:3.43},
+];
+
+const SEED_TS = [
+  {id:'ts1', start:'2026-04-27', end:'2026-05-03', hours:'17:33', notes:''},
+  {id:'ts2', start:'2026-05-04', end:'2026-05-10', hours:'23:40', notes:''},
+  {id:'ts3', start:'2026-05-11', end:'2026-05-17', hours:'18:00', notes:''},
+  {id:'ts4', start:'2026-05-18', end:'2026-05-24', hours:'19:30', notes:''},
+  {id:'ts5', start:'2026-05-25', end:'2026-05-31', hours:'17:45', notes:''},
+  {id:'ts6', start:'2026-06-01', end:'2026-06-07', hours:'23:00', notes:''},
+  {id:'ts7', start:'2026-06-08', end:'2026-06-14', hours:'24:00', notes:''},
+];
+
+function load(key, seed) {
   const raw = localStorage.getItem(key);
   if (!raw) {
-    localStorage.setItem(key, JSON.stringify(defaultVal));
-    return JSON.parse(JSON.stringify(defaultVal));
+    const val = seed !== undefined ? seed : DEFAULTS[key] || [];
+    localStorage.setItem(key, JSON.stringify(val));
+    return JSON.parse(JSON.stringify(val));
   }
   return JSON.parse(raw);
 }
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-function save(key, val) { 
-  localStorage.setItem(key, JSON.stringify(val)); 
-  triggerAutoSync(); // Fire github sync automatically when data changes
-}
+let transactions = load(KEYS.tx, SEED_TX);
+let income = load(KEYS.income, SEED_INCOME);
+let investments = load(KEYS.invest, SEED_INVEST);
+let timesheets = load(KEYS.ts, SEED_TS);
+let budgets = load(KEYS.budgets, DEFAULTS.budgets);
+let settings = load(KEYS.settings, DEFAULTS.settings);
+let categories = load(KEYS.cats, DEFAULTS.cats);
 
-let transactions = loadLocal(KEYS.tx, []);
-let income = loadLocal(KEYS.income, []);
-let investments = loadLocal(KEYS.invest, []);
-let timesheets = loadLocal(KEYS.ts, []);
-let settings = loadLocal(KEYS.settings, DEFAULTS.settings);
-let categories = loadLocal(KEYS.cats, DEFAULTS.cats);
-
+// Ensure settings has all defaults
 Object.assign(settings, {...DEFAULTS.settings, ...settings});
+
 function uid() { return '_' + Math.random().toString(36).substr(2,9); }
-
-/* =====================================================================
-   GITHUB CLOUD STORAGE INTEGRATION
-   ===================================================================== */
-let githubSha = null;
-let syncTimeout = null;
-
-function isGitHubConfigured() {
-  return settings.ghToken && settings.ghOwner && settings.ghRepo;
-}
-
-function updateGitHubStatus(status = 'none') {
-  const badge = document.getElementById('syncStatusBadge');
-  if (!isGitHubConfigured()) {
-    badge.style.display = 'none';
-    return;
-  }
-  badge.style.display = 'flex';
-  badge.className = 'sync-badge';
-  
-  if (status === 'syncing') {
-    badge.classList.add('syncing'); badge.innerHTML = '↻ Syncing';
-  } else if (status === 'synced') {
-    badge.classList.add('synced'); badge.innerHTML = '✓ Synced';
-  } else if (status === 'error') {
-    badge.classList.add('error'); badge.innerHTML = '! Sync Error';
-  } else {
-    badge.innerHTML = '☁️ Cloud Active';
-  }
-}
-
-// Helper to safely encode/decode Unicode to base64
-const encodeBase64 = (str) => btoa(unescape(encodeURIComponent(str)));
-const decodeBase64 = (str) => decodeURIComponent(escape(atob(str)));
-
-async function pullFromGitHub() {
-  if (!isGitHubConfigured()) return;
-  updateGitHubStatus('syncing');
-  
-  const path = settings.ghPath || 'data.json';
-  const url = `https://api.github.com/repos/${settings.ghOwner}/${settings.ghRepo}/contents/${path}`;
-  
-  try {
-    const res = await fetch(url, { headers: { 'Authorization': `Bearer ${settings.ghToken}` } });
-    if (res.ok) {
-      const fileData = await res.json();
-      githubSha = fileData.sha; // Save SHA for updates
-      
-      const contentStr = decodeBase64(fileData.content);
-      const data = JSON.parse(contentStr);
-      
-      // Override local data
-      if (data.transactions) { transactions = data.transactions; localStorage.setItem(KEYS.tx, JSON.stringify(transactions)); }
-      if (data.income) { income = data.income; localStorage.setItem(KEYS.income, JSON.stringify(income)); }
-      if (data.investments) { investments = data.investments; localStorage.setItem(KEYS.invest, JSON.stringify(investments)); }
-      if (data.timesheets) { timesheets = data.timesheets; localStorage.setItem(KEYS.ts, JSON.stringify(timesheets)); }
-      if (data.categories) { categories = data.categories; localStorage.setItem(KEYS.cats, JSON.stringify(categories)); }
-      
-      updateGitHubStatus('synced');
-      renderAll(); 
-    } else if (res.status === 404) {
-      // File doesn't exist yet on GitHub, push initial data
-      pushToGitHub();
-    } else {
-      throw new Error("GitHub API Error: " + res.status);
-    }
-  } catch (error) {
-    console.error("GitHub Pull Error", error);
-    updateGitHubStatus('error');
-    toast("Failed to sync from GitHub", "error");
-  }
-}
-
-async function pushToGitHub(data) {
-  // Retrieve the actual values from your stored settings
-  const settings = JSON.parse(localStorage.getItem('myFinancesSettings') || '{}');
-  const token = settings.githubToken;
-  const username = settings.githubUsername;
-  const repo = settings.githubRepo;
-
-  if (!token || !username || !repo) {
-    throw new Error('Missing GitHub configuration in Settings');
-  }
-
-  const url = `https://api.github.com/repos/${username}/${repo}/contents/data.json`;
-  
-  // 1. Get the current file's SHA
-  const getResponse = await fetch(url, {
-    headers: { 'Authorization': `token ${token}` }
-  });
-  
-  let sha = null;
-  if (getResponse.ok) {
-    const fileData = await getResponse.json();
-    sha = fileData.sha; 
-  }
-
-  // 2. Perform the PUT request with the SHA
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `token ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      message: "Update data.json",
-      content: btoa(JSON.stringify(data)),
-      sha: sha // Include the SHA retrieved above!
-    })
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    console.error('GitHub API Error:', errorData);
-    throw new Error('Failed to push: ' + errorData.message);
-  }
-}
-
-// Debounce pushing so we don't spam the API on every single keystroke/save
-function triggerAutoSync() {
-  if (!isGitHubConfigured()) return;
-  clearTimeout(syncTimeout);
-  updateGitHubStatus('syncing');
-  syncTimeout = setTimeout(() => pushToGitHub(), 2000);
-}
-
-function triggerManualSync() {
-  if (!isGitHubConfigured()) {
-    toast("Configure GitHub in settings first.", "info");
-    switchPage('settings');
-    return;
-  }
-  pushToGitHub().then(()=> toast("Manually pushed to GitHub", "success"));
-}
-
-/* =====================================================================
-   BULK SELECTION LAYER
-   ===================================================================== */
-let selectedIds = new Set();
-let renderedItemIds = []; // keeps track of what is currently on screen for 'select all'
-
-function toggleSelect(cb, id) {
-  if (cb.checked) selectedIds.add(id);
-  else selectedIds.delete(id);
-  cb.closest('tr').classList.toggle('selected', cb.checked);
-  updateBulkActionBar();
-}
-
-function toggleSelectAll(cb, context) {
-  const isChecked = cb.checked;
-  const checkboxes = document.querySelectorAll(`#${context === 'transactions' ? 'txTbody' : context === 'income' ? 'incomeTbody' : context === 'investments' ? 'investTbody' : 'timesheetTbody'} .row-cb`);
-  
-  checkboxes.forEach(box => {
-    box.checked = isChecked;
-    const tr = box.closest('tr');
-    tr.classList.toggle('selected', isChecked);
-    if (isChecked) selectedIds.add(box.value);
-    else selectedIds.delete(box.value);
-  });
-  updateBulkActionBar();
-}
-
-function clearSelection() {
-  selectedIds.clear();
-  document.querySelectorAll('.row-cb').forEach(cb => {
-    cb.checked = false;
-    cb.closest('tr').classList.remove('selected');
-  });
-  // Uncheck header checkboxes
-  ['txSelectAll', 'incSelectAll', 'invSelectAll', 'tsSelectAll'].forEach(id => {
-    if(document.getElementById(id)) document.getElementById(id).checked = false;
-  });
-  updateBulkActionBar();
-}
-
-function updateBulkActionBar() {
-  const bar = document.getElementById('bulkActionBar');
-  const countSpan = document.getElementById('bulkCount');
-  if (selectedIds.size > 0) {
-    countSpan.textContent = selectedIds.size;
-    bar.classList.add('visible');
-  } else {
-    bar.classList.remove('visible');
-  }
-}
-
-function executeBulkDelete() {
-  if (selectedIds.size === 0) return;
-  
-  customConfirm(`Are you sure you want to delete ${selectedIds.size} selected items?`, () => {
-    if (currentPage === 'payments') {
-      transactions = transactions.filter(t => !selectedIds.has(t.id));
-      save(KEYS.tx, transactions);
-    } else if (currentPage === 'income') {
-      income = income.filter(i => !selectedIds.has(i.id));
-      save(KEYS.income, income);
-    } else if (currentPage === 'investing') {
-      investments = investments.filter(i => !selectedIds.has(i.id));
-      save(KEYS.invest, investments);
-    } else if (currentPage === 'timesheets') {
-      timesheets = timesheets.filter(t => !selectedIds.has(t.id));
-      save(KEYS.ts, timesheets);
-    }
-    clearSelection();
-    renderAll();
-    toast(`Deleted successfully`, 'success');
-  }, 'Bulk Delete', 'Delete Selected');
-}
-
 
 /* =====================================================================
    THEME / SETTINGS
@@ -1174,14 +1186,13 @@ function setAccent(color, soft) {
 }
 
 function saveSetting(k, v) {
-  settings[k] = (k.startsWith('gh') || k === 'currency' || k === 'theme' || k === 'accent' || k === 'accentSoft') ? v : parseFloat(v);
+  settings[k] = isNaN(v) ? v : parseFloat(v);
   save(KEYS.settings, settings);
   renderAll();
 }
 
-function loadSettingsUI() {
+function loadSettings() {
   applyTheme();
-  updateGitHubStatus();
   if (settings.accent) {
     document.documentElement.style.setProperty('--accent', settings.accent);
     document.documentElement.style.setProperty('--accent-soft', settings.accentSoft || '#2a2f5c');
@@ -1194,12 +1205,11 @@ function loadSettingsUI() {
   if (t) t.value = settings.taxRate;
   if (ti) ti.value = settings.titheRate;
   if (cu) cu.value = settings.currency || '$';
-  
-  // GH Configs
-  if(document.getElementById('ghToken')) document.getElementById('ghToken').value = settings.ghToken || '';
-  if(document.getElementById('ghOwner')) document.getElementById('ghOwner').value = settings.ghOwner || '';
-  if(document.getElementById('ghRepo')) document.getElementById('ghRepo').value = settings.ghRepo || '';
-  if(document.getElementById('ghPath')) document.getElementById('ghPath').value = settings.ghPath || 'data.json';
+  const as = document.getElementById('autoSyncToggle');
+  if (as) as.checked = !!settings.autoSync;
+  const cid = document.getElementById('googleClientId');
+  if (cid) cid.value = getClientId();
+  if (localStorage.getItem('mf_drive_connected')) updateDriveUI(true);
 }
 
 /* =====================================================================
@@ -1225,7 +1235,6 @@ function hoursToNum(h) {
    ===================================================================== */
 let currentPage = 'dashboard';
 function switchPage(page) {
-  clearSelection(); // Drop selection context on page change
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
@@ -1241,6 +1250,8 @@ function renderPage(page) {
   else if (page === 'income') renderIncome();
   else if (page === 'investing') renderInvesting();
   else if (page === 'timesheets') renderTimesheets();
+  else if (page === 'budget') renderBudget();
+  else if (page === 'import') renderImportPage();
   else if (page === 'settings') renderSettings();
 }
 
@@ -1250,19 +1261,23 @@ function renderAll() { renderPage(currentPage); }
    DASHBOARD
    ===================================================================== */
 function renderDashboard() {
+  // Compute totals
   const totalSpend = transactions.filter(t=>t.type==='Spending').reduce((s,t)=>s+t.amount,0);
   const totalRewards = transactions.filter(t=>t.type==='Rewards').reduce((s,t)=>s+t.amount,0);
   const totalExtraInc = transactions.filter(t=>t.type==='Extra Income').reduce((s,t)=>s+t.amount,0);
   const totalNetIncome = income.reduce((s,i)=>s+i.net,0);
+  const totalGross = income.reduce((s,i)=>s+i.gross,0);
   const totalInvGain = investments.reduce((s,i)=>s+(i.gain||0),0);
   const tithing = totalNetIncome * (settings.titheRate/100);
   const netPos = totalNetIncome + totalExtraInc + totalRewards - totalSpend - tithing + totalInvGain;
 
+  // Hero
   document.getElementById('heroValue').textContent = fmt(netPos);
   document.getElementById('heroValue').className = 'net-hero-value ' + (netPos >= 0 ? 'pos' : 'neg');
   document.getElementById('heroSub').textContent =
     `Income: ${fmt(totalNetIncome)} • Spending: ${fmt(totalSpend)} • Investing: ${fmtSigned(totalInvGain)}`;
 
+  // Summary cards
   document.getElementById('summaryCards').innerHTML = [
     {label:'Net Income (YTD)', val:totalNetIncome, cls:'pos'},
     {label:'Total Spending', val:-totalSpend, cls:'neg'},
@@ -1277,7 +1292,7 @@ function renderDashboard() {
     </div>
   `).join('');
 
-  renderMonthly(new Date().getFullYear());
+  renderMonthly(2026);
   renderCatBreakdown('all');
   renderRecentTx();
   renderInvestSummary();
@@ -1286,6 +1301,7 @@ function renderDashboard() {
 
 function renderMonthly(year) {
   year = parseInt(year);
+  // Calculate per-month net total from income and spending
   const cells = MONTHS.map((m,i)=>{
     const mo = i+1;
     const inc = income.filter(p=>{const d=new Date(p.payDate);return d.getFullYear()===year&&d.getMonth()+1===mo;}).reduce((s,p)=>s+p.net,0);
@@ -1307,6 +1323,7 @@ function renderCatBreakdown(monthVal) {
     return true;
   });
   const total = spending.reduce((s,t)=>s+t.amount,0);
+  // Group by category
   const cats = {};
   spending.forEach(t=>{
     const c = t.cat || 'Uncategorized';
@@ -1425,18 +1442,13 @@ function renderTxTable() {
   if (search) data = data.filter(t=>(t.desc||'').toLowerCase().includes(search)||(t.notes||'').toLowerCase().includes(search)||(t.cat||'').toLowerCase().includes(search)||(t.type||'').toLowerCase().includes(search));
   if (mo !== 'all') data = data.filter(t=>{ const d=new Date(t.date); return d.getMonth()+1 === parseInt(mo); });
 
-  renderedItemIds = data.map(i => i.id);
-
   const tbody = document.getElementById('txTbody');
-  document.getElementById('txSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
-
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No transactions found</div></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">📭</div><div class="empty-title">No transactions found</div></div></td></tr>`;
     return;
   }
   tbody.innerHTML = data.map(t=>`
-    <tr class="${selectedIds.has(t.id)?'selected':''}">
-      <td class="center"><input type="checkbox" class="row-cb" value="${t.id}" onchange="toggleSelect(this, '${t.id}')" ${selectedIds.has(t.id)?'checked':''}></td>
+    <tr>
       <td class="mono" style="font-size:12px;color:var(--text-dim)">${fmtDate(t.date)}</td>
       <td><span class="chip chip-${t.type.toLowerCase().replace(/\s/g,'-')}">${t.type}</span></td>
       <td>
@@ -1506,6 +1518,7 @@ function saveTx() {
   renderPayments();
   toast(editingTxId ? 'Transaction updated' : 'Transaction added', 'success');
   editingTxId = null;
+  scheduleAutoSync();
 }
 
 function editTx(id) {
@@ -1525,12 +1538,12 @@ function editTx(id) {
 }
 
 function deleteTx(id) {
-  customConfirm('Are you sure you want to delete this transaction?', () => {
-    transactions = transactions.filter(t=>t.id!==id);
-    save(KEYS.tx, transactions);
-    renderPayments();
-    toast('Deleted','success');
-  }, 'Delete Transaction');
+  if (!confirm('Delete this transaction?')) return;
+  transactions = transactions.filter(t=>t.id!==id);
+  save(KEYS.tx, transactions);
+  renderPayments();
+  toast('Deleted','success');
+  scheduleAutoSync();
 }
 
 /* =====================================================================
@@ -1540,6 +1553,7 @@ function renderIncome() {
   const totalNet = income.reduce((s,i)=>s+i.net,0);
   const totalGross = income.reduce((s,i)=>s+i.gross,0);
   const totalTax = income.reduce((s,i)=>s+i.tax,0);
+  const totalHrs = income.reduce((s,i)=>s+i.hours,0);
   const tithe = totalNet * (settings.titheRate/100);
 
   document.getElementById('incomeStatCards').innerHTML = [
@@ -1549,18 +1563,68 @@ function renderIncome() {
     {label:'Tithing Owed', val:tithe, cls:'neg'},
   ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${fmt(c.val)}</div></div>`).join('');
 
+  // Monthly category table
+  const months = [5,6]; // May, June
+  const catRows = ['Spending','Investing','Rewards','Income','Tithing','Net Total'];
+  const catData = {
+    'Spending': {5: -330.93, 6: -236.40},
+    'Investing': {5: 0, 6: 0},
+    'Rewards': {5: 3.64, 6: 6.23},
+    'Income': {5: 1303.72, 6: 1237.28},
+    'Tithing': {5: -89.84, 6: -123.73},
+    'Net Total': {5: 886.58, 6: 1769.96},
+  };
+  // Override with live data
+  months.forEach(mo=>{
+    catData['Spending'][mo] = -transactions.filter(t=>t.type==='Spending'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
+    catData['Income'][mo] = income.filter(p=>new Date(p.payDate).getMonth()+1===mo).reduce((s,p)=>s+p.net,0);
+    catData['Rewards'][mo] = transactions.filter(t=>t.type==='Rewards'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
+    const extraInc = transactions.filter(t=>t.type==='Extra Income'&&new Date(t.date).getMonth()+1===mo).reduce((s,t)=>s+t.amount,0);
+    catData['Tithing'][mo] = -(catData['Income'][mo]+extraInc) * (settings.titheRate/100);
+    catData['Investing'][mo] = investments.filter(i=>new Date(i.date).getMonth()+1===mo).reduce((s,i)=>s+(i.gain||0),0);
+    catData['Net Total'][mo] = catData['Income'][mo]+catData['Spending'][mo]+catData['Rewards'][mo]+catData['Tithing'][mo]+catData['Investing'][mo]+extraInc;
+  });
+
+  document.getElementById('monthCatTable').innerHTML = `
+    <div class="table-wrap" style="border:none"><table class="data-table">
+      <thead><tr><th>Category</th>${months.map(m=>`<th class="right">${MONTHS_FULL[m-1]}</th>`).join('')}<th class="right">Total</th></tr></thead>
+      <tbody>${catRows.map(row=>{
+        const vals = months.map(m=>catData[row][m]||0);
+        const total = vals.reduce((s,v)=>s+v,0);
+        const cls = total>0?'pos':total<0?'neg':'';
+        return `<tr><td style="font-weight:500">${row}</td>
+          ${vals.map(v=>`<td class="right mono ${v>0?'pos':v<0?'neg':''}">${v===0?'—':fmtSigned(v)}</td>`).join('')}
+          <td class="right mono ${cls}" style="font-weight:700">${total===0?'—':fmtSigned(total)}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  `;
+
+  // Paycheck breakdown
+  document.getElementById('paycheckBreakdown').innerHTML = `
+    <div style="font-size:13px">
+      ${income.slice(-3).reverse().map(p=>`
+        <div class="flex justify-between items-center" style="padding:10px 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-weight:500">${fmtDate(p.payDate)}</div>
+            <div style="font-size:11px;color:var(--text-dim)">${fmtDate(p.start)} – ${fmtDate(p.end)}</div>
+          </div>
+          <div class="right">
+            <div class="mono pos" style="font-weight:600">${fmt(p.net)}</div>
+            <div style="font-size:11px;color:var(--text-dim)">${p.hours}h @ ${fmt(p.rate)}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
   renderIncomeTable();
 }
 
 function renderIncomeTable() {
   const sorted = [...income].sort((a,b)=>new Date(b.payDate)-new Date(a.payDate));
-  renderedItemIds = sorted.map(i=>i.id);
-  
-  document.getElementById('incSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
-
   document.getElementById('incomeTbody').innerHTML = sorted.map(p=>`
-    <tr class="${selectedIds.has(p.id)?'selected':''}">
-      <td class="center"><input type="checkbox" class="row-cb" value="${p.id}" onchange="toggleSelect(this, '${p.id}')" ${selectedIds.has(p.id)?'checked':''}></td>
+    <tr>
       <td class="mono" style="font-size:12px">${fmtDate(p.payDate)}</td>
       <td style="font-size:12px;color:var(--text-dim)">${fmtDate(p.start)} – ${fmtDate(p.end)}</td>
       <td class="mono">${p.hours}h</td>
@@ -1613,6 +1677,7 @@ function saveIncome() {
   renderIncome();
   toast(editingIncomeId?'Paycheck updated':'Paycheck added','success');
   editingIncomeId = null;
+  scheduleAutoSync();
 }
 
 function editIncome(id) {
@@ -1632,12 +1697,12 @@ function editIncome(id) {
 }
 
 function deleteIncome(id) {
-  customConfirm('Are you sure you want to delete this paycheck?', () => {
-    income = income.filter(i=>i.id!==id);
-    save(KEYS.income, income);
-    renderIncome();
-    toast('Deleted','success');
-  }, 'Delete Paycheck');
+  if (!confirm('Delete this paycheck?')) return;
+  income = income.filter(i=>i.id!==id);
+  save(KEYS.income, income);
+  renderIncome();
+  toast('Deleted','success');
+  scheduleAutoSync();
 }
 
 /* =====================================================================
@@ -1662,12 +1727,8 @@ function renderInvesting() {
   </div>`).join('');
 
   const sorted = [...investments].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  renderedItemIds = sorted.map(i=>i.id);
-  document.getElementById('invSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
-
   document.getElementById('investTbody').innerHTML = sorted.map(inv=>`
-    <tr class="${selectedIds.has(inv.id)?'selected':''}">
-      <td class="center"><input type="checkbox" class="row-cb" value="${inv.id}" onchange="toggleSelect(this, '${inv.id}')" ${selectedIds.has(inv.id)?'checked':''}></td>
+    <tr>
       <td class="mono" style="font-size:12px">${fmtDate(inv.date)}</td>
       <td><span class="stat-badge ${inv.active==='Active'?'badge-green':'badge-red'}">${inv.active}</span></td>
       <td style="font-weight:700;font-size:15px">${inv.symbol}</td>
@@ -1686,12 +1747,13 @@ function renderInvesting() {
         </div>
       </td>
     </tr>
-  `).join('') || `<tr><td colspan="13"><div class="empty"><div class="empty-icon">📈</div><div class="empty-title">No investments yet</div></div></td></tr>`;
+  `).join('') || `<tr><td colspan="12"><div class="empty"><div class="empty-icon">📈</div><div class="empty-title">No investments yet</div></div></td></tr>`;
 }
 
 function calcInvest() {
   const shares = parseFloat(document.getElementById('invShares').value)||0;
   const current = parseFloat(document.getElementById('invCurrent').value)||0;
+  const buy = parseFloat(document.getElementById('invBuy').value)||0;
   const amount = parseFloat(document.getElementById('invAmount').value)||0;
   const value = shares * current;
   const gain = value - amount;
@@ -1724,6 +1786,7 @@ function saveInvest() {
   renderInvesting();
   toast(editingInvestId?'Investment updated':'Investment added','success');
   editingInvestId = null;
+  scheduleAutoSync();
 }
 
 function editInvest(id) {
@@ -1745,12 +1808,12 @@ function editInvest(id) {
 }
 
 function deleteInvest(id) {
-  customConfirm('Are you sure you want to delete this investment?', () => {
-    investments = investments.filter(i=>i.id!==id);
-    save(KEYS.invest, investments);
-    renderInvesting();
-    toast('Deleted','success');
-  }, 'Delete Investment');
+  if (!confirm('Delete this investment?')) return;
+  investments = investments.filter(i=>i.id!==id);
+  save(KEYS.invest, investments);
+  renderInvesting();
+  toast('Deleted','success');
+  scheduleAutoSync();
 }
 
 /* =====================================================================
@@ -1771,16 +1834,12 @@ function renderTimesheets() {
   ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${c.raw?c.val:fmt(c.val)}</div></div>`).join('');
 
   const sorted = [...timesheets].sort((a,b)=>new Date(b.start)-new Date(a.start));
-  renderedItemIds = sorted.map(t=>t.id);
-  document.getElementById('tsSelectAll').checked = renderedItemIds.length > 0 && renderedItemIds.every(id => selectedIds.has(id));
-
   document.getElementById('timesheetTbody').innerHTML = sorted.map((t,i)=>{
     const hrs = hoursToNum(t.hours);
     const gross = hrs*rate;
     const net = gross*(1-taxRate);
     const weekNum = sorted.length - i;
-    return `<tr class="${selectedIds.has(t.id)?'selected':''}">
-      <td class="center"><input type="checkbox" class="row-cb" value="${t.id}" onchange="toggleSelect(this, '${t.id}')" ${selectedIds.has(t.id)?'checked':''}></td>
+    return `<tr>
       <td><span class="stat-badge badge-accent">Week ${weekNum}</span></td>
       <td class="mono" style="font-size:12px">${fmtDate(t.start)}</td>
       <td class="mono" style="font-size:12px">${fmtDate(t.end)}</td>
@@ -1794,7 +1853,7 @@ function renderTimesheets() {
         </div>
       </td>
     </tr>`;
-  }).join('') || `<tr><td colspan="8"><div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">No timesheets yet</div></div></td></tr>`;
+  }).join('') || `<tr><td colspan="7"><div class="empty"><div class="empty-icon">🕐</div><div class="empty-title">No timesheets yet</div></div></td></tr>`;
 }
 
 let editingTsId = null;
@@ -1815,6 +1874,7 @@ function saveTimesheet() {
   renderTimesheets();
   toast(editingTsId?'Week updated':'Week added','success');
   editingTsId = null;
+  scheduleAutoSync();
 }
 
 function editTs(id) {
@@ -1830,19 +1890,20 @@ function editTs(id) {
 }
 
 function deleteTs(id) {
-  customConfirm('Are you sure you want to delete this timesheet?', () => {
-    timesheets = timesheets.filter(t=>t.id!==id);
-    save(KEYS.ts, timesheets);
-    renderTimesheets();
-    toast('Deleted','success');
-  }, 'Delete Timesheet');
+  if (!confirm('Delete this timesheet?')) return;
+  timesheets = timesheets.filter(t=>t.id!==id);
+  save(KEYS.ts, timesheets);
+  renderTimesheets();
+  toast('Deleted','success');
+  scheduleAutoSync();
 }
 
 /* =====================================================================
    SETTINGS PAGE
    ===================================================================== */
 function renderSettings() {
-  loadSettingsUI();
+  loadSettings();
+  // Category list
   document.getElementById('catList').innerHTML = categories.map((c,i)=>`
     <div class="flex items-center justify-between" style="padding:8px 0;border-bottom:1px solid var(--border)">
       <span style="font-size:13px">${c}</span>
@@ -1868,12 +1929,708 @@ function removeCat(i) {
 }
 
 /* =====================================================================
-   DATA IMPORT / EXPORT (LOCAL)
+   BUDGET PAGE
    ===================================================================== */
+function monthlyNetIncome(mo, year=2026) {
+  return income.filter(p=>{const d=new Date(p.payDate);return d.getFullYear()===year&&d.getMonth()+1===mo;}).reduce((s,p)=>s+p.net,0)
+    + transactions.filter(t=>t.type==='Extra Income'&&new Date(t.date).getMonth()+1===mo&&new Date(t.date).getFullYear()===year).reduce((s,t)=>s+t.amount,0);
+}
+function monthlySpendByCat(mo, year=2026) {
+  const out = {};
+  transactions.filter(t=>t.type==='Spending'&&new Date(t.date).getMonth()+1===mo&&new Date(t.date).getFullYear()===year)
+    .forEach(t=>{ const c=t.cat||'Uncategorized'; out[c]=(out[c]||0)+t.amount; });
+  return out;
+}
+function getBudgetFor(cat, mo) {
+  // month-specific overrides recurring
+  const monthB = budgets.find(b=>b.cat===cat&&b.scope==='month'&&b.month===mo);
+  if (monthB) return monthB.amount;
+  const rec = budgets.find(b=>b.cat===cat&&b.scope==='recurring');
+  return rec ? rec.amount : 0;
+}
+
+const BUDGET_COLORS = ['#7c83ff','#4ade80','#f87171','#facc15','#fb923c','#38bdf8','#c084fc','#f472b6','#2dd4bf','#a3e635'];
+
+function renderBudget() {
+  const mo = parseInt(document.getElementById('budgetMonthSel').value);
+  const netInc = monthlyNetIncome(mo);
+  const spendByCat = monthlySpendByCat(mo);
+  const totalSpent = Object.values(spendByCat).reduce((s,v)=>s+v,0);
+
+  // All budgeted categories (recurring + this month)
+  const budgetedCats = [...new Set(budgets.filter(b=>b.scope==='recurring'||(b.scope==='month'&&b.month===mo)).map(b=>b.cat))];
+  const totalBudgeted = budgetedCats.reduce((s,c)=>s+getBudgetFor(c,mo),0);
+
+  // Hero cards
+  document.getElementById('budgetHeroCards').innerHTML = [
+    {label:'Net Income (month)', val:netInc, cls:'pos'},
+    {label:'Total Budgeted', val:totalBudgeted, cls:'accent'},
+    {label:'Spent So Far', val:totalSpent, cls:totalSpent>totalBudgeted&&totalBudgeted>0?'neg':''},
+  ].map(c=>`<div class="stat-card"><div class="stat-label">${c.label}</div><div class="stat-value ${c.cls}">${fmt(c.val)}</div></div>`).join('');
+
+  // Allocation bar (budgeted categories + tithing + remaining)
+  const tithe = netInc * (settings.titheRate/100);
+  const segs = budgetedCats.map((c,i)=>({label:c, val:getBudgetFor(c,mo), color:BUDGET_COLORS[i%BUDGET_COLORS.length]}))
+    .filter(s=>s.val>0);
+  if (tithe>0) segs.push({label:'Tithing', val:tithe, color:'#c084fc'});
+  const allocated = segs.reduce((s,x)=>s+x.val,0);
+  const remaining = Math.max(0, netInc - allocated);
+  if (remaining>0) segs.push({label:'Unallocated', val:remaining, color:'var(--muted)'});
+  const allocTotal = segs.reduce((s,x)=>s+x.val,0) || 1;
+
+  document.getElementById('budgetAllocBar').innerHTML = segs.map(s=>
+    `<div title="${s.label}: ${fmt(s.val)}" style="width:${(s.val/allocTotal*100).toFixed(1)}%;background:${s.color}"></div>`
+  ).join('');
+  document.getElementById('budgetAllocLegend').innerHTML = segs.map(s=>
+    `<div class="flex items-center gap-8" style="font-size:12px"><span style="width:12px;height:12px;border-radius:3px;background:${s.color};display:inline-block"></span>${s.label} <strong class="mono">${fmt(s.val)}</strong></div>`
+  ).join('');
+  document.getElementById('budgetAllocSub').textContent = `${fmt(allocated)} of ${fmt(netInc)} allocated`;
+
+  // Category budget list with progress
+  if (!budgetedCats.length) {
+    document.getElementById('budgetCatList').innerHTML = `<div class="empty"><div class="empty-icon">🎯</div><div class="empty-title">No budgets set yet</div><div class="empty-sub">Tap "Set Budget" to add spending limits per category</div></div>`;
+  } else {
+    document.getElementById('budgetCatList').innerHTML = budgetedCats.map((cat,i)=>{
+      const limit = getBudgetFor(cat, mo);
+      const spent = spendByCat[cat]||0;
+      const pct = limit>0 ? Math.min(100,(spent/limit)*100) : 0;
+      const over = spent>limit && limit>0;
+      const remain = limit - spent;
+      const barColor = over ? 'var(--red)' : pct>80 ? 'var(--yellow)' : 'var(--green)';
+      return `<div class="mb-16">
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center gap-8">
+            <span style="width:10px;height:10px;border-radius:50%;background:${BUDGET_COLORS[i%BUDGET_COLORS.length]};display:inline-block"></span>
+            <strong style="font-size:14px">${cat}</strong>
+            ${over?'<span class="stat-badge badge-red">Over</span>':pct>80?'<span class="stat-badge badge-yellow">Close</span>':'<span class="stat-badge badge-green">On track</span>'}
+          </div>
+          <div class="mono" style="font-size:13px">${fmt(spent)} <span style="color:var(--text-dim)">/ ${fmt(limit)}</span></div>
+        </div>
+        <div class="progress-wrap" style="height:8px"><div class="progress-bar" style="width:${pct}%;background:${barColor}"></div></div>
+        <div class="flex justify-between mt-4" style="font-size:11px;color:var(--text-dim)">
+          <span>${pct.toFixed(0)}% used</span>
+          <span class="${remain<0?'neg':'pos'}">${remain<0?fmt(Math.abs(remain))+' over':fmt(remain)+' left'}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // 50/30/20 rule
+  const savingsGiving = tithe + investments.filter(i=>new Date(i.date).getMonth()+1===mo).reduce((s,i)=>s+i.amount,0);
+  const rule = [
+    {label:'Spending (Needs+Wants)', actual:totalSpent, target:netInc*0.8, color:'var(--accent)'},
+    {label:'Savings & Giving', actual:savingsGiving, target:netInc*0.2, color:'var(--green)'},
+  ];
+  document.getElementById('budgetRuleCheck').innerHTML = rule.map(r=>{
+    const pct = netInc>0?(r.actual/netInc*100):0;
+    const tgtPct = netInc>0?(r.target/netInc*100):0;
+    return `<div class="mb-16">
+      <div class="flex justify-between mb-4"><span style="font-size:13px">${r.label}</span><span class="mono" style="font-size:12px">${pct.toFixed(0)}% <span style="color:var(--text-dim)">(target ${tgtPct.toFixed(0)}%)</span></span></div>
+      <div class="progress-wrap" style="height:8px"><div class="progress-bar" style="width:${Math.min(100,pct)}%;background:${r.color}"></div></div>
+    </div>`;
+  }).join('') + `<div style="font-size:12px;color:var(--text-dim);margin-top:8px">Net this month: <strong class="mono" style="color:var(--text)">${fmt(netInc)}</strong></div>`;
+
+  // Budget vs actual table
+  document.getElementById('budgetSummaryTable').innerHTML = budgetedCats.length ? `
+    <div class="table-wrap" style="border:none"><table class="data-table">
+      <thead><tr><th>Category</th><th class="right">Budget</th><th class="right">Actual</th><th class="right">Diff</th></tr></thead>
+      <tbody>${budgetedCats.map(cat=>{
+        const limit=getBudgetFor(cat,mo); const spent=spendByCat[cat]||0; const diff=limit-spent;
+        return `<tr><td>${cat}</td><td class="right mono">${fmt(limit)}</td><td class="right mono">${fmt(spent)}</td><td class="right mono ${diff>=0?'pos':'neg'}">${fmtSigned(diff)}</td></tr>`;
+      }).join('')}</tbody>
+    </table></div>` : '<div class="empty" style="padding:24px"><div class="empty-sub">No budgets to compare yet</div></div>';
+}
+
+function openBudgetModal() {
+  const sel = document.getElementById('budgetCat');
+  sel.innerHTML = categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+  document.getElementById('budgetAmount').value = '';
+  openModal('budgetModal');
+}
+
+function saveBudget() {
+  const cat = document.getElementById('budgetCat').value;
+  const amount = parseFloat(document.getElementById('budgetAmount').value)||0;
+  const scope = document.getElementById('budgetScope').value;
+  const mo = parseInt(document.getElementById('budgetMonthSel').value);
+  // Remove existing matching budget
+  budgets = budgets.filter(b=>!(b.cat===cat && b.scope===scope && (scope==='recurring'||b.month===mo)));
+  if (amount>0) {
+    budgets.push({id:uid(), cat, amount, scope, month:scope==='month'?mo:null});
+  }
+  save(KEYS.budgets, budgets);
+  closeModal('budgetModal');
+  renderBudget();
+  toast(amount>0?'Budget saved':'Budget removed','success');
+  scheduleAutoSync();
+}
+
+/* =====================================================================
+   SMART IMPORT — built-in parser (no API key)
+   ===================================================================== */
+let pendingImport = { rows: [], dest: 'transactions' };
+
+function renderImportPage() {
+  // nothing to pre-render; preview updates on parse
+}
+
+function loadSmartFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('smartImportText').value = e.target.result; };
+  reader.readAsText(file);
+}
+
+function previewSmartImport() { /* live char count could go here */ }
+
+// Date parser — handles many formats, returns YYYY-MM-DD
+function parseDate(str, defaultYear=2026) {
+  if (!str) return null;
+  str = str.trim();
+  // ISO
+  let m = str.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  // M/D/YYYY or M/D/YY
+  m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+  if (m) { let y=m[3]; if(y.length===2) y='20'+y; return `${y}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`; }
+  // M/D (assume default year)
+  m = str.match(/^(\d{1,2})\/(\d{1,2})$/);
+  if (m) return `${defaultYear}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  // "May 16 2026" or "May 16, 2026" or "16 May 2026"
+  const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+  m = str.match(/([a-z]{3,9})\.?\s+(\d{1,2}),?\s*(\d{4})?/i);
+  if (m && months[m[1].slice(0,3).toLowerCase()]) {
+    const mm=months[m[1].slice(0,3).toLowerCase()]; const y=m[3]||defaultYear;
+    return `${y}-${String(mm).padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+  }
+  return null;
+}
+
+// Amount parser — handles $, commas, parens=negative, trailing DR/CR
+function parseAmount(str) {
+  if (str==null) return null;
+  let s = String(str).trim();
+  let neg = false;
+  if (/^\(.*\)$/.test(s)) { neg=true; s=s.replace(/[()]/g,''); }
+  if (/\bdr\b|debit/i.test(s)) neg=true;
+  if (/-/.test(s)) neg=true;
+  s = s.replace(/[^0-9.]/g,'');
+  if (!s) return null;
+  let n = parseFloat(s);
+  if (isNaN(n)) return null;
+  return neg ? -n : n;
+}
+
+function detectType(desc, amount) {
+  const d = (desc||'').toLowerCase();
+  if (/reward|cashback|cash back|points|redeem/.test(d)) return 'Rewards';
+  if (amount>0 && /deposit|credit|payroll|direct dep|refund|transfer in/.test(d)) return 'Extra Income';
+  if (amount>0 && !/payment|purchase|pos|debit/.test(d)) return 'Extra Income';
+  return 'Spending';
+}
+
+const TICKERS = /\b(QQQ|SPY|VOO|VTI|AAPL|MSFT|NVDA|TSLA|AMZN|GOOGL|GOOG|META|AMD|DIA|IWM|SCHD|VYM|VXUS|BND|GLD|ARKK|COIN|NFLX|DIS|JPM|BAC|F|T|INTC|PLTR|SOFI|BABA|UBER|ABNB)\b/i;
+
+function parseSmartData(text, dest) {
+  const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length);
+  if (!lines.length) return { rows: [], dest };
+
+  // Try JSON first
+  try {
+    const j = JSON.parse(text);
+    if (Array.isArray(j)) return classifyRows(j, dest);
+    if (j.transactions||j.income||j.investments||j.timesheets) {
+      // full backup style — collect all
+      const rows=[];
+      (j.transactions||[]).forEach(t=>rows.push({_dest:'transactions',...t}));
+      (j.income||[]).forEach(t=>rows.push({_dest:'income',...t}));
+      (j.investments||[]).forEach(t=>rows.push({_dest:'investments',...t}));
+      (j.timesheets||[]).forEach(t=>rows.push({_dest:'timesheets',...t}));
+      return { rows, dest:'auto' };
+    }
+  } catch(e) { /* not JSON, continue */ }
+
+  // Detect CSV (has commas or tabs consistently, with a header)
+  const delim = lines[0].includes('\t') ? '\t' : lines[0].includes(',') ? ',' : null;
+  let header = null, dataLines = lines;
+  if (delim) {
+    const firstCells = lines[0].split(delim).map(c=>c.trim().toLowerCase());
+    // A header row never starts with a date or a parseable amount, and matches column-name words as whole words
+    const firstIsData = parseDate(firstCells[0]) || firstCells.some(c=>parseAmount(c)!=null && /^[$\-(]?[\d,]+\.?\d*[)]?$/.test(c.trim()));
+    const headerWords = /^(date|pay date|paydate|desc|description|memo|payee|merchant|name|amount|total|debit|credit|type|category|categ|hours?|total hours|rate|gross|tax|net|symbol|ticker|shares?|qty|quantity|buy.*price|sell.*price|current.*price|price|start|start date|end|end date|notes?)$/;
+    const looksLikeHeader = !firstIsData && firstCells.filter(c=>headerWords.test(c)).length >= 2;
+    if (looksLikeHeader) { header = firstCells; dataLines = lines.slice(1); }
+  }
+
+  const rows = [];
+  dataLines.forEach(line=>{
+    let cells = delim ? line.split(delim).map(c=>c.trim().replace(/^"|"$/g,'')) : line.split(/\s{2,}|\t/).map(c=>c.trim());
+    let rec = parseRowToRecord(cells, header, line, dest);
+    if (rec) rows.push(rec);
+  });
+  return { rows, dest };
+}
+
+function parseRowToRecord(cells, header, rawLine, dest) {
+  // Map by header if available
+  const get = (names) => {
+    if (!header) return null;
+    for (const n of names) {
+      const idx = header.findIndex(h=>h.includes(n));
+      if (idx>=0 && cells[idx]!=null) return cells[idx];
+    }
+    return null;
+  };
+
+  // Investment detection
+  const tickerMatch = rawLine.match(TICKERS);
+  if ((dest==='investments') || (dest==='auto' && tickerMatch && /\d/.test(rawLine))) {
+    const symbol = (get(['symbol','ticker']) || (tickerMatch?tickerMatch[0]:'')).toUpperCase();
+    if (symbol) {
+      const nums = cells.map(c=>parseAmount(c)).filter(n=>n!=null);
+      return {_dest:'investments', _raw:rawLine,
+        date: parseDate(get(['date'])||cells.find(c=>parseDate(c))||'')||new Date().toISOString().split('T')[0],
+        active:'Active', symbol,
+        shares: parseFloat(get(['share','qty','quantity'])||0)||0,
+        amount: parseAmount(get(['amount','invested','cost']))||nums[1]||0,
+        buyPrice: parseAmount(get(['buy','price']))||nums[2]||0,
+        sellPrice: parseAmount(get(['sell']))||null,
+        currentPrice: parseAmount(get(['current']))||nums[3]||0,
+      };
+    }
+  }
+
+  // Timesheet detection (HH:MM hours)
+  const hhmm = rawLine.match(/\b(\d{1,3}):([0-5]\d)\b/);
+  if ((dest==='timesheets') || (dest==='auto' && hhmm && /\d{1,2}\/\d{1,2}/.test(rawLine))) {
+    const dates = cells.map(c=>parseDate(c)).filter(Boolean);
+    if (dates.length>=1 && hhmm) {
+      return {_dest:'timesheets', _raw:rawLine,
+        start: parseDate(get(['start']))||dates[0],
+        end: parseDate(get(['end']))||dates[1]||dates[0],
+        hours: get(['hour','total'])||hhmm[0], notes:''};
+    }
+  }
+
+  // Income detection (has gross/net/rate columns)
+  if ((dest==='income') || (dest==='auto' && header && header.some(h=>/gross|net|rate/.test(h)))) {
+    const gross = parseAmount(get(['gross']));
+    if (gross!=null || dest==='income') {
+      const hours = parseFloat(get(['hour'])||0)||0;
+      const rate = parseAmount(get(['rate']))||settings.rate;
+      const g = gross!=null?gross:hours*rate;
+      const tax = parseAmount(get(['tax','withh']))||0;
+      return {_dest:'income', _raw:rawLine,
+        payDate: parseDate(get(['pay','date']))||parseDate(cells.find(c=>parseDate(c)))||new Date().toISOString().split('T')[0],
+        start: parseDate(get(['start']))||'', end: parseDate(get(['end']))||'',
+        hours, rate, gross:g, tax, net: parseAmount(get(['net']))||(g-tax)};
+    }
+  }
+
+  // Default → transaction
+  let date = parseDate(get(['date'])) || parseDate(cells.find(c=>parseDate(c)));
+  if (!date) {
+    // try find date anywhere in raw line
+    const dm = rawLine.match(/\d{1,2}\/\d{1,2}(\/\d{2,4})?|\d{4}-\d{1,2}-\d{1,2}/);
+    if (dm) date = parseDate(dm[0]);
+  }
+  // amount = last numeric-looking cell, or explicit column
+  let amount = parseAmount(get(['amount','total','debit','credit']));
+  if (amount==null) {
+    for (let i=cells.length-1;i>=0;i--){ const a=parseAmount(cells[i]); if(a!=null && /[\d.]/.test(cells[i]) && !parseDate(cells[i])){ amount=a; break; } }
+  }
+  if (amount==null || !date) return null;
+  // description = longest non-date non-amount cell, or header desc
+  let desc = get(['desc','memo','name','payee','merchant']) || '';
+  if (!desc) {
+    desc = cells.filter(c=>c && !parseDate(c) && parseAmount(c)==null).sort((a,b)=>b.length-a.length)[0]||'';
+  }
+  const type = get(['type']) || detectType(desc, amount);
+  const normType = /reward/i.test(type)?'Rewards':/income|credit|deposit/i.test(type)?'Extra Income':/spend|debit|purchase/i.test(type)?'Spending':detectType(desc,amount);
+  return {_dest:'transactions', _raw:rawLine, date, type:normType, desc:desc.slice(0,60),
+    amount: Math.abs(amount), cat: get(['categ'])||'', notes:''};
+}
+
+function classifyRows(arr, dest) {
+  const rows = arr.map(o=>{
+    const r = {...o};
+    if (dest!=='auto') r._dest = dest;
+    else r._dest = o.symbol?'investments':o.gross!=null?'income':o.hours&&String(o.hours).includes(':')?'timesheets':'transactions';
+    return r;
+  });
+  return { rows, dest };
+}
+
+function runSmartImport() {
+  const text = document.getElementById('smartImportText').value;
+  const dest = document.getElementById('importDest').value;
+  if (!text.trim()) { toast('Paste some data first','error'); return; }
+  const result = parseSmartData(text, dest);
+  pendingImport = result;
+  renderImportPreview(result.rows);
+}
+
+function renderImportPreview(rows) {
+  document.getElementById('parseCount').textContent = `${rows.length} row${rows.length!==1?'s':''}`;
+  const card = document.getElementById('importConfirmCard');
+  if (!rows.length) {
+    document.getElementById('importPreview').innerHTML = `<div class="empty"><div class="empty-icon">🤔</div><div class="empty-title">Couldn't parse that</div><div class="empty-sub">Try selecting a specific destination, or check the format hints below</div></div>`;
+    card.style.display='none';
+    return;
+  }
+  const byDest = {};
+  rows.forEach(r=>{ byDest[r._dest]=(byDest[r._dest]||0)+1; });
+  const labels = {transactions:'💳 Transactions',income:'💵 Income',investments:'📈 Investments',timesheets:'🕐 Timesheets'};
+
+  document.getElementById('importPreview').innerHTML = `
+    <div class="table-wrap" style="max-height:320px;overflow-y:auto"><table class="data-table">
+      <thead><tr><th>Goes to</th><th>Date</th><th>Detail</th><th class="right">Value</th></tr></thead>
+      <tbody>${rows.slice(0,50).map(r=>{
+        let detail='', value='';
+        if (r._dest==='transactions'){ detail=`<span class="chip chip-${r.type.toLowerCase().replace(/\s/g,'-')}">${r.type}</span> ${r.desc||''}`; value=fmt(r.amount); }
+        else if (r._dest==='income'){ detail=`Paycheck ${r.hours}h`; value=fmt(r.net); }
+        else if (r._dest==='investments'){ detail=`<strong>${r.symbol}</strong> ${r.shares||''} sh`; value=fmt(r.amount); }
+        else if (r._dest==='timesheets'){ detail=`Week`; value=r.hours; }
+        return `<tr><td style="font-size:11px">${labels[r._dest]||r._dest}</td><td class="mono" style="font-size:11px">${fmtDate(r.date||r.payDate||r.start)}</td><td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${detail}</td><td class="right mono" style="font-size:12px">${value}</td></tr>`;
+      }).join('')}</tbody>
+    </table></div>
+    ${rows.length>50?`<div class="section-sub mt-8">+ ${rows.length-50} more…</div>`:''}`;
+
+  card.style.display='';
+  document.getElementById('importConfirmSummary').innerHTML = 'Will add: ' + Object.entries(byDest).map(([d,n])=>`<strong>${n}</strong> ${labels[d]||d}`).join(' &nbsp;•&nbsp; ');
+}
+
+function commitSmartImport() {
+  const rows = pendingImport.rows;
+  if (!rows.length) return;
+  let added=0;
+  rows.forEach(r=>{
+    const {_dest,_raw,...clean} = r;
+    clean.id = uid();
+    if (_dest==='transactions'){ transactions.push(clean); added++; }
+    else if (_dest==='income'){
+      clean.gross=clean.gross||0; clean.net=clean.net||(clean.gross-(clean.tax||0));
+      clean.currentValue; income.push(clean); added++;
+    }
+    else if (_dest==='investments'){
+      clean.currentValue=(clean.shares||0)*(clean.currentPrice||0);
+      clean.gain=clean.currentValue-(clean.amount||0);
+      clean.pct=clean.amount?(clean.gain/clean.amount*100):0;
+      investments.push(clean); added++;
+    }
+    else if (_dest==='timesheets'){ timesheets.push(clean); added++; }
+  });
+  save(KEYS.tx,transactions); save(KEYS.income,income); save(KEYS.invest,investments); save(KEYS.ts,timesheets);
+  clearImportPreview();
+  document.getElementById('smartImportText').value='';
+  toast(`Added ${added} item${added!==1?'s':''} to your lists!`,'success');
+  scheduleAutoSync();
+}
+
+function clearImportPreview() {
+  pendingImport={rows:[],dest:'transactions'};
+  document.getElementById('importConfirmCard').style.display='none';
+  document.getElementById('parseCount').textContent='0 rows';
+  document.getElementById('importPreview').innerHTML=`<div class="empty"><div class="empty-icon">🤖</div><div class="empty-title">Nothing parsed yet</div><div class="empty-sub">Paste data on the left and hit Parse</div></div>`;
+}
+
+
+/* =====================================================================
+   GOOGLE DRIVE SYNC  —  per-list JSON files + dated daily backups
+   Architecture: app (code) hosted on GitHub Pages; data lives in Drive.
+   Each list is its own file:  transactions.json, income.json, etc.
+   A dated full snapshot is written to /backups once per day.
+   ===================================================================== */
+
+// Known Drive file IDs (created during setup). The app reads/writes these.
+// If a file is missing (e.g. fresh account), it is auto-created by name.
+const DRIVE_FILES = {
+  transactions: { id: '1fOqQSnn4u8XJiJSGqKbIuGSUr9dQjfZY', name: 'transactions.json' },
+  income:       { id: '1kYaWb8Us159oQDYq1RZSxTWZjlk_j1ib', name: 'income.json' },
+  investments:  { id: '1ur8KCnT44WBiTaFe7WOqcdxaLxHq4PPI', name: 'investments.json' },
+  timesheets:   { id: '1pl4m1HimdeLcDkDf3B-Qj7XQqymTO-Q9', name: 'timesheets.json' },
+  budgets:      { id: '17YEiSZdXDJqzm6kv380wJseszeo-f9HZ', name: 'budgets.json' },
+  settings:     { id: '1-L3y-WEyZcBl5DxWqjyRhnDCPr6hhISx', name: 'settings.json' },
+};
+
+let gisToken = null;
+let tokenClient = null;
+let gapiReady = false;
+
+function getClientId() { return localStorage.getItem('mf_google_client_id') || ''; }
+function saveGoogleClientId(v) { localStorage.setItem('mf_google_client_id', v.trim()); toast('Client ID saved','success'); }
+
+function loadGoogleScripts(cb) {
+  if (window.google && window.gapi && gapiReady) { cb(); return; }
+  let loaded = 0;
+  const done = () => { if (++loaded >= 2) cb(); };
+  if (!document.getElementById('gis-script')) {
+    const s1 = document.createElement('script'); s1.id='gis-script'; s1.src='https://accounts.google.com/gsi/client'; s1.onload=done; s1.onerror=()=>toast('Could not load Google sign-in','error'); document.head.appendChild(s1);
+  } else done();
+  if (!document.getElementById('gapi-script')) {
+    const s2 = document.createElement('script'); s2.id='gapi-script'; s2.src='https://apis.google.com/js/api.js';
+    s2.onload=()=>{ gapi.load('client', async()=>{ await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']}); gapiReady=true; done(); }); };
+    s2.onerror=()=>toast('Could not load Google API','error');
+    document.head.appendChild(s2);
+  } else done();
+}
+
+function driveConnect() {
+  const clientId = getClientId();
+  if (!clientId) { toast('Add your Google Client ID first (field below)','error'); const el=document.getElementById('googleClientId'); if(el) el.focus(); return; }
+  toast('Connecting to Google…','info');
+  loadGoogleScripts(()=>{
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: DRIVE.SCOPE,
+      callback: (resp)=>{
+        if (resp.error){ toast('Sign-in failed','error'); return; }
+        gisToken = resp.access_token;
+        gapi.client.setToken({access_token: gisToken});
+        localStorage.setItem('mf_drive_connected','1');
+        updateDriveUI(true);
+        toast('Connected to Google Drive!','success');
+        loadArchiveList();
+        drivePull(true);  // pull latest right after connecting
+      }
+    });
+    tokenClient.requestAccessToken({prompt: gisToken?'':'consent'});
+  });
+}
+
+function ensureDriveAuth(cb) {
+  if (gisToken && gapiReady) { cb(); return; }
+  if (localStorage.getItem('mf_drive_connected') && getClientId()) {
+    loadGoogleScripts(()=>{
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: getClientId(), scope: DRIVE.SCOPE,
+        callback:(resp)=>{ if(resp.access_token){ gisToken=resp.access_token; gapi.client.setToken({access_token:gisToken}); updateDriveUI(true); cb(); } else { toast('Please reconnect Google Drive','error'); } }
+      });
+      tokenClient.requestAccessToken({prompt:''});
+    });
+  } else {
+    toast('Connect Google Drive in Settings first','error');
+  }
+}
+
+function updateDriveUI(connected) {
+  const btn = document.getElementById('driveBtn');
+  const desc = document.getElementById('driveStatusDesc');
+  const cBtn = document.getElementById('driveConnectBtn');
+  if (connected) {
+    if (btn) btn.textContent='☁️';
+    if (desc) { const last=localStorage.getItem('mf_last_sync'); desc.textContent = 'Connected ✓' + (last?` · last sync ${new Date(last).toLocaleString()}`:''); }
+    if (cBtn) cBtn.textContent='Reconnect';
+  } else {
+    if (desc) desc.textContent='Not connected';
+  }
+}
+
+// ---- low-level helpers ----------------------------------------------------
+
+async function driveFindByName(name, parentId) {
+  const res = await gapi.client.drive.files.list({
+    q: `name='${name}' and '${parentId}' in parents and trashed=false`,
+    fields:'files(id,name,modifiedTime)', spaces:'drive'
+  });
+  return res.result.files[0]||null;
+}
+
+// Write a JSON object to a specific file id (PATCH) or create it by name if missing.
+async function driveWriteFile(fileMeta, parentId, obj) {
+  const content = JSON.stringify(obj);
+  const boundary='-------mf'+Date.now()+Math.random().toString(36).slice(2);
+  let fileId = fileMeta.id;
+
+  // Verify the known id still exists; if not, look up by name, else create.
+  if (fileId) {
+    try { await gapi.client.drive.files.get({fileId, fields:'id'}); }
+    catch(e){ fileId = null; }
+  }
+  if (!fileId) {
+    const found = await driveFindByName(fileMeta.name, parentId);
+    fileId = found ? found.id : null;
+  }
+
+  const meta = fileId ? {} : { name:fileMeta.name, parents:[parentId], mimeType:'application/json' };
+  const body =
+    `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n`+
+    `--${boundary}\r\nContent-Type: application/json\r\n\r\n${content}\r\n--${boundary}--`;
+  const path = fileId
+    ? `/upload/drive/v3/files/${fileId}?uploadType=multipart`
+    : `/upload/drive/v3/files?uploadType=multipart`;
+  const res = await gapi.client.request({ path, method: fileId?'PATCH':'POST',
+    headers:{'Content-Type':`multipart/related; boundary=${boundary}`}, body });
+  // cache id back if newly created
+  if (!fileMeta.id && res.result && res.result.id) fileMeta.id = res.result.id;
+  return res;
+}
+
+async function driveReadFile(fileMeta, parentId) {
+  let fileId = fileMeta.id;
+  if (fileId) {
+    try { await gapi.client.drive.files.get({fileId, fields:'id'}); }
+    catch(e){ fileId=null; }
+  }
+  if (!fileId) {
+    const found = await driveFindByName(fileMeta.name, parentId);
+    if (!found) return null;
+    fileId = found.id; fileMeta.id = fileId;
+  }
+  const res = await gapi.client.drive.files.get({fileId, alt:'media'});
+  const raw = typeof res.body==='string' ? res.body : JSON.stringify(res.result);
+  try { return JSON.parse(raw); } catch(e){ return null; }
+}
+
+// ---- map app state <-> files ---------------------------------------------
+
+function stateForKey(key) {
+  switch(key){
+    case 'transactions': return transactions;
+    case 'income': return income;
+    case 'investments': return investments;
+    case 'timesheets': return timesheets;
+    case 'budgets': return budgets;
+    case 'settings': return { settings, categories };
+  }
+}
+function applyStateForKey(key, data) {
+  if (data==null) return;
+  switch(key){
+    case 'transactions': transactions = data; save(KEYS.tx, transactions); break;
+    case 'income': income = data; save(KEYS.income, income); break;
+    case 'investments': investments = data; save(KEYS.invest, investments); break;
+    case 'timesheets': timesheets = data; save(KEYS.ts, timesheets); break;
+    case 'budgets': budgets = data; save(KEYS.budgets, budgets); break;
+    case 'settings':
+      if (data.settings) { settings = {...settings, ...data.settings}; save(KEYS.settings, settings); }
+      if (data.categories) { categories = data.categories; save(KEYS.cats, categories); }
+      break;
+  }
+}
+
+// ---- public sync operations ----------------------------------------------
+
+// Push every list to its own Drive file, then write a dated daily backup.
+async function driveSyncNow() {
+  ensureDriveAuth(async()=>{
+    try {
+      toast('Saving to Drive…','info');
+      const now = new Date().toISOString();
+      for (const key of Object.keys(DRIVE_FILES)) {
+        await driveWriteFile(DRIVE_FILES[key], DRIVE.folderId, { updated: now, data: stateForKey(key) });
+      }
+      // dated daily snapshot (one file per calendar day, overwritten if re-run same day)
+      await driveWriteDailyBackup(now);
+      localStorage.setItem('mf_last_sync', now);
+      updateDriveUI(true);
+      toast('Saved to Drive ✓','success');
+      loadArchiveList();
+    } catch(e){ console.error(e); toast('Save failed — try Reconnect','error'); }
+  });
+}
+
+async function driveWriteDailyBackup(now) {
+  const name = `finance-${new Date().toISOString().split('T')[0]}.json`;
+  const snapshot = { version:2, exported:now, transactions, income, investments, timesheets, budgets, settings, categories };
+  await driveWriteFile({ id:null, name }, DRIVE.backupsFolderId, snapshot);
+}
+
+// Pull every per-list file from Drive into the app.
+async function drivePull(silent) {
+  ensureDriveAuth(async()=>{
+    try {
+      if(!silent) toast('Loading from Drive…','info');
+      let loadedAny = false;
+      for (const key of Object.keys(DRIVE_FILES)) {
+        const obj = await driveReadFile(DRIVE_FILES[key], DRIVE.folderId);
+        if (obj && obj.data!==undefined) { applyStateForKey(key, obj.data); loadedAny = true; }
+      }
+      if (loadedAny) { renderAll(); if(!silent) toast('Loaded latest from Drive ✓','success'); }
+      else if(!silent) toast('No Drive data found yet','info');
+      localStorage.setItem('mf_last_sync', new Date().toISOString());
+      updateDriveUI(true);
+    } catch(e){ console.error(e); if(!silent) toast('Load failed','error'); }
+  });
+}
+
+// ---- archive (dated backups) ---------------------------------------------
+
+async function loadArchiveList() {
+  if(!gisToken){ return; }
+  try {
+    const res = await gapi.client.drive.files.list({
+      q:`'${DRIVE.backupsFolderId}' in parents and trashed=false and mimeType='application/json'`,
+      orderBy:'name desc', fields:'files(id,name,modifiedTime)', pageSize:90, spaces:'drive'
+    });
+    const files = res.result.files||[];
+    const el = document.getElementById('archiveList');
+    if(!el) return;
+    if(!files.length){ el.innerHTML='<div class="empty" style="padding:24px"><div class="empty-sub">No backups yet — they appear here daily</div></div>'; return; }
+    el.innerHTML = files.map(f=>{
+      const day = f.name.replace('finance-','').replace('.json','');
+      return `<div class="flex justify-between items-center" style="padding:8px 0;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:13px;font-weight:500">${day}</div><div style="font-size:11px;color:var(--text-dim)">${new Date(f.modifiedTime).toLocaleString()}</div></div>
+        <button class="btn btn-ghost btn-sm" onclick="restoreArchive('${f.id}','${day}')">Restore</button>
+      </div>`;
+    }).join('');
+  } catch(e){ console.error(e); }
+}
+
+async function restoreArchive(fileId, day) {
+  if(!confirm(`Restore your data from ${day}? This replaces what's currently in the app. A fresh backup of today is kept separately, so you won't lose anything.`)) return;
+  ensureDriveAuth(async()=>{
+    try {
+      const content = await gapi.client.drive.files.get({fileId, alt:'media'});
+      const data = typeof content.body==='string'?JSON.parse(content.body):content.result;
+      // Snapshot current state first (safety)
+      await driveWriteDailyBackup(new Date().toISOString());
+      applyImportedData(data);
+      // Push restored state back out to the per-list files so all devices match
+      await driveSyncNow();
+      renderAll();
+      toast(`Restored from ${day}`,'success');
+    } catch(e){ console.error(e); toast('Restore failed','error'); }
+  });
+}
+
+function applyImportedData(data) {
+  if(data.transactions){transactions=data.transactions;save(KEYS.tx,transactions);}
+  if(data.income){income=data.income;save(KEYS.income,income);}
+  if(data.investments){investments=data.investments;save(KEYS.invest,investments);}
+  if(data.timesheets){timesheets=data.timesheets;save(KEYS.ts,timesheets);}
+  if(data.budgets){budgets=data.budgets;save(KEYS.budgets,budgets);}
+  if(data.categories){categories=data.categories;save(KEYS.cats,categories);}
+  if(data.settings){settings={...settings,...data.settings};save(KEYS.settings,settings);}
+}
+
+// ---- auto-sync orchestration ---------------------------------------------
+
+let syncTimer=null;
+function scheduleAutoSync() {
+  if(!settings.autoSync || !localStorage.getItem('mf_drive_connected')) return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>{ if(gisToken) driveSyncNow(); else ensureDriveAuth(()=>driveSyncNow()); }, 3500); // debounce rapid edits
+}
+
+function autoSyncOnOpen() {
+  if(!settings.autoSync || !localStorage.getItem('mf_drive_connected')) return;
+  const last = localStorage.getItem('mf_last_sync');
+  const lastDay = last ? last.split('T')[0] : null;
+  const today = new Date().toISOString().split('T')[0];
+  ensureDriveAuth(async()=>{
+    await drivePull(true);                 // always load latest on open (any device)
+    if(lastDay!==today){ await driveSyncNow(); } // guarantee one dated backup per day
+    loadArchiveList();
+  });
+}
+
+
 function exportData() {
   const data = {
-    version:1, exported:new Date().toISOString(),
-    transactions, income, investments, timesheets, settings, categories
+    version:2, exported:new Date().toISOString(),
+    transactions, income, investments, timesheets, budgets, settings, categories
   };
   const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -1882,7 +2639,7 @@ function exportData() {
   a.download = `myfinances-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  toast('Local data exported!','success');
+  toast('Data exported!','success');
 }
 
 function openImport() {
@@ -1902,60 +2659,31 @@ function importData() {
   try {
     const raw = document.getElementById('importJson').value.trim();
     const data = JSON.parse(raw);
-    if (data.transactions) transactions = data.transactions; 
-    if (data.income) income = data.income; 
-    if (data.investments) investments = data.investments; 
-    if (data.timesheets) timesheets = data.timesheets; 
-    if (data.settings) settings = {...settings,...data.settings}; 
-    if (data.categories) categories = data.categories; 
-    
-    // Save locally and trigger GitHub sync
-    save(KEYS.tx, transactions);
-    save(KEYS.income, income);
-    save(KEYS.invest, investments);
-    save(KEYS.ts, timesheets);
-    save(KEYS.cats, categories);
-    save(KEYS.settings, settings);
-
+    if (data.transactions) { transactions = data.transactions; save(KEYS.tx, transactions); }
+    if (data.income) { income = data.income; save(KEYS.income, income); }
+    if (data.investments) { investments = data.investments; save(KEYS.invest, investments); }
+    if (data.timesheets) { timesheets = data.timesheets; save(KEYS.ts, timesheets); }
+    if (data.budgets) { budgets = data.budgets; save(KEYS.budgets, budgets); }
+    if (data.settings) { settings = {...settings,...data.settings}; save(KEYS.settings, settings); }
+    if (data.categories) { categories = data.categories; save(KEYS.cats, categories); }
     closeModal('importModal');
     renderAll();
     toast('Data imported successfully!','success');
+    scheduleAutoSync();
   } catch(e) {
     toast('Invalid JSON — check your file','error');
   }
 }
 
 function clearAll() {
-  customConfirm('⚠️ This will delete ALL local and synced GitHub data. Are you sure?', () => {
-    setTimeout(() => {
-      customConfirm('Really? This cannot be undone.', () => {
-        Object.values(KEYS).forEach(k=>localStorage.removeItem(k));
-        transactions=[]; income=[]; investments=[]; timesheets=[];
-        settings={...DEFAULTS.settings};
-        categories=[...DEFAULTS.cats];
-        triggerAutoSync(); // Push blank state to GitHub
-        renderAll();
-        toast('All data cleared','info');
-      }, 'Final Warning', 'Yes, Delete Everything');
-    }, 300);
-  }, 'Clear All Data', 'Delete');
-}
-
-/* =====================================================================
-   CUSTOM CONFIRM MODAL LOGIC
-   ===================================================================== */
-function customConfirm(message, onConfirm, title = "Confirm", btnText = "Delete") {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMessage').innerHTML = message;
-  const btn = document.getElementById('confirmBtn');
-  btn.textContent = btnText;
-  
-  btn.onclick = () => {
-    closeModal('confirmModal');
-    onConfirm();
-  };
-  
-  openModal('confirmModal');
+  if (!confirm('⚠️ This will delete ALL your data permanently. Are you sure?')) return;
+  if (!confirm('Really? This cannot be undone.')) return;
+  Object.values(KEYS).forEach(k=>localStorage.removeItem(k));
+  transactions=[]; income=[]; investments=[]; timesheets=[]; budgets=[];
+  settings={...DEFAULTS.settings};
+  categories=[...DEFAULTS.cats];
+  renderAll();
+  toast('All data cleared','info');
 }
 
 /* =====================================================================
@@ -1977,6 +2705,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
 });
 
+// Pre-fill modals with defaults
 document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('incPayDate').value = new Date().toISOString().split('T')[0];
@@ -1987,6 +2716,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   txTypeChanged();
 });
 
+// Wire add buttons
 document.querySelector('[data-page="payments"]').addEventListener('click',()=>{
   setTimeout(()=>{ if(document.getElementById('txDate')) document.getElementById('txDate').value = new Date().toISOString().split('T')[0]; },50);
 });
@@ -1998,7 +2728,7 @@ document.addEventListener('keydown', e=>{
   if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
   if ((e.metaKey||e.ctrlKey) && e.key==='k') {
     e.preventDefault();
-    const pages=['dashboard','payments','income','investing','timesheets','settings'];
+    const pages=['dashboard','payments','income','investing','timesheets','budget','import','settings'];
     const idx = pages.indexOf(currentPage);
     switchPage(pages[(idx+1)%pages.length]);
   }
@@ -2007,15 +2737,9 @@ document.addEventListener('keydown', e=>{
 /* =====================================================================
    INIT
    ===================================================================== */
-loadSettingsUI();
-
-// If GitHub is configured, pull the latest data first to overwrite local memory
-if (isGitHubConfigured()) {
-  pullFromGitHub().then(() => renderDashboard());
-} else {
-  renderDashboard();
-}
-
+loadSettings();
+renderDashboard();
+autoSyncOnOpen();
 </script>
 </body>
 </html>
