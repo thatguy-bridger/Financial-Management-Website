@@ -369,12 +369,7 @@ select.form-input option{background:var(--surface)}
       <span class="tab-icon">⚙️</span> Settings
     </button>
   </div>
-  <div class="nav-actions">
-    <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
-    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="exportData()" title="Export data">⬆️</button>
-    <button class="icon-btn" onclick="openImport()" title="Import data">⬇️</button>
-  </div>
+  
 
 <select id="navDropdown" class="nav-dropdown" onchange="switchPage(this.value)">
   <option value="dashboard">📊 Dashboard</option>
@@ -386,6 +381,12 @@ select.form-input option{background:var(--surface)}
   <option value="import">🤖 Import</option>
   <option value="settings">⚙️ Settings</option>
 </select>
+  <div class="nav-actions">
+    <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
+    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
+    <button class="icon-btn" onclick="exportData()" title="Export data">⬆️</button>
+    <button class="icon-btn" onclick="openImport()" title="Import data">⬇️</button>
+  </div>
 <div class="main">
 </nav>
 <!-- ==================== DASHBOARD ==================== -->
