@@ -366,7 +366,6 @@ select.form-input option{background:var(--surface)}
   <button class="nav-tab" data-page="settings" onclick="switchPage('settings')">
     <span class="tab-icon">⚙️</span> Settings
   </button>
-  
 </div>
 
 <select id="navDropdown" class="nav-dropdown" onchange="switchPage(this.value)">
@@ -379,23 +378,6 @@ select.form-input option{background:var(--surface)}
   <option value="import">🤖 Import</option>
   <option value="settings">⚙️ Settings</option>
 </select>
-<div class="dropdown-wrapper">
-  <button class="icon-btn" onclick="toggleTransferMenu()" title="Import / Export">
-    🔄
-  </button>
-
-  <div id="transferMenu" class="dropdown-menu">
-    <div class="dropdown-item" onclick="exportData()">
-      <strong>Export Data</strong>
-      <small>Download all finances, budgets, transactions, and settings.</small>
-    </div>
-
-    <div class="dropdown-item" onclick="openImport()">
-      <strong>Import Data</strong>
-      <small>Restore data from a previously exported backup file.</small>
-    </div>
-  </div>
-</div>
 <div class="main">
 
 <!-- ==================== DASHBOARD ==================== -->
