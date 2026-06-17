@@ -88,7 +88,66 @@ table{border-collapse:collapse;width:100%}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.nav-dropdown {
+  display: none;
+  min-width: 100px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: inherit;
+}
 
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 280px;
+  display: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: inherit;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  gap: 4px;
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,.15);
+}
+
+.dropdown-item small {
+  opacity: .7;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .nav-tabs {
+    display: none;
+  }
+
+  .nav-dropdown {
+    display: block;
+  }
+}
 /* ===================== STAT CARDS ===================== */
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
 .stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:8px}
@@ -290,6 +349,9 @@ select.form-input option{background:var(--surface)}
     <button class="nav-tab active" data-page="dashboard" onclick="switchPage('dashboard')">
       <span class="tab-icon">📊</span> Dashboard
     </button>
+    <button class="nav-tab" data-page="budget" onclick="switchPage('budget')">
+      <span class="tab-icon">🎯</span> Budget
+    </button>
     <button class="nav-tab" data-page="payments" onclick="switchPage('payments')">
       <span class="tab-icon">💳</span> Transactions
     </button>
@@ -302,9 +364,6 @@ select.form-input option{background:var(--surface)}
     <button class="nav-tab" data-page="timesheets" onclick="switchPage('timesheets')">
       <span class="tab-icon">🕐</span> Timesheets
     </button>
-    <button class="nav-tab" data-page="budget" onclick="switchPage('budget')">
-      <span class="tab-icon">🎯</span> Budget
-    </button>
     <button class="nav-tab" data-page="import" onclick="switchPage('import')">
       <span class="tab-icon">🤖</span> Import
     </button>
@@ -312,16 +371,41 @@ select.form-input option{background:var(--surface)}
       <span class="tab-icon">⚙️</span> Settings
     </button>
   </div>
+  
+
+<select id="navDropdown" class="nav-dropdown" onchange="switchPage(this.value)">
+  <option value="dashboard">📊 Dashboard</option>
+  <option value="budget">🎯 Budget</option>
+  <option value="payments">💳 Transactions</option>
+  <option value="income">💵 Income</option>
+  <option value="investing">📈 Investing</option>
+  <option value="timesheets">🕐 Timesheets</option>
+  <option value="import">🤖 Import</option>
+  <option value="settings">⚙️ Settings</option>
+</select>
   <div class="nav-actions">
     <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
     <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="exportData()" title="Export data">⬆️</button>
-    <button class="icon-btn" onclick="openImport()" title="Import data">⬇️</button>
+<div class="dropdown-wrapper">
+  <button class="icon-btn" onclick="toggleTransferMenu()" title="Import / Export">
+    🔄
+  </button>
+
+  <div id="transferMenu" class="dropdown-menu">
+    <div class="dropdown-item" onclick="exportData()">
+      <strong>Export Data</strong>
+      <small>Download all finances, budgets, transactions, and settings.</small>
+    </div>
+
+    <div class="dropdown-item" onclick="openImport()">
+      <strong>Import Data</strong>
+      <small>Restore data from a previously exported backup file.</small>
+    </div>
   </div>
-</nav>
-
+</div>
+  </div>
 <div class="main">
-
+</nav>
 <!-- ==================== DASHBOARD ==================== -->
 <div id="page-dashboard" class="page active">
   <div class="net-hero" id="netHero">
