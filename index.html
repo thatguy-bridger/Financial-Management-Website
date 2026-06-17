@@ -88,7 +88,64 @@ table{border-collapse:collapse;width:100%}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.nav-dropdown {
+  display: none;
+  min-width: 220px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: inherit;
+}
 
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 280px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  display: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,.05);
+}
+
+.dropdown-item small {
+  opacity: .7;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .nav-tabs {
+    display: none;
+  }
+
+  .nav-dropdown {
+    display: block;
+  }
+}
 /* ===================== STAT CARDS ===================== */
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
 .stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:8px}
@@ -284,42 +341,61 @@ select.form-input option{background:var(--surface)}
 <body>
 
 <!-- NAV -->
-<nav class="nav">
-  <div class="nav-brand">Bridger's Finances</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" data-page="dashboard" onclick="switchPage('dashboard')">
-      <span class="tab-icon">📊</span> Dashboard
-    </button>
-    <button class="nav-tab" data-page="payments" onclick="switchPage('payments')">
-      <span class="tab-icon">💳</span> Transactions
-    </button>
-    <button class="nav-tab" data-page="income" onclick="switchPage('income')">
-      <span class="tab-icon">💵</span> Income
-    </button>
-    <button class="nav-tab" data-page="investing" onclick="switchPage('investing')">
-      <span class="tab-icon">📈</span> Investing
-    </button>
-    <button class="nav-tab" data-page="timesheets" onclick="switchPage('timesheets')">
-      <span class="tab-icon">🕐</span> Timesheets
-    </button>
-    <button class="nav-tab" data-page="budget" onclick="switchPage('budget')">
-      <span class="tab-icon">🎯</span> Budget
-    </button>
-    <button class="nav-tab" data-page="import" onclick="switchPage('import')">
-      <span class="tab-icon">🤖</span> Import
-    </button>
-    <button class="nav-tab" data-page="settings" onclick="switchPage('settings')">
-      <span class="tab-icon">⚙️</span> Settings
-    </button>
-  </div>
-  <div class="nav-actions">
-    <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
-    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="exportData()" title="Export data">⬆️</button>
-    <button class="icon-btn" onclick="openImport()" title="Import data">⬇️</button>
-  </div>
-</nav>
+<div class="nav-tabs" id="navTabs">
+  <button class="nav-tab active" data-page="dashboard" onclick="switchPage('dashboard')">
+    <span class="tab-icon">📊</span> Dashboard
+  </button>
+  <button class="nav-tab" data-page="budget" onclick="switchPage('budget')">
+    <span class="tab-icon">🎯</span> Budget
+  </button>
+  <button class="nav-tab" data-page="payments" onclick="switchPage('payments')">
+    <span class="tab-icon">💳</span> Transactions
+  </button>
+  <button class="nav-tab" data-page="income" onclick="switchPage('income')">
+    <span class="tab-icon">💵</span> Income
+  </button>
+  <button class="nav-tab" data-page="investing" onclick="switchPage('investing')">
+    <span class="tab-icon">📈</span> Investing
+  </button>
+  <button class="nav-tab" data-page="timesheets" onclick="switchPage('timesheets')">
+    <span class="tab-icon">🕐</span> Timesheets
+  </button>
+  <button class="nav-tab" data-page="import" onclick="switchPage('import')">
+    <span class="tab-icon">🤖</span> Import
+  </button>
+  <button class="nav-tab" data-page="settings" onclick="switchPage('settings')">
+    <span class="tab-icon">⚙️</span> Settings
+  </button>
+  
+</div>
 
+<select id="navDropdown" class="nav-dropdown" onchange="switchPage(this.value)">
+  <option value="dashboard">📊 Dashboard</option>
+  <option value="budget">🎯 Budget</option>
+  <option value="payments">💳 Transactions</option>
+  <option value="income">💵 Income</option>
+  <option value="investing">📈 Investing</option>
+  <option value="timesheets">🕐 Timesheets</option>
+  <option value="import">🤖 Import</option>
+  <option value="settings">⚙️ Settings</option>
+</select>
+<div class="dropdown-wrapper">
+  <button class="icon-btn" onclick="toggleTransferMenu()" title="Import / Export">
+    🔄
+  </button>
+
+  <div id="transferMenu" class="dropdown-menu">
+    <div class="dropdown-item" onclick="exportData()">
+      <strong>Export Data</strong>
+      <small>Download all finances, budgets, transactions, and settings.</small>
+    </div>
+
+    <div class="dropdown-item" onclick="openImport()">
+      <strong>Import Data</strong>
+      <small>Restore data from a previously exported backup file.</small>
+    </div>
+  </div>
+</div>
 <div class="main">
 
 <!-- ==================== DASHBOARD ==================== -->
@@ -2553,6 +2629,19 @@ function renderSettings() {
   `).join('');
   loadTaxFields();
 }
+function toggleTransferMenu() {
+  document
+    .getElementById('transferMenu')
+    .classList.toggle('show');
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dropdown-wrapper')) {
+    document
+      .getElementById('transferMenu')
+      ?.classList.remove('show');
+  }
+});
 
 /* =====================================================================
    PAY SCHEDULE (Settings) — drives auto-built paychecks
