@@ -367,9 +367,7 @@ select.form-input option{background:var(--surface)}
     <button class="nav-tab" data-page="import" onclick="switchPage('import')">
       <span class="tab-icon">🤖</span> Import
     </button>
-    <button class="nav-tab" data-page="settings" onclick="switchPage('settings')">
-      <span class="tab-icon">⚙️</span> Settings
-    </button>
+    
   </div>
   
 
@@ -381,16 +379,16 @@ select.form-input option{background:var(--surface)}
   <option value="investing">📈 Investing</option>
   <option value="timesheets">🕐 Timesheets</option>
   <option value="import">🤖 Import</option>
-  <option value="settings">⚙️ Settings</option>
 </select>
   <div class="nav-actions">
+    <button class="nav-tab" data-page="settings" onclick="switchPage('settings')">
+      <span class="tab-icon">⚙️</span> 
+    </button>
     <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
     <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
 <div class="dropdown-wrapper">
-  <button class="icon-btn" onclick="toggleTransferMenu()" title="Import / Export">
-    🔄
-  </button>
-
+  <button class="icon-btn" onclick="toggleTransferMenu()" title="Import / Export">🔄</button>
+  
   <div id="transferMenu" class="dropdown-menu">
     <div class="dropdown-item" onclick="exportData()">
       <strong>Export Data</strong>
