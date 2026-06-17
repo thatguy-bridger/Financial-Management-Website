@@ -384,8 +384,23 @@ select.form-input option{background:var(--surface)}
   <div class="nav-actions">
     <button class="icon-btn" id="driveBtn" onclick="driveSyncNow()" title="Sync to Google Drive">☁️</button>
     <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">🌙</button>
-    <button class="icon-btn" onclick="exportData()" title="Export data">⬆️</button>
-    <button class="icon-btn" onclick="openImport()" title="Import data">⬇️</button>
+<div class="dropdown-wrapper">
+  <button class="icon-btn" onclick="toggleTransferMenu()" title="Import / Export">
+    🔄
+  </button>
+
+  <div id="transferMenu" class="dropdown-menu">
+    <div class="dropdown-item" onclick="exportData()">
+      <strong>Export Data</strong>
+      <small>Download all finances, budgets, transactions, and settings.</small>
+    </div>
+
+    <div class="dropdown-item" onclick="openImport()">
+      <strong>Import Data</strong>
+      <small>Restore data from a previously exported backup file.</small>
+    </div>
+  </div>
+</div>
   </div>
 <div class="main">
 </nav>
