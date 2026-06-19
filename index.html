@@ -495,7 +495,7 @@ select.form-input option{background:var(--surface)}
       <div class="section-title" style="font-size:20px">Transactions</div>
       <div class="section-sub">Spending, rewards, and extra income</div>
     </div>
-    <button class="btn btn-primary" onclick="openModal('txModal')">+ Add Transaction</button>
+    <button class="btn btn-primary" onclick="openTxModal()">+ Add Transaction</button>
   </div>
 
   <div class="grid-auto mb-16" id="txStatCards"></div>
@@ -1003,46 +1003,14 @@ select.form-input option{background:var(--surface)}
 <!-- ==================== MODALS ==================== -->
 
 <!-- Transaction Modal -->
+<!-- Transaction Modal -->
 <div class="modal-overlay" id="txModal">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="txModalTitle">Add Transaction</div>
       <button class="modal-close" onclick="closeModal('txModal')">✕</button>
     </div>
-    <div class="form-row mb-12">
-      <div class="form-group">
-        <label class="form-label">Date</label>
-        <input type="date" class="form-input" id="txDate">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Type</label>
-        <select class="form-input" id="txType" onchange="txTypeChanged()">
-          <option value="Spending">Spending</option>
-          <option value="Rewards">Rewards</option>
-          <option value="Extra Income">Extra Income</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-row mb-12">
-      <div class="form-group" style="flex:2">
-        <label class="form-label">Description</label>
-        <input type="text" class="form-input" id="txDesc" placeholder="e.g. Groceries, Gas…">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Amount ($)</label>
-        <input type="number" class="form-input" id="txAmount" placeholder="0.00" step="0.01">
-      </div>
-    </div>
-    <div class="form-group mb-12" id="txCatGroup">
-      <label class="form-label">Category</label>
-      <select class="form-input" id="txCat">
-        <option value="">— Select —</option>
-      </select>
-    </div>
-    <div class="form-group mb-12">
-      <label class="form-label">Notes</label>
-      <input type="text" class="form-input" id="txNotes" placeholder="Optional…">
-    </div>
+    <div id="txModalFields"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('txModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveTx()">Save</button>
@@ -1968,11 +1936,13 @@ function renderCell(col, row, table) {
     return `<td class="mono" style="font-size:12px">${fmtDate(v)}</td>`;
   if (col.key==='amount'&&table==='tx') {
     const cls = row.type==='Spending'?'neg':'pos';
-    return `<td class="right mono ${cls}" style="font-weight:600">${row.type==='Spending'?'− ':'+ '}${fmt(v)}</td>`;
+    const inner = `${row.type==='Spending'?'− ':'+ '}${fmt(v)}`;
+    return `<td class="right mono ${cls}" style="font-weight:600"><span class="editable" onclick="inlineEdit(this,'tx','${row.id}','amount')" title="Click to edit">${inner}</span></td>`;
   }
   if (col.key==='gain') return `<td class="right mono ${v>=0?'pos':'neg'}" style="font-weight:600">${fmtSigned(v)}</td>`;
   if (col.key==='net'&&table==='income') return `<td class="right mono pos" style="font-weight:600">${fmt(v)}</td>`;
   if (col.key==='net'&&table==='ts') return `<td class="right mono pos">${fmt(v)}</td>`;
+  if (col.key==='tax'&&table==='income') return `<td class="right mono neg"><span class="editable" onclick="inlineEdit(this,'income','${row.id}','tax')" title="Click to edit">${fmt(v)}</span></td>`;
   if (col.key==='tax') return `<td class="right mono neg">${fmt(v)}</td>`;
   if (col.key==='pct') return `<td class="right mono ${v>=0?'pos':'neg'}">${v>=0?'+':''}${v.toFixed(2)}%</td>`;
   if (col.key==='symbol') return `<td style="font-weight:700;font-size:15px">${v}</td>`;
@@ -1980,41 +1950,104 @@ function renderCell(col, row, table) {
     const cls = row._priceFresh ? 'price-live' : row._priceStale ? 'price-stale' : '';
     return `<td class="right mono ${cls}">${fmt(v)}</td>`;
   }
-  if (col.type==='number') return `<td class="right mono">${typeof v==='number'?fmt(v):v}</td>`;
-  // Text / custom
-  if (col.custom) {
-    // Inline-editable custom cells
-    return `<td><span class="editable" onclick="inlineEdit(this,'${table}','${row.id}','${col.key}')" title="Click to edit">${v||'—'}</span></td>`;
-  }
-  if (col.key==='desc') return `<td style="max-width:180px"><div style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v||'—'}</div></td>`;
-  if (col.key==='cat') return `<td><span style="font-size:12px;color:var(--text-dim)">${v||'—'}</span></td>`;
-  if (col.key==='notes') return `<td style="max-width:160px"><span style="font-size:12px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">${v||'—'}</span></td>`;
-  if (col.key==='hours'&&table==='income') return `<td class="mono">${v}h</td>`;
-  if (col.key==='rate') return `<td class="mono">${fmt(v)}/hr</td>`;
-  if (col.key==='sellPrice') return `<td class="right mono" style="color:var(--text-dim)">${v?fmt(v):'—'}</td>`;
-  if (col.key==='shares') return `<td class="right mono">${v}</td>`;
-  return `<td>${v}</td>`;
-}
+  const editableInline = !col.fixed && col.type!=='cb' && col.type!=='act';
+  const wrap = (inner) => editableInline
+    ? `<span class="editable" onclick="inlineEdit(this,'${table}','${row.id}','${col.key}')" title="Click to edit">${inner}</span>`
+    : inner;
 
+  if (col.custom) {
+    return `<td>${wrap(v||'—')}</td>`;
+  }
+  if (col.key==='desc') return `<td style="max-width:180px"><div style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${wrap(v||'—')}</div></td>`;
+  if (col.key==='cat') return `<td><span style="font-size:12px;color:var(--text-dim)">${wrap(v||'—')}</span></td>`;
+  if (col.key==='notes') return `<td style="max-width:160px"><span style="font-size:12px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">${wrap(v||'—')}</span></td>`;
+  if (col.key==='hours'&&table==='income') return `<td class="mono">${wrap(v+'h')}</td>`;
+  if (col.key==='rate') return `<td class="mono">${wrap(fmt(v)+'/hr')}</td>`;
+  if (col.key==='sellPrice') return `<td class="right mono" style="color:var(--text-dim)">${v?wrap(fmt(v)):wrap('—')}</td>`;
+  if (col.key==='shares') return `<td class="right mono">${wrap(v)}</td>`;
+  return `<td>${wrap(v)}</td>`;
+}
 function inlineEdit(span, table, id, key) {
-  const current = span.textContent === '—' ? '' : span.textContent;
+  const current = span.textContent === '—' ? '' : span.textContent.replace(/[^0-9.\-]/g,'') || span.textContent;
   const col = getCols(table).find(c=>c.key===key);
-  const input = document.createElement('input');
-  input.className='inline-edit'; input.value=current;
-  if (col && col.type==='number') input.type='number';
+
+  // Resolve the actual data array + storage key + (for income) only manual rows
+  const arrMap = {tx:transactions, income:income, invest:investments, ts:timesheets};
+  const keyMap = {tx:KEYS.tx, income:KEYS.income, invest:KEYS.invest, ts:KEYS.ts};
+  const row = (arrMap[table]||[]).find(r=>r.id===id);
+  if (!row) {
+    // Derived paychecks (from pay schedule) aren't directly editable
+    toast('This row is auto-generated — edit it from the pay schedule or timesheets', 'info');
+    renderPage(currentPage);
+    return;
+  }
+
+  // Build an appropriate input
+  let input;
+  if (key==='type') {
+    input = document.createElement('select');
+    input.className='inline-edit';
+    input.innerHTML = ['Spending','Rewards','Extra Income'].map(t=>`<option ${row.type===t?'selected':''}>${t}</option>`).join('');
+  } else if (key==='active') {
+    input = document.createElement('select');
+    input.className='inline-edit';
+    input.innerHTML = ['Active','Closed'].map(t=>`<option ${row.active===t?'selected':''}>${t}</option>`).join('');
+  } else if (key==='cat') {
+    input = document.createElement('select');
+    input.className='inline-edit';
+    input.innerHTML = '<option value="">—</option>' + categories.map(c=>`<option ${row.cat===c?'selected':''}>${c}</option>`).join('');
+  } else {
+    input = document.createElement('input');
+    input.className='inline-edit';
+    input.value = (col && col.type==='number') ? (row[key] ?? '') : (row[key] ?? current);
+    if (col && col.type==='number') input.type='number';
+    if (col && col.type==='date') input.type='date';
+    // hours on a timesheet is an HH:MM string, keep it text
+    if (table==='ts' && key==='hours') input.type='text';
+  }
+
   span.replaceWith(input);
   input.focus();
+  if (input.select) input.select();
+
   const commit = () => {
-    const val = col&&col.type==='number' ? (parseFloat(input.value)||0) : input.value;
-    const arr = {tx:transactions,income,invest:investments,ts:timesheets};
-    const k = {tx:KEYS.tx,income:KEYS.income,invest:KEYS.invest,ts:KEYS.ts};
-    const row = (arr[table]||[]).find(r=>r.id===id);
-    if (row) { row[key]=val; save(k[table],arr[table]); }
+    let val = input.value;
+    if (col && col.type==='number' && !(table==='ts'&&key==='hours')) val = parseFloat(val)||0;
+    row[key] = val;
+    recomputeRow(table, row, key);
+    save(keyMap[table], arrMap[table]);
     renderPage(currentPage);
     scheduleAutoSync();
   };
-  input.onblur=commit;
-  input.onkeydown=e=>{ if(e.key==='Enter') commit(); if(e.key==='Escape') renderPage(currentPage); };
+  input.onblur = commit;
+  input.onkeydown = e => {
+    if (e.key==='Enter') { e.preventDefault(); input.blur(); }
+    if (e.key==='Escape') renderPage(currentPage);
+  };
+  // selects commit immediately on change
+  if (input.tagName==='SELECT') input.onchange = commit;
+}
+
+// Recompute dependent fields after an inline edit, based on which field changed
+function recomputeRow(table, row, editedKey) {
+  if (table==='invest') {
+    row.currentValue = (row.shares||0) * (row.currentPrice||0);
+    row.gain = row.currentValue - (row.amount||0);
+    row.pct = row.amount ? (row.gain/row.amount)*100 : 0;
+  } else if (table==='income') {
+    if (editedKey==='hours' || editedKey==='rate') {
+      row.gross = (row.hours||0) * (row.rate||0);
+      row.tax = calcTax(row.gross);
+      row.net = row.gross - row.tax;
+    } else if (editedKey==='gross') {
+      row.tax = calcTax(row.gross||0);
+      row.net = (row.gross||0) - row.tax;
+    } else if (editedKey==='tax') {
+      row.net = (row.gross||0) - (row.tax||0);
+    }
+  }
+  // tx and ts need no recompute — tx.amount is standalone; ts gross/net are
+  // computed fresh at render time from the hours string.
 }
 
 /* =====================================================================
@@ -2132,46 +2165,90 @@ function renderTxTable() {
 let editingTxId = null;
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+// Build the transaction modal's fields from the current column config.
+// Shows every existing column (incl. custom), skips structural cb/act columns.
+// Inputs get id="txf_<key>". Special-cases Type and Category as selects.
+function buildTxModalFields(row) {
+  row = row || {};
+  const cols = getCols('tx').filter(c => c.type!=='cb' && c.type!=='act');
+  const field = (col) => {
+    const id = 'txf_' + col.key;
+    const val = row[col.key] ?? '';
+    let control;
+    if (col.key === 'type') {
+      control = `<select class="form-input" id="${id}" onchange="txTypeChanged()">`
+        + ['Spending','Rewards','Extra Income'].map(t=>`<option ${row.type===t?'selected':''}>${t}</option>`).join('')
+        + `</select>`;
+    } else if (col.key === 'cat') {
+      control = `<select class="form-input" id="${id}">`
+        + '<option value="">— Select —</option>'
+        + categories.map(c=>`<option ${row.cat===c?'selected':''}>${c}</option>`).join('')
+        + `</select>`;
+    } else {
+      const t = col.type==='number' ? 'number' : col.type==='date' ? 'date' : 'text';
+      const step = col.type==='number' ? ' step="0.01"' : '';
+      const ph = col.type==='number' ? ' placeholder="0.00"' : '';
+      control = `<input type="${t}"${step}${ph} class="form-input" id="${id}" value="${String(val).replace(/"/g,'&quot;')}">`;
+    }
+    return `<div class="form-group" data-key="${col.key}" style="flex:1;min-width:140px;margin-bottom:12px">
+      <label class="form-label">${col.label||col.key}</label>
+      ${control}
+    </div>`;
+  };
+  document.getElementById('txModalFields').innerHTML =
+    `<div class="form-row" style="align-items:flex-start">${cols.map(field).join('')}</div>`;
+}
+function populateCatSelect() { /* fields now built by buildTxModalFields() */ }
 
 function openTxModal(reset=true) {
   if (reset) {
     editingTxId = null;
     document.getElementById('txModalTitle').textContent = 'Add Transaction';
-    document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
-    document.getElementById('txType').value = 'Spending';
-    document.getElementById('txDesc').value = '';
-    document.getElementById('txAmount').value = '';
-    document.getElementById('txNotes').value = '';
-    populateCatSelect();
+    buildTxModalFields({
+      date: new Date().toISOString().split('T')[0],
+      type: 'Spending'
+    });
+    txTypeChanged();
   }
   openModal('txModal');
 }
 
-function populateCatSelect() {
-  const sel = document.getElementById('txCat');
-  sel.innerHTML = '<option value="">— Select —</option>' + categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+function editTx(id) {
+  const t = transactions.find(x=>x.id===id);
+  if (!t) return;
+  editingTxId = id;
+  document.getElementById('txModalTitle').textContent = 'Edit Transaction';
+  buildTxModalFields(t);     // pre-fills EVERY field, custom columns included
+  txTypeChanged();
+  openModal('txModal');
 }
 
 function txTypeChanged() {
-  const type = document.getElementById('txType').value;
-  const catG = document.getElementById('txCatGroup');
-  catG.style.display = type === 'Spending' ? '' : 'none';
+  const typeEl = document.getElementById('txf_type');
+  if (!typeEl) return;
+  const catGroup = document.querySelector('#txModalFields [data-key="cat"]');
+  if (catGroup) catGroup.style.display = typeEl.value === 'Spending' ? '' : 'none';
 }
 
 function saveTx() {
-  const date = document.getElementById('txDate').value;
-  const type = document.getElementById('txType').value;
-  const desc = document.getElementById('txDesc').value.trim();
-  const amount = parseFloat(document.getElementById('txAmount').value);
-  const cat = document.getElementById('txCat').value;
-  const notes = document.getElementById('txNotes').value.trim();
-  if (!date || !amount || isNaN(amount)) { toast('Please fill in date and amount','error'); return; }
+  const cols = getCols('tx').filter(c => c.type!=='cb' && c.type!=='act');
+  const rec = {};
+  cols.forEach(col => {
+    const el = document.getElementById('txf_' + col.key);
+    if (!el) return;
+    rec[col.key] = col.type==='number' ? (parseFloat(el.value)||0) : el.value.trim ? el.value.trim() : el.value;
+  });
+
+  if (!rec.date || !rec.amount || isNaN(rec.amount)) {
+    toast('Please fill in date and amount','error');
+    return;
+  }
 
   if (editingTxId) {
     const idx = transactions.findIndex(t=>t.id===editingTxId);
-    if (idx>=0) transactions[idx] = {...transactions[idx], date, type, desc, amount, cat, notes};
+    if (idx>=0) transactions[idx] = {...transactions[idx], ...rec};
   } else {
-    transactions.push({id:uid(), date, type, desc, amount, cat, notes});
+    transactions.push({id:uid(), ...rec});
   }
   save(KEYS.tx, transactions);
   closeModal('txModal');
@@ -2188,7 +2265,6 @@ function editTx(id) {
   document.getElementById('txModalTitle').textContent = 'Edit Transaction';
   document.getElementById('txDate').value = t.date;
   document.getElementById('txType').value = t.type;
-  document.getElementById('txDesc').value = t.desc||'';
   document.getElementById('txAmount').value = t.amount;
   document.getElementById('txNotes').value = t.notes||'';
   populateCatSelect();
@@ -3732,13 +3808,10 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
 
 // Pre-fill modals with defaults
 document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('incPayDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('incRate').value = settings.rate || 16.79;
   document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('tsStart').value = new Date().toISOString().split('T')[0];
-  populateCatSelect();
-  txTypeChanged();
 });
 
 // Wire add buttons
