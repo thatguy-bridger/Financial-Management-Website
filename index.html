@@ -2068,9 +2068,9 @@ async function refreshAllPrices() {
     if (price) {
       inv.currentPrice = price;
       inv._priceFresh = true; inv._priceStale = false;
-      inv.currentValue = Math.round(inv.shares * price * 100)/100;
-      inv.gain = Math.round((inv.currentValue - inv.amount)*100)/100;
-      inv.pct = inv.amount ? Math.round((inv.gain/inv.amount)*10000)/100 : 0;
+      inv.currentValue = inv.shares * price;
+      inv.gain = inv.currentValue - inv.amount;
+      inv.pct = inv.amount ? (inv.gain / inv.amount) * 100 : 0;
       updated++;
     } else { inv._priceStale = true; }
   }
