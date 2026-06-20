@@ -1981,7 +1981,7 @@ function renderCell(col, row, table) {
     return `<td class="right mono ${cls}">${fmt(v)}</td>`;
   }
   if (col.key === 'hours') {
-  return `<td class="right mono">${Number(v).toFixed(2)}</td>`;
+  return `<td class="right mono">${Number(v).toFixed(2)} hrs</td>`;
 }
 
 if (col.type==='number') {
