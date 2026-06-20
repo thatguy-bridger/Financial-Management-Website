@@ -1081,7 +1081,7 @@ select.form-input option{background:var(--surface)}
         <input type="number" class="form-input" id="incRate" step="0.01" oninput="calcIncome()">
       </div>
     </div>
-    <div class="form-row mb-12">
+    <div class="f">
       <div class="form-group">
         <label class="form-label">Gross</label>
         <input type="number" class="form-input" id="incGross" step="0.01" oninput="calcNet()" placeholder="Auto-calculated">
@@ -1109,7 +1109,7 @@ select.form-input option{background:var(--surface)}
       <div class="modal-title" id="investModalTitle">Add Investment</div>
       <button class="modal-close" onclick="closeModal('investModal')">✕</button>
     </div>
-    <div class="form-row mb-12">
+    <div class="f">
       <div class="form-group">
         <label class="form-label">Date</label>
         <input type="date" class="form-input" id="invDate">
@@ -1689,7 +1689,7 @@ function renderTimesheetDashSummary() {
   document.getElementById('timesheetSummary').innerHTML = `
     <div class="grid-4 mb-12" style="gap:10px">
       <div class="stat-card card-sm"><div class="stat-label">Total Weeks</div><div class="stat-value accent" style="font-size:22px">${timesheets.length}</div></div>
-      <div class="stat-card card-sm"><div class="stat-label">Total Hours</div><div class="stat-value" style="font-size:22px">${totalHrs.toFixed(1)}</div></div>
+      <div class="stat-card card-sm"><div class="stat-label">Total Hours</div><div class="stat-value" style="font-size:22px">${totalHrs.toFixed(2)}</div></div>
       <div class="stat-card card-sm"><div class="stat-label">Est. Gross</div><div class="stat-value pos" style="font-size:18px">${fmt(totalHrs*rate)}</div></div>
       <div class="stat-card card-sm"><div class="stat-label">Rate</div><div class="stat-value" style="font-size:18px">${fmt(rate)}/hr</div></div>
     </div>
@@ -1980,7 +1980,13 @@ function renderCell(col, row, table) {
     const cls = row._priceFresh ? 'price-live' : row._priceStale ? 'price-stale' : '';
     return `<td class="right mono ${cls}">${fmt(v)}</td>`;
   }
-  if (col.type==='number') return `<td class="right mono">${typeof v==='number'?fmt(v):v}</td>`;
+  if (col.key === 'hours') {
+  return `<td class="right mono">${Number(v).toFixed(2)}</td>`;
+}
+
+if (col.type==='number') {
+  return `<td class="right mono">${typeof v==='number' ? fmt(v) : v}</td>`;
+}
   // Text / custom
   if (col.custom) {
     // Inline-editable custom cells
