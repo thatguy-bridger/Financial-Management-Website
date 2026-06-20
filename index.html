@@ -1025,44 +1025,7 @@ select.form-input option{background:var(--surface)}
       <div class="modal-title" id="incomeModalTitle">Add Paycheck</div>
       <button class="modal-close" onclick="closeModal('incomeModal')">✕</button>
     </div>
-    <div class="form-row mb-12">
-      <div class="form-group">
-        <label class="form-label">Pay Date</label>
-        <input type="date" class="form-input" id="incPayDate">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Period Start</label>
-        <input type="date" class="form-input" id="incStart">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Period End</label>
-        <input type="date" class="form-input" id="incEnd">
-      </div>
-    </div>
-    <div class="form-row mb-12">
-      <div class="form-group">
-        <label class="form-label">Hours</label>
-        <input type="number" class="form-input" id="incHours" step="0.01" oninput="calcIncome()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Rate ($/hr)</label>
-        <input type="number" class="form-input" id="incRate" step="0.01" oninput="calcIncome()">
-      </div>
-    </div>
-    <div class="form-row mb-12">
-      <div class="form-group">
-        <label class="form-label">Gross</label>
-        <input type="number" class="form-input" id="incGross" step="0.01" oninput="calcNet()" placeholder="Auto-calculated">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Tax Withheld</label>
-        <input type="number" class="form-input" id="incTax" step="0.01" oninput="calcNet()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Net</label>
-        <input type="number" class="form-input" id="incNet" step="0.01">
-      </div>
-    </div>
+    <div id="incomeModalFields"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('incomeModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveIncome()">Save</button>
@@ -1147,26 +1110,7 @@ select.form-input option{background:var(--surface)}
       <div class="modal-title" id="tsModalTitle">Add Timesheet Week</div>
       <button class="modal-close" onclick="closeModal('timesheetModal')">✕</button>
     </div>
-    <div class="form-row mb-12">
-      <div class="form-group">
-        <label class="form-label">Start Date</label>
-        <input type="date" class="form-input" id="tsStart">
-      </div>
-      <div class="form-group">
-        <label class="form-label">End Date</label>
-        <input type="date" class="form-input" id="tsEnd">
-      </div>
-    </div>
-    <div class="form-row mb-12">
-      <div class="form-group">
-        <label class="form-label">Total Hours (HH:MM)</label>
-        <input type="text" class="form-input" id="tsHours" placeholder="e.g. 40:00">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Notes</label>
-        <input type="text" class="form-input" id="tsNotes" placeholder="Optional">
-      </div>
-    </div>
+    <div id="tsModalFields"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('timesheetModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveTimesheet()">Save</button>
@@ -2212,13 +2156,12 @@ function openTxModal(reset=true) {
   }
   openModal('txModal');
 }
-
 function editTx(id) {
   const t = transactions.find(x=>x.id===id);
   if (!t) return;
   editingTxId = id;
   document.getElementById('txModalTitle').textContent = 'Edit Transaction';
-  buildTxModalFields(t);     // pre-fills EVERY field, custom columns included
+  buildTxModalFields(t);
   txTypeChanged();
   openModal('txModal');
 }
@@ -2420,59 +2363,50 @@ function calcTax(gross) {
   return Math.round((ss + med + fed + st) * 100) / 100;
 }
 
-function calcIncome() {
-  const h = parseFloat(document.getElementById('incHours').value) || 0;
-  const r = parseFloat(document.getElementById('incRate').value) || 0;
-  const gross = h * r;
-  document.getElementById('incGross').value = gross.toFixed(2);
-  document.getElementById('incTax').value = calcTax(gross).toFixed(2);
-  calcNet();
+function buildIncomeFields(row) {
+  buildModalFields('incomeModalFields', 'income', 'incf_', row, { skip:['period'], oninput:'incomeFieldChanged' });
 }
-function calcNet() {
-  const gross = parseFloat(document.getElementById('incGross').value) || 0;
-  document.getElementById('incTax').value = calcTax(gross).toFixed(2);
-  const tax = parseFloat(document.getElementById('incTax').value) || 0;
-  document.getElementById('incNet').value = (gross - tax).toFixed(2);
+function incomeFieldChanged(key) {
+  const g = id => document.getElementById('incf_' + id);
+  const num = id => parseFloat(g(id)?.value)||0;
+  if (key==='hours' || key==='rate') {
+    const gross = num('hours') * num('rate');
+    if (g('gross')) g('gross').value = gross.toFixed(2);
+    if (g('tax'))   g('tax').value   = calcTax(gross).toFixed(2);
+  } else if (key==='gross') {
+    if (g('tax')) g('tax').value = calcTax(num('gross')).toFixed(2);
+  }
+  if (g('net')) g('net').value = (num('gross') - num('tax')).toFixed(2);
 }
-
+function openIncomeModal() {
+  editingIncomeId = null;
+  document.getElementById('incomeModalTitle').textContent = 'Add Paycheck';
+  buildIncomeFields({ payDate: new Date().toISOString().split('T')[0], rate: settings.rate || 16.79 });
+  openModal('incomeModal');
+}
+function editIncome(id) {
+  const p = income.find(i=>i.id===id);
+  if (!p) return;
+  editingIncomeId = id;
+  document.getElementById('incomeModalTitle').textContent = 'Edit Paycheck';
+  buildIncomeFields(p);
+  openModal('incomeModal');
+}
 function saveIncome() {
-  const payDate = document.getElementById('incPayDate').value;
-  const start = document.getElementById('incStart').value;
-  const end = document.getElementById('incEnd').value;
-  const hours = parseFloat(document.getElementById('incHours').value)||0;
-  const rate = parseFloat(document.getElementById('incRate').value)||settings.rate;
-  const gross = parseFloat(document.getElementById('incGross').value)||0;
-  const tax = parseFloat(document.getElementById('incTax').value)||0;
-  const net = parseFloat(document.getElementById('incNet').value)||0;
-  if (!payDate) { toast('Please enter a pay date','error'); return; }
-
-  const rec = {id:editingIncomeId||uid(), payDate, start, end, hours, rate, gross, tax, net};
+  const rec = collectModalFields('income', 'incf_', ['period']);
+  if (!rec.payDate) { toast('Please enter a pay date','error'); return; }
+  if (!rec.rate) rec.rate = settings.rate;
+  rec.net = rec.net || ((rec.gross||0) - (rec.tax||0));
   if (editingIncomeId) {
     const idx = income.findIndex(i=>i.id===editingIncomeId);
-    if (idx>=0) income[idx] = rec;
-  } else { income.push(rec); }
+    if (idx>=0) income[idx] = {...income[idx], ...rec, id:editingIncomeId};
+  } else { income.push({id:uid(), ...rec}); }
   save(KEYS.income, income);
   closeModal('incomeModal');
   renderIncome();
   toast(editingIncomeId?'Paycheck updated':'Paycheck added','success');
   editingIncomeId = null;
   scheduleAutoSync();
-}
-
-function editIncome(id) {
-  const p = income.find(i=>i.id===id);
-  if (!p) return;
-  editingIncomeId = id;
-  document.getElementById('incomeModalTitle').textContent = 'Edit Paycheck';
-  document.getElementById('incPayDate').value = p.payDate||'';
-  document.getElementById('incStart').value = p.start||'';
-  document.getElementById('incEnd').value = p.end||'';
-  document.getElementById('incHours').value = p.hours;
-  document.getElementById('incRate').value = p.rate;
-  document.getElementById('incGross').value = p.gross;
-  document.getElementById('incTax').value = p.tax;
-  document.getElementById('incNet').value = p.net;
-  openModal('incomeModal');
 }
 
 function deleteIncome(id) {
@@ -2656,36 +2590,36 @@ function renderTimesheets() {
 }
 
 let editingTsId = null;
+function buildTsFields(row) {
+  buildModalFields('tsModalFields', 'ts', 'tsf_', row, { skip:['week','gross','net'] });
+}
+function openTimesheetModal() {
+  editingTsId = null;
+  document.getElementById('tsModalTitle').textContent = 'Add Timesheet Week';
+  buildTsFields({ start: new Date().toISOString().split('T')[0] });
+  openModal('timesheetModal');
+}
+function editTs(id) {
+  const t = timesheets.find(x=>x.id===id);
+  if (!t) return;
+  editingTsId = id;
+  document.getElementById('tsModalTitle').textContent = 'Edit Week';
+  buildTsFields(t);
+  openModal('timesheetModal');
+}
 function saveTimesheet() {
-  const start = document.getElementById('tsStart').value;
-  const end = document.getElementById('tsEnd').value;
-  const hours = document.getElementById('tsHours').value.trim();
-  const notes = document.getElementById('tsNotes').value.trim();
-  if (!start || !end || !hours) { toast('Please fill all fields','error'); return; }
-
-  const rec = {id:editingTsId||uid(), start, end, hours, notes};
+  const rec = collectModalFields('ts', 'tsf_', ['week','gross','net']);
+  if (!rec.start || !rec.end || !rec.hours) { toast('Please fill all fields','error'); return; }
   if (editingTsId) {
     const idx = timesheets.findIndex(t=>t.id===editingTsId);
-    if (idx>=0) timesheets[idx] = rec;
-  } else { timesheets.push(rec); }
+    if (idx>=0) timesheets[idx] = {...timesheets[idx], ...rec, id:editingTsId};
+  } else { timesheets.push({id:uid(), ...rec}); }
   save(KEYS.ts, timesheets);
   closeModal('timesheetModal');
   renderTimesheets();
   toast(editingTsId?'Week updated':'Week added','success');
   editingTsId = null;
   scheduleAutoSync();
-}
-
-function editTs(id) {
-  const t = timesheets.find(x=>x.id===id);
-  if (!t) return;
-  editingTsId = id;
-  document.getElementById('tsModalTitle').textContent = 'Edit Week';
-  document.getElementById('tsStart').value = t.start;
-  document.getElementById('tsEnd').value = t.end;
-  document.getElementById('tsHours').value = t.hours;
-  document.getElementById('tsNotes').value = t.notes||'';
-  openModal('timesheetModal');
 }
 
 function deleteTs(id) {
@@ -3808,10 +3742,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
 
 // Pre-fill modals with defaults
 document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('incPayDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('incRate').value = settings.rate || 16.79;
   document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('tsStart').value = new Date().toISOString().split('T')[0];
 });
 
 // Wire add buttons
